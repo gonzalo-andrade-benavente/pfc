@@ -1,6 +1,6 @@
 	//Puede ser que la latitud y longitud estén a réves.
-	//var lat = -1.6404555, lon = 42.8139115;
-	var lat = 43, lon = -20;
+	var lat = -1.6404555, lon = 42.8139115;
+	//var lat = 43, lon = -20;
 	/*
 		FUNCIÓN CREACIÓN DE MESH VERTICES + DATOS
 		######## ERROR #####
@@ -9,17 +9,27 @@
 		var mesh;
 		var verticesQuantized, facesQuantized, geometry, mesh;
 		verticesQuantized = cesium._quantizedVertices;
+		var x = cesium._uValues, 
+			y = cesium._vValues,
+			heights = cesium._heightValues;
 		facesQuantized = cesium._indices;
 		var geometry = new THREE.Geometry();
 		//geometry.computeBoundingSphere();
+		/*
 		for(var i=0; i < verticesQuantized.length; i=i+3){
 			geometry.vertices.push(new THREE.Vector3(Math.round(verticesQuantized[i]/1000), Math.round(verticesQuantized[i+1]/1000), Math.round(verticesQuantized[i+2]/1000)));
 			console.log("x:"+ Math.round(verticesQuantized[i]/1000) +" y:"+ Math.round(verticesQuantized[i+1]/1000) +" z:"+ Math.round(verticesQuantized[i+2]/1000));
 		}
+		*/
+		for(var i=0; i < heights.length; i++){
+			geometry.vertices.push( new THREE.Vector3(Math.round(x[i]/1000),Math.round(y[i]/1000),Math.round(heights[i]/1000)));
+		}
+
 		for(var i=0; i < facesQuantized.length; i=i+3){
 			geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
-			console.log(facesQuantized[i] +","+facesQuantized[i+1]+","+ facesQuantized[i+2]);
+			//console.log(facesQuantized[i] +","+facesQuantized[i+1]+","+ facesQuantized[i+2]);
 		}
+		
 		//geometry.computeBoundingSphere();
 		mesh = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial( {wireframe : true}) );
 		scene.add(mesh);
