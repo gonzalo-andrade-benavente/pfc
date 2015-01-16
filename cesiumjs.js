@@ -1,5 +1,6 @@
 	//Puede ser que la latitud y longitud estén a réves.
-	var lat = -1.6404555, lon = 42.8139115;
+	var lat = -1.643084, lon = 42.819939;
+	//var lat = -1.9988972, lon = 43.3215343; //Isla de santa clara.
 	/*
 		FUNCIÓN CREACIÓN DE MESH VERTICES + DATOS
 		######## ERROR #####
