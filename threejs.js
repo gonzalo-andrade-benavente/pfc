@@ -30,7 +30,7 @@ function init() {
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.shadowMapEnabled = true; //Sombra en el renderizado
 	//------------------ posición y punto de la cámara para centrar la escena 
-	camera.position.z = 800;
+	camera.position.z = 100;
 	//camara.lookAt(new THREE.Vector3(0, 0, 0));
 	//------------------ Ratón
 	trackballControls = new THREE.TrackballControls(camera);
