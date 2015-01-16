@@ -4,19 +4,24 @@
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 	<!-- css -->
 	<link rel="stylesheet" type="text/css" href="css/pfc.css"/>
+	<script type="text/javascript" src="uploadjs.js"> //Libreria mía. </script>
 	<title> PFC Gonzalo Andrade </title>
 </head>
 
 <body>
 	<div>
-		<form enctype="multipart/form-data" action="__URL__" method="POST">
+		<form id="file-form" action="handler.php" method="POST">
 			<!-- MAX_FILE_SIZE must precede the file input field -->
 			<input type="hidden" name="MAX_FILE_SIZE" value="30000" />
 			<!-- Name of input element determines name in $_FILES array -->
-			Enviar ruta gpx <input name="userfile" type="file" />
-			<input type="submit" value="Send File" />
+			Enviar ruta gpx <input name="gpx" type="file" id="file-select" />
+			<input type="submit" value="Subir fichero" id="upload-button" />
 		</form>
 	</div>
+	
+	<script>
+		var formulario = document.getElementById('file-form');
+	</script>
 </body>
 
 </html>
