@@ -1,0 +1,19 @@
+/* Estilo PFC Gonzalo Andrade */
+
+html {
+	//background-image: url("../images/europa.jpg");
+	//background-repeat: no-repeat;
+	/* opacity: 0.6; */
+}
+ 
+body {
+  /* background-image: url("imagenes/segunda_imagen.png"); */
+}
+
+div {
+	position: absolute;
+	width: 100%;
+	top: 50%;
+	margin-top: -15px; /* 50% of the line-height in a */
+	text-align: center;
+}
