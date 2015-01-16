@@ -24,6 +24,7 @@
 		
 		//geometry.computeBoundingSphere();
 		mesh = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial( {wireframe : true}) );
+		mesh.rotation.x =  Math.PI / 180 * (-90);
 		scene.add(mesh);
 	}
 	/*
