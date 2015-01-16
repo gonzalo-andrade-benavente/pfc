@@ -1,0 +1,22 @@
+<html  xml:lang="es" lang="es">
+
+<head>
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+	<!-- css -->
+	<link rel="stylesheet" type="text/css" href="css/pfc.css"/>
+	<title> PFC Gonzalo Andrade </title>
+</head>
+
+<body>
+	<div>
+		<form enctype="multipart/form-data" action="__URL__" method="POST">
+			<!-- MAX_FILE_SIZE must precede the file input field -->
+			<input type="hidden" name="MAX_FILE_SIZE" value="30000" />
+			<!-- Name of input element determines name in $_FILES array -->
+			Enviar ruta gpx <input name="userfile" type="file" />
+			<input type="submit" value="Send File" />
+		</form>
+	</div>
+</body>
+
+</html>
