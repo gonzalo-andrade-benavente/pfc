@@ -10,7 +10,12 @@ window.onload=function(){
 	form.onsubmit = function(event) {
 		event.preventDefault();
 		// Update button text.
-		uploadButton.innerHTML = 'Subiendo...';
+		var files = fileSelect.files;
+		var formData = new FormData();
+		if (files[0].name.match(/(gpx)$/))
+			formData.append('ruta', files[0], files[0].name);
+		else
+			console.log("Extension incorrecta.");
 	}
 	
 };
