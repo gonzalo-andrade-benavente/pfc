@@ -1,5 +1,5 @@
 	var latitude = -2.002, longitude = 43.314, tile;
-	var meshPosX = 0;
+	var meshPosX = meshPosY = meshPosZ = 0;
 	//camera.position.x = 50;
 	//camera.position.y = 20;
 	var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
@@ -89,8 +89,11 @@
 		}
 		//geometry.computeBoundingSphere();
 		mesh = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial( {wireframe : true}) );
-		//mesh.rotation.x =  Math.PI / 180 * (-90);
-		mesh.position.set(meshPosX, 0, 0);
+		//mesh.rotation.y = -0.5;
+		//mesh.rotation.x = -1.3;
+		//mesh.position.set(meshPosX, -50, 0);
+		mesh.position.set(meshPosX, meshPosY, meshPosZ);
+		//mesh.computeBoundingBox();
+		//console.log(mesh.boundingBox);
 		scene.add(mesh);
 	}
-
