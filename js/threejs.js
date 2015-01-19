@@ -4,7 +4,7 @@
 	VARIABLES GLOBALES.
 */
 var container;
-var camera, controls, scene, renderer;
+var camera, controls, scene, renderer, gui;
 /* 
 	CARGAR SI EL NAVEGADOR ES COMPATIBLE.
 */
@@ -47,6 +47,10 @@ function init() {
 	*/
 	document.getElementById('container').appendChild(renderer.domElement);
 	render();
+}
+
+function createGUI() {
+	gui = new dat.GUI();
 }
 
 function render() {
