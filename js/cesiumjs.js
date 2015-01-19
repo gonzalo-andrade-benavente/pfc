@@ -1,5 +1,7 @@
 	var latitude = -2.002, longitude = 43.314, tile;
 	var meshPosX = 0;
+	//camera.position.x = 50;
+	//camera.position.y = 20;
 	var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
 		url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
 	});
@@ -91,5 +93,4 @@
 		mesh.position.set(meshPosX, 0, 0);
 		scene.add(mesh);
 	}
-
 
