@@ -9,24 +9,32 @@
 		//Cartographic.fromDegrees(longitude, latitude, height, result)
 		var positionLonLat = Cesium.Cartographic.fromDegrees(longitude, latitude);
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
+		
 		var rectangleTileXY = aCesiumTerrainProvider.tilingScheme.tileXYToRectangle(positionTileXY.x, positionTileXY.y, 12);
 		sw = new Coordenada(radianToDegrees(Cesium.Rectangle.southwest(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.southwest(rectangleTileXY).longitude));
 		se = new Coordenada(radianToDegrees(Cesium.Rectangle.southeast(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.southeast(rectangleTileXY).longitude));
 		nw = new Coordenada(radianToDegrees(Cesium.Rectangle.northwest(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.northwest(rectangleTileXY).longitude));
 		ne = new Coordenada(radianToDegrees(Cesium.Rectangle.northeast(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.northeast(rectangleTileXY).longitude));
-		console.log("[Sur-este]");
-		console.log(se);
-		console.log("[Sur-oeste]");
-		console.log(sw);
-		console.log("[Nor-este]");
-		console.log(ne);
-		console.log("[Nor-oeste]");
-		console.log(nw);
+		var myTile = new Tile(ne, se, nw, sw);
+		
+		console.log(myTile);
 		aCesiumTerrainProvider.requestTileGeometry(positionTileXY.x,positionTileXY.y,12,true).then(function(data){
 			mesh1(data);
 		});
 	}
-	
+	/*
+		CLASE TILE
+	*/
+	function Tile(noreste, sureste, noroeste, suroeste){
+		this.noreste = noreste;
+		this.sureste = sureste;
+		this.noroeste = noroeste;
+		this.suroeste = suroeste;
+		this.distancia = ((noreste.latitud - sureste.latitud)/0.01)*1.1132;
+	}
+	/*
+		CLASE COORDENADA
+	*/
 	function Coordenada(latitud, longitud){
 		this.latitud = latitud;
 		this.longitud = longitud;
