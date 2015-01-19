@@ -28,6 +28,11 @@
 		mesh.rotation.x =  Math.PI / 180 * (-90);
 		scene.add(mesh);
 	}
+	
+	function createMesh() {
+	
+	
+	}
 	/*
 		FUNCIÓN OBTENCION DATOS CESIUM
 	*/
