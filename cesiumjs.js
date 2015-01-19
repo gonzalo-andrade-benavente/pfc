@@ -1,5 +1,33 @@
+	var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
+		url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
+	});
+	function loadedTerrainProvider(){
+		var latitude, longitude, cesium;
+		latitude = -2,002;
+		longitude = 43.314;
+		//Cartographic.fromDegrees(longitude, latitude, height, result)
+		var positionLonLat = Cesium.Cartographic.fromDegrees(longitude, latitude);
+		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
+		aCesiumTerrainProvider.requestTileGeometry(positionTileXY.x,positionTileXY.y,12,true).then(function(data){
+			mesh1(data);
+		});
+	}
+	/*
+		FUNCIÓN PARA OBTENER LOS DATOS DE CESIUM
+	*/
+	function requestTilesWhenReady() {
+		if (aCesiumTerrainProvider.ready) {
+			console.log("Terrain Provider ready");
+			loadedTerrainProvider();
+		} else {
+			console.log("Waiting a Terrain Provider is ready");
+			setTimeout(requestTilesWhenReady, 10);
+		}
+	}
+	requestTilesWhenReady();
+	
 	//Puede ser que la latitud y longitud estén a réves.
-	var lat = -1.643084, lon = 42.819939;
+	//var latitude = -1.643084, longitude = 42.819939;
 	//var lat = -1.9988972, lon = 43.3215343; //Isla de santa clara.
 	/*
 		FUNCIÓN CREACIÓN DE MESH VERTICES + DATOS
@@ -28,11 +56,6 @@
 		mesh.rotation.x =  Math.PI / 180 * (-90);
 		scene.add(mesh);
 	}
-	
-	function createMesh() {
-	
-	
-	}
 	/*
 		FUNCIÓN OBTENCION DATOS CESIUM
 	*/
@@ -51,26 +74,3 @@
 			correct = min + (height*interval);
 		return correct;
 	}
-
-	/*
-		FUNCIÓN PARA OBTENER LOS DATOS DE CESIUM
-	*/
-	function requestTilesWhenReady() {
-		if (aCesiumTerrainProvider.ready) {
-			console.log("Terrain Provider ready");
-			positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
-			aCesiumTerrainProvider.requestTileGeometry(positionTileXY.x,positionTileXY.y,12,true)
-				.then(function(data) {
-					 foo(data);
-					});   
-		} else {
-				setTimeout(requestTilesWhenReady, 10);
-			}
-	}
-
-	var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
-		url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
-		});
-
-	var positionLonLat = Cesium.Cartographic.fromDegrees(lat, lon);
-    requestTilesWhenReady();
