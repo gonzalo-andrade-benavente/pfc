@@ -1,27 +1,31 @@
 <html  xml:lang="es" lang="es">
-
 <head>
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 	<!-- css -->
-	<link rel="stylesheet" type="text/css" href="css/pfc.css"/>
-	<script type="text/javascript" src="uploadjs.js"> //Libreria mía. </script>
-	<title> PFC Gonzalo Andrade </title>
+	<script type="text/javascript" src="js/dnd.js"> //Libreria mía. </script>
+	<link rel="stylesheet" type="text/css" href="css/dnd.css"/> 
+	<title> PFC Three.js  </title>
 </head>
-
 <body>
-	<div>
-		<form id="file-form" action="handler.php" method="POST">
-			<!-- MAX_FILE_SIZE must precede the file input field -->
-			<input type="hidden" name="MAX_FILE_SIZE" value="30000" />
-			<!-- Name of input element determines name in $_FILES array -->
-			Enviar ruta gpx <input name="gpx" type="file" id="file-select" />
-			<input type="submit" value="Subir fichero" id="upload-button" />
-		</form>
-	</div>
-	
-	<script>
-		var formulario = document.getElementById('file-form');
-	</script>
-</body>
+	<form id="upload" action="" method="POST" enctype="multipart/form-data">
+		<fieldset>
+			<legend>Subir ruta gpx <i>drag and drop</i></legend>
+			<input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
+			<div>
+				<!-- 
+				<label for="fileselect">Fichero a subir</label>
+				<input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />
+				-->
+				<div id="filedrag">Arrastrar aquí</div>
+			</div>
+			<div id="submitbutton">
+				<button type="submit">Subir ficheros</button>
+			</div>
+		</fieldset>
+	</form>
 
+	<div id="messages">
+		<p><i>Mensaje de estado</i></p>
+	</div>
+</body>
 </html>
