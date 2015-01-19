@@ -11,10 +11,10 @@
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
 		
 		var rectangleTileXY = aCesiumTerrainProvider.tilingScheme.tileXYToRectangle(positionTileXY.x, positionTileXY.y, 12);
-		sw = new Coordenada(radianToDegrees(Cesium.Rectangle.southwest(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.southwest(rectangleTileXY).longitude));
-		se = new Coordenada(radianToDegrees(Cesium.Rectangle.southeast(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.southeast(rectangleTileXY).longitude));
-		nw = new Coordenada(radianToDegrees(Cesium.Rectangle.northwest(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.northwest(rectangleTileXY).longitude));
-		ne = new Coordenada(radianToDegrees(Cesium.Rectangle.northeast(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.northeast(rectangleTileXY).longitude));
+		sw = new Coordinate(radianToDegrees(Cesium.Rectangle.southwest(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.southwest(rectangleTileXY).longitude));
+		se = new Coordinate(radianToDegrees(Cesium.Rectangle.southeast(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.southeast(rectangleTileXY).longitude));
+		nw = new Coordinate(radianToDegrees(Cesium.Rectangle.northwest(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.northwest(rectangleTileXY).longitude));
+		ne = new Coordinate(radianToDegrees(Cesium.Rectangle.northeast(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.northeast(rectangleTileXY).longitude));
 		var myTile = new Tile(ne, se, nw, sw);
 		
 		console.log(myTile);
@@ -22,22 +22,24 @@
 			mesh1(data);
 		});
 	}
+	
+	
 	/*
 		CLASE TILE
 	*/
-	function Tile(noreste, sureste, noroeste, suroeste){
-		this.noreste = noreste;
-		this.sureste = sureste;
-		this.noroeste = noroeste;
-		this.suroeste = suroeste;
-		this.distancia = ((noreste.latitud - sureste.latitud)/0.01)*1.1132;
+	function Tile(northeast, southeast, northwest, southwest){
+		this.northeast = northeast;
+		this.southeast = southeast;
+		this.northwest = northwest;
+		this.southwest = southwest;
+		this.distance = ((northeast.latitude - southeast.latitude)/0.01)*1.1132;
 	}
 	/*
 		CLASE COORDENADA
 	*/
-	function Coordenada(latitud, longitud){
-		this.latitud = latitud;
-		this.longitud = longitud;
+	function Coordinate(latitude, longitude){
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 	/*
 		FUNCIÓN TRANSFORMA RADIANES A GRADOS
