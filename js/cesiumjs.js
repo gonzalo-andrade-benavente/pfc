@@ -1,5 +1,6 @@
 	var latitude = 43.314, longitude = -2.002, tile;
 	var meshPosX = meshPosY = meshPosZ = 0;
+	var tileX, tileY;
 	//camera.position.x = 50;
 	//camera.position.y = 20;
 	var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
@@ -8,12 +9,12 @@
 	
 	function loadedTerrainProvider(){
 		var positionLonLat = Cesium.Cartographic.fromDegrees(longitude, latitude);
-		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);		
+		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
+		console.log(positionTileXY);
 		tile = getTile(positionTileXY);
 		aCesiumTerrainProvider.requestTileGeometry(positionTileXY.x,positionTileXY.y,12,true).then(function(data){
 			mesh1(data);
 		});
-		longitude = longitude + tile.distanceCoordinate;
 	}
 	
 	function getTile(positionTileXY){
@@ -107,7 +108,7 @@
 			- Cambiamos las coordenadas gráficas
 			- loadedTerrainProvider();
 		*/
-		latitude = latitude + tile.distanceCoordinate;
-		meshPosX = meshPosX + 60; meshPosX = meshPosX - 30; meshPosZ = meshPosZ - 25;
+		latitude = latitude - tile.distanceCoordinate;
+		meshPosX = meshPosX + 33;
 		loadedTerrainProvider();
 	}
