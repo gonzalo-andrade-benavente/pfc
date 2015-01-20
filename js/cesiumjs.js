@@ -1,4 +1,4 @@
-	var latitude = -2.002, longitude = 43.314, tile;
+	var latitude = 43.314, longitude = -2.002, tile;
 	var meshPosX = meshPosY = meshPosZ = 0;
 	//camera.position.x = 50;
 	//camera.position.y = 20;
@@ -88,12 +88,26 @@
 			//console.log(facesQuantized[i] +","+facesQuantized[i+1]+","+ facesQuantized[i+2]);
 		}
 		//geometry.computeBoundingSphere();
-		mesh = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial( {wireframe : true}) );
+		var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true } );
+		mesh = new THREE.Mesh( geometry, material );
 		//mesh.rotation.y = -0.5;
 		//mesh.rotation.x = -1.3;
 		//mesh.position.set(meshPosX, -50, 0);
+		mesh.rotation.x =  Math.PI / 180 * (-90);
 		mesh.position.set(meshPosX, meshPosY, meshPosZ);
 		//mesh.computeBoundingBox();
 		//console.log(mesh.boundingBox);
 		scene.add(mesh);
+	}
+	/*
+		FUNCIÓN CREA MAPA 4 REGIONES.
+	*/
+	function createMap(action) {
+		/*	- Obtención de otro punto central al partir del inicial.
+			- Cambiamos las coordenadas gráficas
+			- loadedTerrainProvider();
+		*/
+		latitude = latitude + tile.distanceCoordinate;
+		meshPosX = meshPosX + 60; meshPosX = meshPosX - 30; meshPosZ = meshPosZ - 25;
+		loadedTerrainProvider();
 	}
