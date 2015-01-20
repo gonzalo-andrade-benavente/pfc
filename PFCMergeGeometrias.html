@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title> PFC 3D - merge geometrias</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #f0f0f0;
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+
+	<script type="text/javascript" src="threeJS/js/libs/stats.min.js">//Estado</script> 
+	<script type="text/javascript" src="threeJS/build/three.js"></script>
+	<script type="text/javascript" src="threeJS/js/controls/TrackballControls.js">//Estado</script>
+
+		<script>
+
+			var container, stats;
+			var camera, controls, scene, projector, renderer;
+			var plane;
+			var mesh;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				scene = new THREE.Scene();
+				scene.add( new THREE.AmbientLight( 0x505050 ) );
+				
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera.position.set(0,250,650);
+				camera.lookAt(scene.position);
+
+				controls = new THREE.TrackballControls( camera );
+				controls.rotateSpeed = 1.0;
+				controls.zoomSpeed = 1.2;
+				controls.panSpeed = 0.8;
+				controls.noZoom = false;
+				controls.noPan = false;
+				controls.staticMoving = true;
+				controls.dynamicDampingFactor = 0.3;
+
+				var light = new THREE.SpotLight( 0xffffff, 1.5 );
+				light.position.set( 0, 500, 2000 );
+				light.castShadow = true;
+
+				light.shadowCameraNear = 200;
+				light.shadowCameraFar = camera.far;
+				light.shadowCameraFov = 50;
+
+				light.shadowBias = -0.00022;
+				light.shadowDarkness = 0.5;
+
+				light.shadowMapWidth = 2048;
+				light.shadowMapHeight = 2048;
+
+				scene.add( light );
+				
+				var faceMat = new THREE.MeshBasicMaterial({color: 0x888888,side: THREE.DoubleSide});
+				var wireMat = new THREE.MeshBasicMaterial({color:0xaaaaaa,wireframe:true,transparent:true});
+				var multiMat = [faceMat ,wireMat];
+
+				var floor= THREE.SceneUtils.createMultiMaterialObject(new THREE.PlaneGeometry(1000, 1000, 10, 10),multiMat);
+	
+				floor.rotation.x = Math.PI / 2;
+				scene.add( floor );
+
+				projector = new THREE.Projector();
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setClearColor( 0xf0f0f0 );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.sortObjects = false;
+
+				renderer.shadowMapEnabled = true;
+				renderer.shadowMapType = THREE.PCFShadowMap;
+
+				container.appendChild( renderer.domElement );
+
+				var info = document.createElement( 'div' );
+				info.style.position = 'absolute';
+				info.style.top = '10px';
+				info.style.width = '100%';
+				info.style.textAlign = 'center';
+				info.innerHTML = "webGL three.js merge geometrias."
+				container.appendChild( info );
+
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0px';
+				container.appendChild( stats.domElement );
+				
+				/*----------------------------------------------------------------
+				----------------------GEOMETRIAS ---------------------------------
+				------------------------------------------------------------------*/
+				var shape1 = new THREE.Mesh( new THREE.BoxGeometry(100,100,100,5,5,5));
+				var shape2 = new THREE.Mesh( new THREE.BoxGeometry(100,100,100,5,5,5));
+				shape1.position.x=60;
+				shape1.position.x=-60;
+				shape2.position.x=30;
+				shape2.rotation.z = Math.PI / 3;
+				shape2.rotation.y = Math.PI / 4;
+				shape2.rotation.x = Math.PI / 5;
+				
+
+				var combine = new THREE.Geometry();
+				// merging with Geometry Utils
+				// Actualizar Matriz geometría.
+				shape1.updateMatrix(); shape2.updateMatrix();
+				combine.merge(shape1.geometry, shape1.matrix);
+				combine.merge(shape2.geometry, shape2.matrix);
+				//THREE.GeometryUtils.merge( combine, shape1 );
+				//THREE.GeometryUtils.merge( combine, shape2 );
+				mesh = new THREE.Mesh( combine, new THREE.MeshNormalMaterial({ shading:THREE.FlatShading }));
+				mesh.position.y= 80;
+				mesh.position.x=-100;
+				scene.add( mesh );
+				
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+
+			function animate() {
+				requestAnimationFrame( animate );
+				render();
+				stats.update();
+			}
+
+			function render() {
+				controls.update();
+				renderer.render( scene, camera );
+			}
+
+		</script>
+
+	</body>
+</html>

@@ -113,9 +113,19 @@
 	}
 	
 	function merge(){
-		console.log(tiles.length);
-	
-	
+		var geometry = new THREE.Geometry();
+		var mesh, geo;
+		var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true } );
+		for (var i=0; i<= tiles.length ; i++){
+			geo = tiles[i];
+			mesh = new THREE.Mesh(geo,material);
+			mesh.updateMatrix();
+			geometry.merge(mesh.geometry, mesh.matrix);
+		}
+		//var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true } );
+		//mesh = new THREE.Mesh( geometry, material );
+		//scene.add(mesh);
+		console.log("[PFC]: Mesh final creado");
 	}
 	
 	/*
