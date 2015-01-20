@@ -9,7 +9,7 @@
 	function loadedTerrainProvider(x, y, z){
 		var positionLonLat = Cesium.Cartographic.fromDegrees(longitude, latitude);
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
-		console.log(positionTileXY);
+		//console.log(positionTileXY);
 		tile = getTile(positionTileXY);
 		aCesiumTerrainProvider.requestTileGeometry(positionTileXY.x,positionTileXY.y,12,true).then(function(data){
 			mesh1(data, x, y, z);
@@ -110,8 +110,11 @@
 		//loadedTerrainProvider();
 		//longitude = longitudeOrigin;
 		//meshPosX = 0;
-		tileToMesh(-33, 0, 0, latitude, longitudeOrigin - tile.distanceCoordinate);
-		tileToMesh(33, 0, 0, latitude, longitudeOrigin + tile.distanceCoordinate);
+		//tileToMesh(-32, 0, 0, latitude, longitudeOrigin - tile.distanceCoordinate);
+		tileToMesh(32, 0, 0, latitude, longitudeOrigin + tile.distanceCoordinate);
+		tileToMesh(0, 0, 32, latitudeOrigin - tile.distanceCoordinate, longitudeOrigin);
+		//tileToMesh(-32, 0, 32, latitudeOrigin - tile.distanceCoordinate, longitudeOrigin - tile.distanceCoordinate);
+		tileToMesh(32, 0, 32, latitudeOrigin - tile.distanceCoordinate, longitudeOrigin + tile.distanceCoordinate);
 		//tileToMesh(meshPosX + 66, 0, 0, latitude, longitudeOrigin + tile.distanceCoordinate);
 	}
 	
@@ -120,3 +123,14 @@
 		longitude = lon;
 		loadedTerrainProvider(x, y, z);
 	}
+	
+	
+	/*
+		- Tener coordenadas de latitud y longitud, tener en cuenta la ruta gpx.
+		- Obtener los tiles necesario para la ruta en CesiumJS.
+		- Crear cada tile y unirlos todos en un mesh.
+		- Añadir imagen de MapBox al mesh creado y ver si coincide o no.
+		- Añadir el mesh creado a la escena.
+	*/
+	
+	
