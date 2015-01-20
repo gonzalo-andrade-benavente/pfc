@@ -1,6 +1,5 @@
 	var latitude = 43.314, longitude = -2.002, tile;
 	var meshPosX = meshPosY = meshPosZ = 0;
-	var tileX, tileY;
 	//camera.position.x = 50;
 	//camera.position.y = 20;
 	var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
