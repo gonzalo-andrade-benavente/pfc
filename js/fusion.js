@@ -6,7 +6,6 @@
 	de tiles que debemos obtener.
 
 */
-var tiles = [];
 function merge(){
 	
 	

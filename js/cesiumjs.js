@@ -1,4 +1,4 @@
-	var latitude = 43.314, longitude = -2.002, tile;
+	var latitude = 43.314, longitude = -2.002, tile, tiles=[];
 	var latitudeOrigin = 43.314, longitudeOrigin = -2.002; 
 	//camera.position.x = 50;
 	//camera.position.y = 20;
@@ -55,10 +55,10 @@
 	*/
 	function requestTilesWhenReady() {
 		if (aCesiumTerrainProvider.ready) {
-			console.log("Terrain Provider ready");
-			loadedTerrainProvider(0, 0, 0);
+			console.log("[PFC]:Terrain Provider ready");
+			//loadedTerrainProvider(0, 0, 0);
 		} else {
-			console.log("Waiting a Terrain Provider is ready");
+			console.log("[PFC]:Waiting a Terrain Provider is ready");
 			setTimeout(requestTilesWhenReady, 10);
 		}
 	}
@@ -91,31 +91,19 @@
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.rotation.x =  Math.PI / 180 * (-90);
 		mesh.position.set(x, y, z);
-		scene.add(mesh);
+		tiles.push(mesh);
+		//scene.add(mesh);
 	}
 	/*
 		FUNCIÓN CREA MAPA 4 REGIONES.
 	*/
 	function createMap(action) {
-		/*	- Obtención de otro punto central al partir del inicial.
-			- Cambiamos las coordenadas gráficas
-			- loadedTerrainProvider();
-		*/
-		/*
-		latitude = latitude - tile.distanceCoordinate;
-		meshPosX = meshPosX + 33;
-		*/
-		//longitude = longitude - tile.distanceCoordinate;
-		//meshPosX = meshPosX - 33;
-		//loadedTerrainProvider();
-		//longitude = longitudeOrigin;
-		//meshPosX = 0;
-		//tileToMesh(-32, 0, 0, latitude, longitudeOrigin - tile.distanceCoordinate);
+		tileToMesh(0, 0, 0, latitude, longitude);
 		tileToMesh(32, 0, 0, latitude, longitudeOrigin + tile.distanceCoordinate);
 		tileToMesh(0, 0, 32, latitudeOrigin - tile.distanceCoordinate, longitudeOrigin);
 		//tileToMesh(-32, 0, 32, latitudeOrigin - tile.distanceCoordinate, longitudeOrigin - tile.distanceCoordinate);
 		tileToMesh(32, 0, 32, latitudeOrigin - tile.distanceCoordinate, longitudeOrigin + tile.distanceCoordinate);
-		//tileToMesh(meshPosX + 66, 0, 0, latitude, longitudeOrigin + tile.distanceCoordinate);
+		console.log("[PFC]:Mesh creados correctamente.");
 	}
 	
 	function tileToMesh(x, y, z, lat, lon){
@@ -124,6 +112,11 @@
 		loadedTerrainProvider(x, y, z);
 	}
 	
+	function merge(){
+		console.log(tiles.length);
+	
+	
+	}
 	
 	/*
 		- Tener coordenadas de latitud y longitud, tener en cuenta la ruta gpx.

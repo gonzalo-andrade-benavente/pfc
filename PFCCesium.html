@@ -11,7 +11,7 @@
 	<script type="text/javascript" src="js/threejs.js">	//Libreria mía.	</script>
 	<script type="text/javascript" src="js/Cesium.js"> 	//Cesium		</script>
 	<script type="text/javascript" src="js/cesiumjs.js">	//Libreria mía.	</script>
-	<script type="text/javascript" src="js/fusion.js">	//Libreria mía.	</script> 
+	<!-- <script type="text/javascript" src="js/fusion.js">	//Libreria mía.	</script> -->
 	
 	<!-- mapBox -->
 	<link href='https://mapbox.com/base/latest/base.css?v1.0' rel='stylesheet' />
@@ -25,6 +25,7 @@
 <body onload="load()">
 	<div> 
 		<input type='button' id="tile" class='button' value='Create Map' onclick='createMap()' /> 
+		<input type='button' id="merge" class='button' value='Merge' onclick='merge()' />
 	</div>
 	<div id="container"><!--Aquí ira el renderizado.--></div>
 </body>
