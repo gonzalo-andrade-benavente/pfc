@@ -1,18 +1,18 @@
 	var latitude = 43.314, longitude = -2.002, tile;
-	var meshPosX = meshPosY = meshPosZ = 0;
+	var latitudeOrigin = 43.314, longitudeOrigin = -2.002; 
 	//camera.position.x = 50;
 	//camera.position.y = 20;
 	var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
 		url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
 	});
 	
-	function loadedTerrainProvider(){
+	function loadedTerrainProvider(x, y, z){
 		var positionLonLat = Cesium.Cartographic.fromDegrees(longitude, latitude);
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
 		console.log(positionTileXY);
 		tile = getTile(positionTileXY);
 		aCesiumTerrainProvider.requestTileGeometry(positionTileXY.x,positionTileXY.y,12,true).then(function(data){
-			mesh1(data);
+			mesh1(data, x, y, z);
 		});
 	}
 	
@@ -56,7 +56,7 @@
 	function requestTilesWhenReady() {
 		if (aCesiumTerrainProvider.ready) {
 			console.log("Terrain Provider ready");
-			loadedTerrainProvider();
+			loadedTerrainProvider(0, 0, 0);
 		} else {
 			console.log("Waiting a Terrain Provider is ready");
 			setTimeout(requestTilesWhenReady, 10);
@@ -71,32 +71,26 @@
 		FUNCIÓN CREACIÓN DE MESH VERTICES + DATOS
 		######## ERROR #####
 	*/
-	function mesh1(cesium){
+	function mesh1(cesium, x, y, z){
 		var mesh;
 		var verticesQuantized, facesQuantized, geometry, mesh;
 		verticesQuantized = cesium._quantizedVertices;
-		var x = cesium._uValues, 
-			y = cesium._vValues,
+		var xx = cesium._uValues, 
+			yy = cesium._vValues,
 			heights = cesium._heightValues;
 		facesQuantized = cesium._indices;
 		var geometry = new THREE.Geometry();
 		for(var i=0; i < heights.length; i++){
-			geometry.vertices.push( new THREE.Vector3(Math.round(x[i]/1000),Math.round(y[i]/1000),Math.round(heights[i]/1000)));
+			geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/1000),Math.round(yy[i]/1000),Math.round(heights[i]/1000)));
 		}
 		for(var i=0; i < facesQuantized.length; i=i+3){
 			geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 			//console.log(facesQuantized[i] +","+facesQuantized[i+1]+","+ facesQuantized[i+2]);
 		}
-		//geometry.computeBoundingSphere();
 		var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true } );
 		mesh = new THREE.Mesh( geometry, material );
-		//mesh.rotation.y = -0.5;
-		//mesh.rotation.x = -1.3;
-		//mesh.position.set(meshPosX, -50, 0);
 		mesh.rotation.x =  Math.PI / 180 * (-90);
-		mesh.position.set(meshPosX, meshPosY, meshPosZ);
-		//mesh.computeBoundingBox();
-		//console.log(mesh.boundingBox);
+		mesh.position.set(x, y, z);
 		scene.add(mesh);
 	}
 	/*
@@ -107,7 +101,22 @@
 			- Cambiamos las coordenadas gráficas
 			- loadedTerrainProvider();
 		*/
+		/*
 		latitude = latitude - tile.distanceCoordinate;
 		meshPosX = meshPosX + 33;
-		loadedTerrainProvider();
+		*/
+		//longitude = longitude - tile.distanceCoordinate;
+		//meshPosX = meshPosX - 33;
+		//loadedTerrainProvider();
+		//longitude = longitudeOrigin;
+		//meshPosX = 0;
+		tileToMesh(-33, 0, 0, latitude, longitudeOrigin - tile.distanceCoordinate);
+		tileToMesh(33, 0, 0, latitude, longitudeOrigin + tile.distanceCoordinate);
+		//tileToMesh(meshPosX + 66, 0, 0, latitude, longitudeOrigin + tile.distanceCoordinate);
+	}
+	
+	function tileToMesh(x, y, z, lat, lon){
+		latitude = lat;
+		longitude = lon;
+		loadedTerrainProvider(x, y, z);
 	}
