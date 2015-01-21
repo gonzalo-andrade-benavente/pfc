@@ -12,7 +12,7 @@
 		//console.log(positionTileXY);
 		tile = getTile(positionTileXY);
 		aCesiumTerrainProvider.requestTileGeometry(positionTileXY.x,positionTileXY.y,12,true).then(function(data){
-			mesh1(data, x, y, z);
+			mesh(data, x, y, z);
 		});
 	}
 	
@@ -55,10 +55,9 @@
 	*/
 	function requestTilesWhenReady() {
 		if (aCesiumTerrainProvider.ready) {
-			console.log("[PFC]:Terrain Provider ready");
-			//loadedTerrainProvider(0, 0, 0);
+			console.log("[PFC]:Server Terrain Provider ready");			
 		} else {
-			console.log("[PFC]:Waiting a Terrain Provider is ready");
+			//console.log("[PFC]:Waiting a Terrain Provider is ready");
 			setTimeout(requestTilesWhenReady, 10);
 		}
 	}
@@ -71,9 +70,9 @@
 		FUNCIÓN CREACIÓN DE MESH VERTICES + DATOS
 		######## ERROR #####
 	*/
-	function mesh1(cesium, x, y, z){
-		var mesh;
-		var verticesQuantized, facesQuantized, geometry, mesh;
+	function mesh(cesium, x, y, z){
+		var mesh_aux;
+		var verticesQuantized, facesQuantized, geometry;
 		verticesQuantized = cesium._quantizedVertices;
 		var xx = cesium._uValues, 
 			yy = cesium._vValues,
@@ -88,10 +87,10 @@
 			//console.log(facesQuantized[i] +","+facesQuantized[i+1]+","+ facesQuantized[i+2]);
 		}
 		var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true } );
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.rotation.x =  Math.PI / 180 * (-90);
-		mesh.position.set(x, y, z);
-		tiles.push(mesh);
+		mesh_aux = new THREE.Mesh( geometry, material );
+		mesh_aux.rotation.x =  Math.PI / 180 * (-90);
+		mesh_aux.position.set(x, y, z);
+		tiles.push(mesh_aux);
 		//scene.add(mesh);
 	}
 	/*
@@ -103,6 +102,7 @@
 		tileToMesh(0, 0, 32, latitudeOrigin - tile.distanceCoordinate, longitudeOrigin);
 		//tileToMesh(-32, 0, 32, latitudeOrigin - tile.distanceCoordinate, longitudeOrigin - tile.distanceCoordinate);
 		tileToMesh(32, 0, 32, latitudeOrigin - tile.distanceCoordinate, longitudeOrigin + tile.distanceCoordinate);
+		console.log("[PFC]:Array de mesh creados.");
 	}
 	/*
 		FUNCIÓN QUE A PARTIR DE UNA LATITUD Y LONGITUD(VAR GLOBALES)
@@ -119,16 +119,17 @@
 	*/
 	function merge(){
 		var geometry = new THREE.Geometry();
-		var mesh, geo;
+		var mesh_aux, geo;
 		for (var i=0; i< tiles.length ; i++){
 			geo = tiles[i];
 			geo.updateMatrix();
 			geometry.merge(geo.geometry, geo.matrix);
 		}
 		var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true } );
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set(0, 0, 0);
-		scene.add(mesh);
+		mesh_aux = new THREE.Mesh( geometry, material );
+		mesh_aux.position.set(-30, -10, 0);
+		scene.add(mesh_aux);
+		console.log("[PFC]: Mesh creado con merge().");
 	}
 	
 	/*
