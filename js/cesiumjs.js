@@ -137,8 +137,7 @@
 	}
 	
 	function addBox() {
-		var geometry = new THREE.BoxGeometry(30, 30, 30);
-		console.log(geometry);
+		var geometry = new THREE.BoxGeometry(5, 5, 5, 5);
 		var texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
 		var material= new THREE.MeshBasicMaterial( {wireframe:false, map:texture} );
 		var mesh = new THREE.Mesh(geometry, material);
@@ -147,25 +146,14 @@
 	
 	function addGeometry() {
 		var geometry = new THREE.Geometry();
-			geometry.vertices.push(new THREE.Vector3(0, 0, 0));
-			geometry.vertices.push(new THREE.Vector3(30, 0, 0));
-			geometry.vertices.push(new THREE.Vector3(0, -30, 0));
-			geometry.vertices.push(new THREE.Vector3(30, -30, 0));
-			
-			geometry.faces.push(new THREE.Face3(0,2,1));
-			geometry.faces.push(new THREE.Face3(2,3,1));
-			
-			geometry.faceVertexUvs[0].push([new THREE.Vector2(0, 1), new THREE.Vector2(0, 0), new THREE.Vector2(1, 1)]);
-			geometry.faceVertexUvs[0].push([new THREE.Vector2(0, 0), new THREE.Vector2(1, 0), new THREE.Vector2(1, 1)]);
-			
-			/*
-			geometry.faceVertexUvs[1].push([
-				new THREE.Vector2(0, 0),
-				new THREE.Vector2(0, 1),
-				new THREE.Vector2(1, 0),
-			]);
-			*/
-		console.log(geometry);
+		geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+		geometry.vertices.push(new THREE.Vector3(30, 0, 0));
+		geometry.vertices.push(new THREE.Vector3(0, -30, 0));
+		geometry.vertices.push(new THREE.Vector3(30, -30, 0));
+		geometry.faces.push(new THREE.Face3(0,2,1));
+		geometry.faces.push(new THREE.Face3(2,3,1));
+		geometry.faceVertexUvs[0].push([new THREE.Vector2(0, 1), new THREE.Vector2(0, 0), new THREE.Vector2(1, 1)]);
+		geometry.faceVertexUvs[0].push([new THREE.Vector2(0, 0), new THREE.Vector2(1, 0), new THREE.Vector2(1, 1)]);	
 		var texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
 		var material= new THREE.MeshBasicMaterial( {wireframe:false, map:texture} );
 		//var material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true} );
