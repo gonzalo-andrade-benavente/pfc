@@ -152,7 +152,7 @@
 		var geometry = new THREE.Geometry();
 		geometry.vertices.push(new THREE.Vector3(0, 0, 0));
 		geometry.vertices.push(new THREE.Vector3(60, 0, 0));
-		geometry.vertices.push(new THREE.Vector3(0, -333, ));
+		geometry.vertices.push(new THREE.Vector3(0, -333, 0));
 		geometry.vertices.push(new THREE.Vector3(18, -30, 0));
 		geometry.faces.push(new THREE.Face3(0,2,1));
 		geometry.faces.push(new THREE.Face3(2,3,1));
