@@ -6,7 +6,7 @@
 		url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
 	});
 	
-	function loadedTerrainProvider(x, y, z){
+	function loadedTerrainProvider(x, y, z) {
 		var positionLonLat = Cesium.Cartographic.fromDegrees(longitude, latitude);
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
 		//console.log(positionTileXY);
@@ -16,7 +16,7 @@
 		});
 	}
 	
-	function getTile(positionTileXY){
+	function getTile(positionTileXY) {
 		var myTile, sw, se, nw, ne;;
 		var rectangleTileXY = aCesiumTerrainProvider.tilingScheme.tileXYToRectangle(positionTileXY.x, positionTileXY.y, 12);
 		sw = new Coordinate(radianToDegrees(Cesium.Rectangle.southwest(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.southwest(rectangleTileXY).longitude));
@@ -29,7 +29,7 @@
 	/*
 		CLASE TILE
 	*/
-	function Tile(northeast, southeast, northwest, southwest){
+	function Tile(northeast, southeast, northwest, southwest) {
 		this.northeast = northeast;
 		this.southeast = southeast;
 		this.northwest = northwest;
@@ -40,14 +40,14 @@
 	/*
 		CLASE COORDENADA
 	*/
-	function Coordinate(latitude, longitude){
+	function Coordinate(latitude, longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
 	/*
 		FUNCIÓN TRANSFORMA RADIANES A GRADOS
 	*/
-	function radianToDegrees(radians){
+	function radianToDegrees(radians) {
 		return (radians * 180)/ Math.PI;	
 	}
 	/*
@@ -70,7 +70,7 @@
 		FUNCIÓN CREACIÓN DE MESH VERTICES + DATOS
 		######## ERROR #####
 	*/
-	function mesh(cesium, x, y, z){
+	function mesh(cesium, x, y, z) {
 		var mesh_aux;
 		var verticesQuantized, facesQuantized, geometry;
 		verticesQuantized = cesium._quantizedVertices;
@@ -117,7 +117,7 @@
 		FUNCIÓN QUE CREA UN MESH A PARTIR DE VARIOS
 		CON LA FUNCION "MERGE" DE GOEMETRY.
 	*/
-	function merge(){
+	function merge() {
 		var geometry = new THREE.Geometry();
 		var mesh_aux, geo;
 		for (var i=0; i< tiles.length ; i++){
@@ -125,6 +125,7 @@
 			geo.updateMatrix();
 			geometry.merge(geo.geometry, geo.matrix);
 		}
+		//geometry.computeTangents();
 		var texture, material;
 		texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
 		material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true, map:texture} );
@@ -135,12 +136,44 @@
 		console.log("[PFC]: Mesh creado con merge().");
 	}
 	
-	function addBox(){
+	function addBox() {
 		var geometry = new THREE.BoxGeometry(30, 30, 30);
-		texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
+		var texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
 		var material= new THREE.MeshBasicMaterial( {wireframe:false, map:texture} );
 		var mesh = new THREE.Mesh(geometry, material);
 		scene.add(mesh);
+	}
+	
+	function addGeometry() {
+		var geometry = new THREE.Geometry();
+			geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+			//geometry.vertices.push(new THREE.Vector3(30, 0, 0));
+			geometry.vertices.push(new THREE.Vector3(0, -30, 0));
+			geometry.vertices.push(new THREE.Vector3(30, -30, 0));
+			
+			geometry.faces.push(new THREE.Face3(0,1,2));
+			//geometry.faces.push(new THREE.Face3(0,2,3));
+			
+			
+			geometry.faceVertexUvs[0].push([
+				new THREE.Vector2(0, 0),
+				new THREE.Vector2(0, 1),
+				new THREE.Vector2(1, 0),
+			]);
+			
+			/*
+			geometry.faceVertexUvs[1].push([
+				new THREE.Vector2(0, 0),
+				new THREE.Vector2(0, 1),
+				new THREE.Vector2(1, 0),
+			]);
+			*/
+			
+		console.log(geometry);
+		var texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
+		var material= new THREE.MeshBasicMaterial( {wireframe:false, map:texture} );
+		//var material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true} );
+		scene.add(new THREE.Mesh(geometry, material));
 	}
 	
 	/*
