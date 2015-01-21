@@ -97,35 +97,38 @@
 	/*
 		FUNCIÓN CREA MAPA 4 REGIONES.
 	*/
-	function createMap(action) {
+	function createMap() {
 		tileToMesh(0, 0, 0, latitude, longitude);
 		tileToMesh(32, 0, 0, latitude, longitudeOrigin + tile.distanceCoordinate);
 		tileToMesh(0, 0, 32, latitudeOrigin - tile.distanceCoordinate, longitudeOrigin);
 		//tileToMesh(-32, 0, 32, latitudeOrigin - tile.distanceCoordinate, longitudeOrigin - tile.distanceCoordinate);
 		tileToMesh(32, 0, 32, latitudeOrigin - tile.distanceCoordinate, longitudeOrigin + tile.distanceCoordinate);
-		console.log("[PFC]:Mesh creados correctamente.");
 	}
-	
+	/*
+		FUNCIÓN QUE A PARTIR DE UNA LATITUD Y LONGITUD(VAR GLOBALES)
+		Y LAS POSICIONES EN LA PANTALLA, CREA EL MESH.
+	*/
 	function tileToMesh(x, y, z, lat, lon){
 		latitude = lat;
 		longitude = lon;
 		loadedTerrainProvider(x, y, z);
 	}
-	
-	
+	/*
+		FUNCIÓN QUE CREA UN MESH A PARTIR DE VARIOS
+		CON LA FUNCION "MERGE" DE GOEMETRY.
+	*/
 	function merge(){
 		var geometry = new THREE.Geometry();
 		var mesh, geo;
-		var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true } );
 		for (var i=0; i< tiles.length ; i++){
 			geo = tiles[i];
-			//geo.updateMatrix();
+			geo.updateMatrix();
 			geometry.merge(geo.geometry, geo.matrix);
 		}
 		var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true } );
 		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set(0, 0, 0);
 		scene.add(mesh);
-		console.log("[PFC]: Mesh final creado");
 	}
 	
 	/*
