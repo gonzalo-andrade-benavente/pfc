@@ -125,11 +125,22 @@
 			geo.updateMatrix();
 			geometry.merge(geo.geometry, geo.matrix);
 		}
-		var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true } );
+		var texture, material;
+		texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
+		material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true, map:texture} );
+		//material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true} );
 		mesh_aux = new THREE.Mesh( geometry, material );
 		mesh_aux.position.set(-30, -10, 0);
 		scene.add(mesh_aux);
 		console.log("[PFC]: Mesh creado con merge().");
+	}
+	
+	function addBox(){
+		var geometry = new THREE.BoxGeometry(30, 30, 30);
+		texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
+		var material= new THREE.MeshBasicMaterial( {wireframe:false, map:texture} );
+		var mesh = new THREE.Mesh(geometry, material);
+		scene.add(mesh);
 	}
 	
 	/*
