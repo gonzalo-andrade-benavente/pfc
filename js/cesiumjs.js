@@ -119,17 +119,20 @@
 	*/
 	function merge() {
 		var geometry = new THREE.Geometry();
-		var mesh_aux, geo;
+		var mesh_aux, geo, material, texture;
 		for (var i=0; i< tiles.length ; i++){
 			geo = tiles[i];
 			geo.updateMatrix();
 			geometry.merge(geo.geometry, geo.matrix);
 		}
-		//geometry.computeTangents();
-		var texture, material;
-		texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
-		material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true, map:texture} );
-		//material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true} );
+		console.log(geometry);
+		if (geometry.faceVertexUvs[0].length == geometry.faces.length) {
+			texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
+			material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true, map:texture} );
+		} else {
+			material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true} );
+		}
+		
 		mesh_aux = new THREE.Mesh( geometry, material );
 		mesh_aux.position.set(-30, -10, 0);
 		scene.add(mesh_aux);
@@ -137,19 +140,20 @@
 	}
 	
 	function addBox() {
-		var geometry = new THREE.BoxGeometry(5, 5, 5, 5);
+		var geometry = new THREE.BoxGeometry(3, 3, 3, 3);
 		var texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
 		var material= new THREE.MeshBasicMaterial( {wireframe:false, map:texture} );
 		var mesh = new THREE.Mesh(geometry, material);
+		console.log(geometry);
 		scene.add(mesh);
 	}
 	
 	function addGeometry() {
 		var geometry = new THREE.Geometry();
 		geometry.vertices.push(new THREE.Vector3(0, 0, 0));
-		geometry.vertices.push(new THREE.Vector3(30, 0, 0));
-		geometry.vertices.push(new THREE.Vector3(0, -30, 0));
-		geometry.vertices.push(new THREE.Vector3(30, -30, 0));
+		geometry.vertices.push(new THREE.Vector3(60, 0, 0));
+		geometry.vertices.push(new THREE.Vector3(0, -333, ));
+		geometry.vertices.push(new THREE.Vector3(18, -30, 0));
 		geometry.faces.push(new THREE.Face3(0,2,1));
 		geometry.faces.push(new THREE.Face3(2,3,1));
 		geometry.faceVertexUvs[0].push([new THREE.Vector2(0, 1), new THREE.Vector2(0, 0), new THREE.Vector2(1, 1)]);
@@ -157,6 +161,21 @@
 		var texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
 		var material= new THREE.MeshBasicMaterial( {wireframe:false, map:texture} );
 		//var material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true} );
+		scene.add(new THREE.Mesh(geometry, material));
+		console.log(geometry)
+	}
+	
+	function addPlane() {
+		var geometry = new THREE.PlaneGeometry(30, 30, 30);
+		//var material = new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true} );
+		var texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
+		var material= new THREE.MeshBasicMaterial( {wireframe:false, map:texture} );
+		
+		for(var i=0; i<geometry.vertices.length; i++){
+			if (i == 10)
+				geometry.vertices[i].z=10;
+		}
+		console.log(geometry);
 		scene.add(new THREE.Mesh(geometry, material));
 	}
 	
