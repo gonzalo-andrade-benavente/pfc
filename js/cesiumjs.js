@@ -130,7 +130,7 @@
 			texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
 			material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true, map:texture} );
 		} else {
-			material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true} );
+			material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:false} );
 		}
 		
 		mesh_aux = new THREE.Mesh( geometry, material );
