@@ -78,6 +78,7 @@
 			yy = cesium._vValues,
 			heights = cesium._heightValues;
 		facesQuantized = cesium._indices;
+		console.log(cesium);
 		var geometry = new THREE.Geometry();
 		for(var i=0; i < heights.length; i++){
 			geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/1000),Math.round(yy[i]/1000),Math.round(heights[i]/1000)));
@@ -125,18 +126,33 @@
 			geo.updateMatrix();
 			geometry.merge(geo.geometry, geo.matrix);
 		}
-		console.log(geometry);
+		geometry = addFaceVertexUvs(geometry);
 		if (geometry.faceVertexUvs[0].length == geometry.faces.length) {
 			texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
-			material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true, map:texture} );
+			material= new THREE.MeshBasicMaterial( {wireframe:false, map:texture} );
 		} else {
-			material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:false} );
+			material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true} );
 		}
 		
 		mesh_aux = new THREE.Mesh( geometry, material );
 		mesh_aux.position.set(-30, -10, 0);
 		scene.add(mesh_aux);
 		console.log("[PFC]: Mesh creado con merge().");
+	}
+	/* 
+		FUNCIÓN QUE CREA LOS FACEVERTEX PARA PODER
+		APLICAR LA TEXTURA A LA GEOMETRÍA CREADA.
+	*/
+	function addFaceVertexUvs(geometry){
+		var rango;
+		//console.log(geometry.faces.length); 1247
+		//geometry.computeVertexNormals();
+		//for(var i=0; i < geometry.faces.length; i++)
+			//geometry.faceVertexUvs[0].push([new THREE.Vector2(0, 1), new THREE.Vector2(0, 0), new THREE.Vector2(1, 1)]);	
+		//geometry.computeTangents();
+		console.log(geometry);
+		//rango = (1/geometry.faces.length);
+		return geometry;
 	}
 	
 	function addBox() {
@@ -166,7 +182,7 @@
 	}
 	
 	function addPlane() {
-		var geometry = new THREE.PlaneGeometry(30, 30, 30);
+		var geometry = new THREE.PlaneGeometry(4, 4, 2, 2);
 		//var material = new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true} );
 		var texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
 		var material= new THREE.MeshBasicMaterial( {wireframe:false, map:texture} );
