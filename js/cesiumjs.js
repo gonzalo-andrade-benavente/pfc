@@ -78,7 +78,6 @@
 			yy = cesium._vValues,
 			heights = cesium._heightValues;
 		facesQuantized = cesium._indices;
-		console.log(cesium);
 		var geometry = new THREE.Geometry();
 		for(var i=0; i < heights.length; i++){
 			geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/1000),Math.round(yy[i]/1000),Math.round(heights[i]/1000)));
@@ -144,14 +143,24 @@
 		APLICAR LA TEXTURA A LA GEOMETRÍA CREADA.
 	*/
 	function addFaceVertexUvs(geometry){
-		var rango;
-		//console.log(geometry.faces.length); 1247
-		//geometry.computeVertexNormals();
-		//for(var i=0; i < geometry.faces.length; i++)
-			//geometry.faceVertexUvs[0].push([new THREE.Vector2(0, 1), new THREE.Vector2(0, 0), new THREE.Vector2(1, 1)]);	
-		//geometry.computeTangents();
+		geometry.computeBoundingBox();
+		var max = geometry.boundingBox.max,
+			min = geometry.boundingBox.min;
+		var offset = new THREE.Vector2(0 - min.x, 0 - min.y);
+		var range = new THREE.Vector2(max.x - min.x, max.y - min.y);
+		geometry.faceVertexUvs[0] = [];
+		for (i = 0; i < geometry.faces.length ; i++) {
+			var v1 = geometry.vertices[geometry.faces[i].a], v2 = geometry.vertices[geometry.faces[i].b], v3 = geometry.vertices[geometry.faces[i].c];
+			geometry.faceVertexUvs[0].push(
+			[
+				new THREE.Vector2((v1.x + offset.x)/range.x ,(v1.y + offset.y)/range.y),
+				new THREE.Vector2((v2.x + offset.x)/range.x ,(v2.y + offset.y)/range.y),
+				new THREE.Vector2((v3.x + offset.x)/range.x ,(v3.y + offset.y)/range.y)
+			]);
+
+		}
+		geometry.uvsNeedUpdate = true;
 		console.log(geometry);
-		//rango = (1/geometry.faces.length);
 		return geometry;
 	}
 	
