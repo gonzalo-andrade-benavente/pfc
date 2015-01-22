@@ -1,4 +1,4 @@
-	var latitude = 43.314, longitude = -2.002, tile, tiles=[];
+	var latitude = 43.314, longitude = -2.002, tile, tiles=[], geometries=[];
 	var latitudeOrigin = 43.314, longitudeOrigin = -2.002; 
 	//camera.position.x = 50;
 	//camera.position.y = 20;
@@ -55,14 +55,15 @@
 	*/
 	function requestTilesWhenReady() {
 		if (aCesiumTerrainProvider.ready) {
-			console.log("[PFC]:Server Terrain Provider ready");			
+			console.log("[PFC]:Server Terrain Provider ready");
+			createMap();
 		} else {
 			//console.log("[PFC]:Waiting a Terrain Provider is ready");
 			setTimeout(requestTilesWhenReady, 10);
 		}
 	}
 	requestTilesWhenReady();
-	
+		
 	//Puede ser que la latitud y longitud estén a réves.
 	//var latitude = -1.643084, longitude = 42.819939;
 	//var lat = -1.9988972, lon = 43.3215343; //Isla de santa clara.
@@ -86,6 +87,7 @@
 			geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 			//console.log(facesQuantized[i] +","+facesQuantized[i+1]+","+ facesQuantized[i+2]);
 		}
+		geometries.push(geometry);
 		var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true } );
 		mesh_aux = new THREE.Mesh( geometry, material );
 		mesh_aux.rotation.x =  Math.PI / 180 * (-90);
@@ -122,7 +124,7 @@
 		var mesh_aux, geo, material, texture;
 		for (var i=0; i< tiles.length ; i++){
 			geo = tiles[i];
-			geo.updateMatrix();
+			//geo.updateMatrix();
 			geometry.merge(geo.geometry, geo.matrix);
 		}
 		geometry = addFaceVertexUvs(geometry);
@@ -138,11 +140,24 @@
 		scene.add(mesh_aux);
 		console.log("[PFC]: Mesh creado con merge().");
 	}
+	
+	function createMesh(geometry){
+		console.log(geometry);
+		geometry = addFaceVertexUvs(geometry);
+		//console.log(geometry);
+		var material, texture;
+		texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
+		//material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true} );
+		material= new THREE.MeshBasicMaterial( {wireframe:false, map:texture} );
+		scene.add(new THREE.Mesh(geometry, material));
+	}
 	/* 
 		FUNCIÓN QUE CREA LOS FACEVERTEX PARA PODER
 		APLICAR LA TEXTURA A LA GEOMETRÍA CREADA.
 	*/
-	function addFaceVertexUvs(geometry){
+	
+	
+	function addFaceVertexUvs(geometry) {
 		geometry.computeBoundingBox();
 		var max = geometry.boundingBox.max,
 			min = geometry.boundingBox.min;
@@ -160,10 +175,10 @@
 
 		}
 		geometry.uvsNeedUpdate = true;
-		console.log(geometry);
+		//geometry.computeTangents();
 		return geometry;
 	}
-	
+		
 	function addBox() {
 		var geometry = new THREE.BoxGeometry(3, 3, 3, 3);
 		var texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
