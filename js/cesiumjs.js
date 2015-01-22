@@ -119,18 +119,21 @@
 		FUNCIÓN QUE CREA UN MESH A PARTIR DE VARIOS
 		CON LA FUNCION "MERGE" DE GOEMETRY.
 	*/
+	
+	
 	function merge() {
 		var geometry = new THREE.Geometry();
-		var mesh_aux, geo, material, texture;
+		var mesh_aux, mesh, material, texture;
 		for (var i=0; i< tiles.length ; i++){
-			geo = tiles[i];
-			//geo.updateMatrix();
-			geometry.merge(geo.geometry, geo.matrix);
+			mesh = tiles[i];
+			mesh.updateMatrix();
+			geometry.merge(mesh.geometry, mesh.matrix);
+			console.log(mesh.material);
 		}
 		geometry = addFaceVertexUvs(geometry);
 		if (geometry.faceVertexUvs[0].length == geometry.faces.length) {
 			texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
-			material= new THREE.MeshBasicMaterial( {wireframe:false, map:texture} );
+			material= new THREE.MeshBasicMaterial( {map:texture} );
 		} else {
 			material= new THREE.MeshBasicMaterial( { color:"rgb(255,0,0)", wireframe:true} );
 		}
@@ -141,9 +144,8 @@
 		console.log("[PFC]: Mesh creado con merge().");
 	}
 	
-	function createMesh(geometry){
-		console.log(geometry);
-		geometry = addFaceVertexUvs(geometry);
+	function createMesh(){
+		geometry = addFaceVertexUvs(geometries[0]);
 		//console.log(geometry);
 		var material, texture;
 		texture = THREE.ImageUtils.loadTexture( "maps/file.jpeg" );
