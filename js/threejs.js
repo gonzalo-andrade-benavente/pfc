@@ -3,7 +3,7 @@
 /* 
 	VARIABLES GLOBALES.
 */
-var container;
+var container, stats;
 var camera, controls, scene, renderer, gui;
 /* 
 	CARGAR SI EL NAVEGADOR ES COMPATIBLE.
@@ -14,10 +14,26 @@ function load() {
 		init();
 	}
 }
+
+function initialStats() {
+	var stat = new Stats();
+	stat.setMode(0); // 0: framepersecundo, 1: milisecond
+	// Align top-left
+	stat.domElement.style.position = 'absolute';
+	stat.domElement.style.left = '0px';
+	stat.domElement.style.top = '0px';
+	document.body.appendChild(stat.domElement);
+	return stat;
+}
 /* 
 	INICIO, CREAR LA ESCENA.
 */
 function init() {
+
+	var container = document.createElement('div');
+	document.body.appendChild(container);
+
+	stats = initialStats();
 	// Clock - Para trackballs
 	clock = new THREE.Clock();
 	//-------------------- Creaciónn de la escena que contendrá los objetos, cámaras, luces.
@@ -31,13 +47,18 @@ function init() {
 	renderer.shadowMapEnabled = true; //Sombra en el renderizado
 	//------------------ posición y punto de la cámara para centrar la escena 
 	camera.position.z = 100;
+	camera.lookAt(scene.position);
+	controls = new THREE.OrbitControls(camera,renderer.domElement); 
+	
 	//camara.lookAt(new THREE.Vector3(0, 0, 0));
 	//------------------ Ratón
+	/*
 	trackballControls = new THREE.TrackballControls(camera);
 	trackballControls.rotateSpeed = 1.0;
 	trackballControls.zoomSpeed = 1.0;
 	trackballControls.panSpeed = 1.0;
 	trackballControls.staticMoving = true;		
+	*/
 	//------------------ Luz
 	/*
 	scene.add(new THREE.HemisphereLight(0xC0C0C0, 0x826F26));
@@ -45,17 +66,16 @@ function init() {
 	light.position.set(0,250,0);
 	scene.add(light);
 	*/
-	document.getElementById('container').appendChild(renderer.domElement);
+	container.appendChild(renderer.domElement);
 	render();
 }
 
-function createGUI() {
-	gui = new dat.GUI();
-}
 
 function render() {
 	var delta = clock.getDelta();
-	trackballControls.update(delta);
+	controls.update();
+	stats.update();
+	//trackballControls.update(delta);
 	requestAnimationFrame(render);
 	renderer.render(scene, camera);
 }

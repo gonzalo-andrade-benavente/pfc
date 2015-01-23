@@ -1,0 +1,213 @@
+<html  xml:lang="es" lang="es">
+	<head>
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+	<script type="text/javascript" src="threeJS/js/Detector.js">//detector si el navegador soporta WebGL</script>	
+	<script type="text/javascript" src="threeJS/js/libs/stats.min.js">//Estado</script> 
+	<script type="text/javascript" src="threeJS/js/libs/dat.gui.min.js">//GUI Graphic user interface </script> 
+	<script type="text/javascript" src="threeJS/build/three.js"></script>
+
+	<script type="text/javascript" src="threeJS/js/controls/TrackballControls.js">//Estado</script>
+
+	<!--<script type="text/javascript" src="./src/Three.js"></script>
+	<script src="./build/three.min.js">//instancia de la cámara</script>	
+	<script src="./build/three.js">//instancia de la cámara</script> -->
+		<title>
+			PFC 3D - 2
+		</title>
+	</head>
+
+	
+	<body>
+		<!-- Librerías importardas javascript -->
+		
+		<!-- Código javascript-->
+		<script>
+		
+			//----------------- VARIABLES GLOBALES
+			var contenedor;
+			var escena, camara, renderizado;
+			var plano, cubo;
+			var gui, controles;
+
+					
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+			else {
+				console.log('WebGL reconocido');
+			}
+			
+			//----------------- EL ORDEN EN PRINCIPIO NO INFLUYE
+			var estado = estadoInicial();
+			init();
+			
+			
+			function estadoInicial() {
+				console.log('función estadoInicial()');
+				var stats = new Stats();
+				stats.setMode(0); // 0: framepersecundo, 1: milisecond
+				// Align top-left
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.left = '0px';
+				stats.domElement.style.top = '0px';
+				document.body.appendChild(stats.domElement);
+				return stats;
+			}
+			
+			function init(){
+				console.log('función init()');
+				contenedor = document.createElement('div');
+				document.body.appendChild(contenedor);
+				
+				//-------------------- Creaciónn de la escena que contendrá los objetos, cámaras, luces.
+				escena = new THREE.Scene();
+				//-------------------- Creamos la cámara
+				camara = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+				//-------------------- Creamos el render y definimos el tamaño.
+				renderizado = new THREE.WebGLRenderer();
+				renderizado.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+				renderizado.setSize(window.innerWidth, window.innerHeight);
+				renderizado.shadowMapEnabled = true; //Sombra en el renderizado
+				
+				//-------------------- Creación del plano
+				var geometriaPlano = new THREE.PlaneGeometry(40,20);
+				var materialPlano = new THREE.MeshBasicMaterial({color: 0xcccccc});
+				plano = new THREE.Mesh(geometriaPlano,materialPlano);
+				plano.receiveShadow  = true; //sombra para el plano
+				//-------------------- Posición plano
+				plano.rotation.x=-0.5*Math.PI;
+				plano.position.x=5
+				plano.position.y=0
+				plano.position.z=0
+				//--------------------- añadir plano a la escena.
+				escena.add(plano);
+							
+				//------------------ posición y punto de la cámara para centrar la escena 
+				camara.position.x = -30;
+				camara.position.y = 10;
+				camara.position.z = 40;
+				camara.lookAt(escena.position);
+				
+				// luz aplicada a todos los objetos de la escena
+				//var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+				//escena.add(ambientLight);
+				
+				//------------------ Añadir spotlihgt para las sombras
+				// Punto de luz, se puede echar sombra en una dirección
+				var spotLight = new THREE.SpotLight( 0xffffff );
+				spotLight.position.set( -40, 60, -10 );
+				spotLight.castShadow = true;
+				escena.add( spotLight );
+				
+				//------------------ Añadimos el renderizado al contenedor
+				contenedor.appendChild(renderizado.domElement);
+				//------------------ Renderizamos la escena
+				//renderizado.render(escena, camara);
+				
+				
+				//--------------------- Creamos el cubo
+				var geometriaCubo = new THREE.BoxGeometry(4,4,4);
+				var materialCubo = new THREE.MeshLambertMaterial({color: 0xff0000});
+				cubo = new THREE.Mesh(geometriaCubo, materialCubo);
+				cubo.castShadow = true;
+				cubo.name = "cubo-" + escena.children.length;
+				console.log(cubo.name);
+				//--------------------- Posición cubo
+				cubo.position.x=-4;
+				cubo.position.y=3;
+				cubo.position.z=0;
+				//--------------------- añadir el cubo a la escena
+				escena.add(cubo);
+				
+				controles = new function() {
+				//---------------- Objetos escena: plano, cubo, camara, luz.
+					this.numberOfObjects = escena.children.length;
+					this.rotationSpeed = 0.02;
+					this.x=-4;
+					this.y=3;
+					this.z=0;
+					this.color = materialCubo.color.getStyle();
+
+					/*this.removeCube = function() {
+						var allChildren = escena.children;
+						var lastObject = allChildren[allChildren.length-2];
+						console.log('[RM]:Eliminar objeto: ' + lastObject.name);
+						if (lastObject instanceof THREE.Mesh) {
+							escena.remove(lastObject);
+							//this.numberOfObjects = scene.children.length;
+						}
+					}*/
+					
+					this.defaultPosition = function() {
+						this.x=-4;
+						this.y=3;
+						this.z=0;
+						this.rotationSpeed = 0.02;
+					}
+				}
+				
+
+				
+				gui = new dat.GUI();
+				gui.add(controles, 'x', -200, 200).name('Eje X');
+				gui.add(controles, 'y', -200, 200).name('Eje Y');
+				gui.add(controles, 'z', -200, 200).name('Eje Z');
+				gui.add(controles, 'rotationSpeed',0,0.5).name('Velocidad de rotación');
+				gui.addColor(controles, 'color').onChange(function (e) {
+					materialCubo.color.setStyle(e)
+				}).name('Color material');
+				gui.add(controles, 'defaultPosition').name('Estado inicial');
+				//gui.add(controles, 'removeCube').name('Eliminar cubo');
+				//Función de renderizado
+				
+				document.addEventListener("keydown", onDocumentKeyDown, false);
+				
+				render();
+			}
+			
+			
+			function onDocumentKeyDown(event){
+				var keyCode = event.which;
+				switch(keyCode){
+				case 87:
+					console.log('W');
+					cubo.position.y = cubo.position.y + 1;
+					controles.y = cubo.position.y;
+					break;
+				case 65:
+					console.log('A');
+					cubo.position.x = cubo.position.x - 1;
+					controles.x = cubo.position.x;
+					break;
+				case 83:
+					console.log('S');
+					cubo.position.y = cubo.position.y - 1;
+					controles.y = cubo.position.y;
+					break;
+				case 68:
+					console.log('D');
+					cubo.position.x = cubo.position.x + 1;
+					controles.x = cubo.position.x;
+					break;
+				}
+						
+			}
+			
+			function render() {
+				//------------------ Renderizamos la escena, animar el cubo
+				renderizado.render(escena, camara);
+				estado.update();
+				cubo.rotation.x += controles.rotationSpeed;
+				cubo.rotation.y += controles.rotationSpeed;
+				cubo.rotation.z += controles.rotationSpeed;
+				cubo.position.x= controles.x;
+				cubo.position.y= controles.y;
+				cubo.position.z= controles.z;
+				//------------------ render usando requestAnimationFrame
+				requestAnimationFrame(render);
+			}
+			
+			
+		</script>
+	
+	</body>
+
+</html>
