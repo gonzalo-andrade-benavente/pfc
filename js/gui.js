@@ -1,45 +1,44 @@
 /* PFC GUI - Three.js */
-var estado;
+var controls;
 
-window.onload = function() {
 
-	controles = new function() {
+function createGUI() {
+	var controls = new function() {
 		//this.numberOfObjects = escena.children.length;
-		this.rotationSpeed = 0.02;
-		this.x=-4;
-		this.y=3;
-		this.z=0;
-		//this.color = materialCubo.color.getStyle();
-
-		/*this.removeCube = function() {
-			var allChildren = escena.children;
-			var lastObject = allChildren[allChildren.length-2];
-			console.log('[RM]:Eliminar objeto: ' + lastObject.name);
-			if (lastObject instanceof THREE.Mesh) {
-				escena.remove(lastObject);
-				//this.numberOfObjects = scene.children.length;
-			}
-		}*/
-		
-		this.defaultPosition = function() {
-			this.x=-4;
-			this.y=3;
-			this.z=0;
-			this.rotationSpeed = 0.02;
+		this.lat = 43.314;
+		this.lon = -2.002;	
+		this.createMesh = function() {
+			createMesh();
 		}
+		this.control1 = "control1";
+		this.control2 = "control2";
+		this.wireframe = false;
 	}
 	
 	gui = new dat.GUI();
-	gui.add(controles, 'x', -200, 200).name('Eje X');
-	gui.add(controles, 'y', -200, 200).name('Eje Y');
+	gui.add(controls, 'lat').name('Latitude');
+	gui.add(controls, 'lon').name('Longitude');
+	gui.add(controls, 'wireframe').name('Wireframe');
+	/*
 	gui.add(controles, 'z', -200, 200).name('Eje Z');
 	gui.add(controles, 'rotationSpeed',0,0.5).name('Velocidad de rotación');
-	/*
 	gui.addColor(controles, 'color').onChange(function (e) {
 		materialCubo.color.setStyle(e)
 	}).name('Color material');
 	*/
-	gui.add(controles, 'defaultPosition').name('Estado inicial');				
+	gui.add(controls, 'createMesh').name('Crear Mesh');	
+	var folder = gui.addFolder('Folder');
+		folder.add( controls, 'control1' );
+		folder.add( controls, 'control2' );
+		folder.close();
+	gui.close();			
 }
+
+/*
+Latitud 
+Varía entre 90º N y 90º S pasando por 0º que es el Ecuador 
+Longitud 
+Se toma como base 0 el meridiano de Greenwich. Si nos movemos hacia el este llegamos a 180º E y si es hacia el oeste sería 180º O. 
+*/
 
 

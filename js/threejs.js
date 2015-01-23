@@ -4,7 +4,7 @@
 	VARIABLES GLOBALES.
 */
 var container, stats;
-var camera, controls, scene, renderer, gui;
+var camera, controlCamera, scene, renderer, gui;
 /* 
 	CARGAR SI EL NAVEGADOR ES COMPATIBLE.
 */
@@ -48,7 +48,7 @@ function init() {
 	//------------------ posición y punto de la cámara para centrar la escena 
 	camera.position.z = 100;
 	camera.lookAt(scene.position);
-	controls = new THREE.OrbitControls(camera,renderer.domElement); 
+	controlCamera = new THREE.OrbitControls(camera,renderer.domElement); 
 	
 	//camara.lookAt(new THREE.Vector3(0, 0, 0));
 	//------------------ Ratón
@@ -72,8 +72,8 @@ function init() {
 
 
 function render() {
-	var delta = clock.getDelta();
-	controls.update();
+	//var delta = clock.getDelta();
+	controlCamera.update();
 	stats.update();
 	//trackballControls.update(delta);
 	requestAnimationFrame(render);
