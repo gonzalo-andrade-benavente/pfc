@@ -10,13 +10,10 @@ window.onload=function() {
 			submitbutton = document.getElementById("submitbutton");
 		
 		if (xhr.upload) {	
-			// file drop
 			filedrag.addEventListener("dragover", FileDragHover, false);
 			filedrag.addEventListener("dragleave", FileDragHover, false);
 			filedrag.addEventListener("drop", FileSelectHandler, false);
 			filedrag.style.display = "block";
-			// remove submit button
-			submitbutton.style.display = "none";
 		}	
 	
 	}else{
@@ -47,11 +44,12 @@ function FileSelectHandler(e) {
 
 xhr.onreadystatechange = function () {
 	if (xhr.readyState == 4 && xhr.status == 200) {
-		//console.log(xhr.statusText);
 		var response = xhr.responseText;
-		if (response == "true")
-			alert("ok");
-		else 
+		if (response != "") {
+			//guardo el nombre del fichero subido en la variable de sesión.
+			sessionStorage.setItem("rute", response);
+			window.open("./PFCMyRute.php", "_self");
+		} else 
 			alert("failure in the server");
 	}
 }

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx creator="Wikiloc - http://www.wikiloc.com" version="1.1" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <trk>
+    <name>Piso a universidad</name>
+    <cmt></cmt>
+    <desc></desc>
+    <trkseg>
+      <trkpt lat="42.819939" lon="-1.643084">
+        <ele>458.0</ele>
+        <time>2014-11-13T10:56:33Z</time>
+      </trkpt>
+      <trkpt lat="42.819435" lon="-1.643052">
+        <ele>456.0</ele>
+        <time>2014-11-13T10:56:53Z</time>
+      </trkpt>
+      <trkpt lat="42.818829" lon="-1.642740">
+        <ele>457.0</ele>
+        <time>2014-11-13T10:57:13Z</time>
+      </trkpt>
+      <trkpt lat="42.817830" lon="-1.641485">
+        <ele>451.0</ele>
+        <time>2014-11-13T10:57:33Z</time>
+      </trkpt>
+      <trkpt lat="42.816712" lon="-1.640080">
+        <ele>460.0</ele>
+        <time>2014-11-13T10:57:53Z</time>
+      </trkpt>
+      <trkpt lat="42.816059" lon="-1.641013">
+        <ele>459.0</ele>
+        <time>2014-11-13T10:58:13Z</time>
+      </trkpt>
+      <trkpt lat="42.815689" lon="-1.640702">
+        <ele>462.0</ele>
+        <time>2014-11-13T10:58:33Z</time>
+      </trkpt>
+      <trkpt lat="42.814824" lon="-1.639779">
+        <ele>467.0</ele>
+        <time>2014-11-13T10:58:53Z</time>
+      </trkpt>
+      <trkpt lat="42.814233" lon="-1.639082">
+        <ele>461.0</ele>
+        <time>2014-11-13T10:59:13Z</time>
+      </trkpt>
+      <trkpt lat="42.813643" lon="-1.638470">
+        <ele>472.0</ele>
+        <time>2014-11-13T10:59:33Z</time>
+      </trkpt>
+      <trkpt lat="42.813352" lon="-1.638857">
+        <ele>475.0</ele>
+        <time>2014-11-13T10:59:53Z</time>
+      </trkpt>
+      <trkpt lat="42.813147" lon="-1.638835">
+        <ele>476.0</ele>
+        <time>2014-11-13T11:00:13Z</time>
+      </trkpt>
+      <trkpt lat="42.812935" lon="-1.638985">
+        <ele>476.0</ele>
+        <time>2014-11-13T11:00:33Z</time>
+      </trkpt>
+      <trkpt lat="42.811219" lon="-1.637118">
+        <ele>467.0</ele>
+        <time>2014-11-13T11:00:53Z</time>
+      </trkpt>
+      <trkpt lat="42.810062" lon="-1.635852">
+        <ele>462.0</ele>
+        <time>2014-11-13T11:01:13Z</time>
+      </trkpt>
+      <trkpt lat="42.809078" lon="-1.637365">
+        <ele>469.0</ele>
+        <time>2014-11-13T11:01:33Z</time>
+      </trkpt>
+      <trkpt lat="42.807716" lon="-1.635906">
+        <ele>458.0</ele>
+        <time>2014-11-13T11:01:53Z</time>
+      </trkpt>
+      <trkpt lat="42.807157" lon="-1.635574">
+        <ele>454.0</ele>
+        <time>2014-11-13T11:02:13Z</time>
+      </trkpt>
+      <trkpt lat="42.806961" lon="-1.635402">
+        <ele>451.0</ele>
+        <time>2014-11-13T11:02:33Z</time>
+      </trkpt>
+      <trkpt lat="42.806780" lon="-1.635337">
+        <ele>446.0</ele>
+        <time>2014-11-13T11:02:53Z</time>
+      </trkpt>
+      <trkpt lat="42.806410" lon="-1.635574">
+        <ele>438.0</ele>
+        <time>2014-11-13T11:03:13Z</time>
+      </trkpt>
+      <trkpt lat="42.805292" lon="-1.635166">
+        <ele>426.0</ele>
+        <time>2014-11-13T11:03:33Z</time>
+      </trkpt>
+      <trkpt lat="42.804591" lon="-1.634898">
+        <ele>429.0</ele>
+        <time>2014-11-13T11:03:53Z</time>
+      </trkpt>
+      <trkpt lat="42.804048" lon="-1.634769">
+        <ele>434.0</ele>
+        <time>2014-11-13T11:04:13Z</time>
+      </trkpt>
+      <trkpt lat="42.803844" lon="-1.634747">
+        <ele>435.0</ele>
+        <time>2014-11-13T11:04:33Z</time>
+      </trkpt>
+      <trkpt lat="42.803741" lon="-1.634865">
+        <ele>436.0</ele>
+        <time>2014-11-13T11:04:53Z</time>
+      </trkpt>
+      <trkpt lat="42.803253" lon="-1.634554">
+        <ele>436.0</ele>
+        <time>2014-11-13T11:05:13Z</time>
+      </trkpt>
+      <trkpt lat="42.803056" lon="-1.634629">
+        <ele>435.0</ele>
+        <time>2014-11-13T11:05:33Z</time>
+      </trkpt>
+      <trkpt lat="42.802899" lon="-1.634694">
+        <ele>434.0</ele>
+        <time>2014-11-13T11:05:53Z</time>
+      </trkpt>
+      <trkpt lat="42.802686" lon="-1.634629">
+        <ele>434.0</ele>
+        <time>2014-11-13T11:06:13Z</time>
+      </trkpt>
+      <trkpt lat="42.802128" lon="-1.635981">
+        <ele>434.0</ele>
+        <time>2014-11-13T11:06:33Z</time>
+      </trkpt>
+      <trkpt lat="42.801860" lon="-1.636400">
+        <ele>433.0</ele>
+        <time>2014-11-13T11:06:53Z</time>
+      </trkpt>
+      <trkpt lat="42.800805" lon="-1.635359">
+        <ele>428.0</ele>
+        <time>2014-11-13T11:07:13Z</time>
+      </trkpt>
+      <trkpt lat="42.800073" lon="-1.636754">
+        <ele>435.0</ele>
+        <time>2014-11-13T11:07:33Z</time>
+      </trkpt>
+      <trkpt lat="42.798475" lon="-1.635370">
+        <ele>424.0</ele>
+        <time>2014-11-13T11:07:53Z</time>
+      </trkpt>
+    </trkseg>
+  </trk></gpx>
