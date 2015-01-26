@@ -1,34 +1,26 @@
 <html  xml:lang="es" lang="es">
 
 <head>
-	<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-	<!-- three.js -->
-	<script type="text/javascript" src="threeJS/js/libs/stats.min.js">//Estado</script> 
-	<script type="text/javascript" src="threeJS/js/libs/dat.gui.min.js">//GUI Graphic user interface </script> 
-	<script type="text/javascript" src="threeJS/build/three.js"></script>
-	<script type="text/javascript" src="threeJS/js/controls/TrackballControls.js">//Eliminado</script>
-	<script type="text/javascript" src="threeJS/js/controls/OrbitControls.js">//Nuevo añadido</script>
-	<script type="text/javascript" src="threeJS/js/Detector.js">//detector si el navegador soporta WebGL</script>	
-	
-	<!-- <script type="text/javascript" src="js/threejs.js">	//Libreria mía.	</script>
-	<script type="text/javascript" src="js/Cesium.js"> 	//Cesium		</script>
-	<script type="text/javascript" src="js/cesiumjs.js">	//Libreria mía.	</script> 
-	<script type="text/javascript" src="js/gui.js">	//Libreria mía.	</script> -->
-	
+	<!-- JavaScript: Mapbox. -->
+	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
+	<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+	<!-- JavaScript: Mi libreria.-->
 	<script type="text/javascript" src="js/rute.js"> </script>
-	
-	<!-- <script type="text/javascript" src="js/cesiumjsgui.js">	//Libreria mía.	 -->
-	
-	<!-- mapBox -->
-	<!-- <link href='https://mapbox.com/base/latest/base.css?v1.0' rel='stylesheet' />
-	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.3/mapbox.js'></script> -->
-	
+	<!-- JavaScript: Para codificar las coordenadas -->
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry"></script>
+	<!-- JavaScript: include method omnivore para gpx, kml-->
+	<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
+	<style>
+		body { margin:0; padding:0; }
+		#map { position:absolute; top:0; bottom:0; width:30%; height:85%}
+	</style>
 	<title> PFC Three.js  </title>
 
 </head>
 
 <body onload="getRute()">
-	
+	<div id='map'></div>
 </body>
 
 </html>
