@@ -15,7 +15,9 @@
 	<script type="text/javascript" src="js/cesiumjs.js">	//Libreria mía.	</script> 
 	<script type="text/javascript" src="js/gui.js">	//Libreria mía.	</script> -->
 	
-	<!-- <script type="text/javascript" src="js/cesiumjsgui.js">	//Libreria mía.	</script> -->
+	<script type="text/javascript" src="js/rute.js"> </script>
+	
+	<!-- <script type="text/javascript" src="js/cesiumjsgui.js">	//Libreria mía.	 -->
 	
 	<!-- mapBox -->
 	<!-- <link href='https://mapbox.com/base/latest/base.css?v1.0' rel='stylesheet' />
@@ -25,7 +27,7 @@
 
 </head>
 
-<body>
+<body onload="getRute()">
 	
 </body>
 

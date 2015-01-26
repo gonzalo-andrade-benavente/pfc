@@ -1,8 +1,5 @@
 /* dnd.js */
-
 var xhr = new XMLHttpRequest();
-var fileSession;
-
 window.onload=function() {
 	if (window.File && window.FileList && window.FileReader) {
 		var fileselect = document.getElementById("fileselect"),
@@ -33,7 +30,6 @@ function FileSelectHandler(e) {
 	var RegExPattern = /(gpx)$/;
 	if (files[0].name.match(RegExPattern)) {
 		var formData = new FormData();
-		fileSession = files[0].name;
 		formData.append('ruta', files[0], files[0].name);
 		xhr.open('POST', 'upload.php', true);
 		xhr.send(formData);
