@@ -44,7 +44,7 @@ xhr.onreadystatechange = function () {
 		if (response != "") {
 			//guardo el nombre del fichero subido en la variable de sesión.
 			sessionStorage.setItem("rute", response);
-			window.open("./PFCMyRute.php", "_self");
+			window.open("./PFCMyRute.html", "_self");
 		} else 
 			alert("failure in the server");
 	}
