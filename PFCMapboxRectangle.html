@@ -8,20 +8,63 @@
 <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
 <style>
   body { margin:0; padding:0; }
-  #map { position:absolute; top:0; bottom:0; width:50%; height:80% }
+  <!-- Ajuste manual -->
+  <!-- #map { position:absolute; top:0; bottom:0; width:450; height:510 } -->
+  <!-- #map { position:absolute; top:0; bottom:0; width:700; height:700 } -->
+   #map { position:absolute; top:0; bottom:0; width:15%; height:55%}
 </style>
 </head>
 <body>
 <div id='map'></div>
 <script>
 	L.mapbox.accessToken = 'pk.eyJ1IjoiZ29uemFsaXRvIiwiYSI6IlVJTGIweFUifQ.waoF7m8PZbBM6u8Tg_rR7A';
-	var bounds = [[43.2861328125, -2.021484375000009], [43.330078125, -1.9775390625000044]];
-		
-	//var map = L.mapbox.map('map', 'gonzalito.k53kcf3d').setView([43.314, -2.002], 14);
+	/*
+	var bounds = [[43.2861328125, -2.021484375000009], [43.330078125, -1.9775390625000044]],
+		bounds1 = [[43.2861328125,  -1.9775390625000044],[43.330078125, -1.9335937499999998]],
+		bounds2 = [[43.2421875, -2.021484375000009],[43.2861328125, -1.9775390625000044]],
+		bounds3 = [[43.2421875, -1.9775390625000044],[43.2861328125, -1.9335937499999998]];
+	*/
 	var map = L.mapbox.map('map', 'gonzalito.k53kcf3d');
 	
-	L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map);
+	
+	/*
+	var southWest = L.latLng(43.2861328125, -2.021484375000009),
+		northEast = L.latLng(43.330078125, -1.9775390625000044),
+		bounds = L.latLngBounds(southWest, northEast);
+	*/
+	var bounds = [[43.2861328125, -2.021484375000009], [43.330078125, -1.9775390625000044]];
+	//console.log(bounds);
+	L.rectangle(bounds, {color: "#ff7800", weight: 5, fillOpacity:0 }).addTo(map);
+	map.setZoom(13);
+	map.setMaxBounds(bounds);
+	
+	//map.fitBounds(bounds);
+	
+	
+	//var map = L.mapbox.map('map', 'gonzalito.k53kcf3d').setView([43.314, -2.002], 14);
+	//map.center({ lat: 40.74, lon: -73.98});
+	//L.rectangle(bounds1, {color: "#ff7800", weight: 0.5}).addTo(map);
+	//L.rectangle(bounds2, {color: "#ff7800", weight: 0.5}).addTo(map);
+	//L.rectangle(bounds3, {color: "#ff7800", weight: 0.5}).addTo(map);
+	//map.fitBounds(bounds);
+	
+	
+	var southWest = L.latLng(43.2861328125, -2.021484375000009),
+		northEast = L.latLng(43.330078125, -1.9775390625000044),
+		bounds = L.latLngBounds(southWest, northEast);
+	
+	/*
+	var map = L.mapbox.map('map', 'gonzalito.k53kcf3d', {
+    // set that bounding box as maxBounds to restrict moving the map
+    // see full maxBounds documentation:
+    // http://leafletjs.com/reference.html#map-maxbounds
+		maxBounds: bounds,
+		maxZoom: 19,
+		minZoom: 10
+	});
 	map.fitBounds(bounds);
+	*/
+
 </script>
 </body>
 
