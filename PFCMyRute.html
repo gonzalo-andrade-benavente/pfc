@@ -14,8 +14,8 @@
 	<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
 	<style>
 		body { margin:0; padding:0; }
-		#map { position:absolute; top:0; margin-left:35%; width:30%; height:85%}
-		#buttons {position:absolute; bottom:0;}
+		#map { position:absolute; margin-top:3%; margin-left:35%; width:30%; height:85%}
+		#buttons {position:absolute; margin-top:3%; margin-left:45%; width:30%; }
 	</style>
 	<title> PFC Three.js  </title>
 
@@ -24,8 +24,10 @@
 <body onload="getRute()">
 	<div id="map"></div>
 	<div id="buttons"> 
-		<input type='button' class='button' value='Cambiar Mapa' name='' onclick="changeMap()" /> 
-		<input type='button' class='button' value='Dibujar Mapa' name='' onclick="drawRute()" /> 
+		<!-- <input type='button' class='button' value='Cambiar Mapa' onclick="changeMap()" /> 
+			 <input type='button' class='button' value='Dibujar Mapa' onclick="drawRute()" /> -->
+		<a class='icon layers button' onclick="changeMap()">Cambiar Mapa</a>
+		<a class='icon pencil button' onclick="drawRute()">Dibujar Mapa</a>
 	</div>
 </body>
 

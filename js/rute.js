@@ -39,8 +39,6 @@ function createMap(coord){
 	//map.setZoom(14);
 	//map.fitBounds(bounds); //map.setMaxBounds(bounds);
 	loadGpx();
-	//drawRute(coordinates);
-	//drawRute(coordinates);
 }
 
 function loadGpx() {
