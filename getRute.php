@@ -1,4 +1,5 @@
 <?php
+	/* Obtain file with route information gpx. */
 	$fichero = fopen($_GET["rute"], "r");
 	$coordenadas[][]="";
 	$i = 0;
