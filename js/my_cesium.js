@@ -25,9 +25,10 @@
 		/*
 			I have acces to variables coordinates and map.
 		*/
-		var coor_x, coor_y, coor_z, latitude, longitude;		
-		coor_x = 0; coor_y = 0; coor_z = 0;
-		latitude = coordinates[0][0], longitude = coordinates[0][1];
+		var mesh_x, mesh_y, mesh_z, latitude, longitude;		
+		mesh_x = 0; mesh_y = 0; mesh_z = 0;
+		var coor_middle = Math.round(coordinates.length/2);
+		latitude = coordinates[coor_middle][0], longitude = coordinates[coor_middle][1];
 		var positionLonLat = Cesium.Cartographic.fromDegrees(longitude, latitude);
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
 		tile = getTile(positionTileXY);
