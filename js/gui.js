@@ -10,16 +10,11 @@ function createGUI() {
 		//this.control2 = "control2";
 		this.wireframe = true;
 		this.visible = true;
-		this.texture = false;
 	}
 	
 	gui = new dat.GUI();
 	//gui.add(controls, 'lat').name('Latitude');
 	//gui.add(controls, 'lon').name('Longitude');
-	gui.add(controls, 'texture').name('Textura').onChange(function (e) {
-		var texture = texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
-		render();
-	});
 	
 	gui.add(controls, 'visible').name('Visible').onChange(function (e) {
 		scene.children[0].visible = e;

@@ -41,6 +41,30 @@
 			}
 		}
 	}
+	/*
+		Function to add faces vertices to my own geomtry.
+	*/
+	function addFaceVertexUvs(geometry) {
+		geometry.computeBoundingBox();
+		var max = geometry.boundingBox.max,
+			min = geometry.boundingBox.min;
+		var offset = new THREE.Vector2(0 - min.x, 0 - min.y);
+		var range = new THREE.Vector2(max.x - min.x, max.y - min.y);
+		geometry.faceVertexUvs[0] = [];
+		for (i = 0; i < geometry.faces.length ; i++) {
+			var v1 = geometry.vertices[geometry.faces[i].a], v2 = geometry.vertices[geometry.faces[i].b], v3 = geometry.vertices[geometry.faces[i].c];
+			geometry.faceVertexUvs[0].push(
+			[
+				new THREE.Vector2((v1.x + offset.x)/range.x ,(v1.y + offset.y)/range.y),
+				new THREE.Vector2((v2.x + offset.x)/range.x ,(v2.y + offset.y)/range.y),
+				new THREE.Vector2((v3.x + offset.x)/range.x ,(v3.y + offset.y)/range.y)
+			]);
+
+		}
+		geometry.uvsNeedUpdate = true;
+		return geometry;
+	}
+	
 	
 	function loadedTerrainProvider(x, y, z, latitude, longitude) {
 		var positionLonLat = Cesium.Cartographic.fromDegrees(longitude, latitude);
@@ -59,7 +83,13 @@
 			for(var i=0; i < facesQuantized.length; i=i+3){
 				geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 			}
-			var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true } );
+			geometry = addFaceVertexUvs(geometry);
+			var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
+			var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true } );
+			//var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true } );
+			material.needsUpdate = true;
+			geometry.buffersNeedUpdate = true;
+			geometry.uvsNeedUpdate = true;
 			mesh = new THREE.Mesh( geometry, material );
 			mesh.rotation.x =  Math.PI / 180 * (-90);
 			mesh.position.set(x, y, z);

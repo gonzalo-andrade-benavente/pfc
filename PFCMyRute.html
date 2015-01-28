@@ -12,9 +12,9 @@
 	<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
 	<!-- JavaScript: CesiumJS and myCesium -->
 	<script type="text/javascript" src="js/Cesium.js"> 		//Cesium		</script>
-	<script type="text/javascript" src="js/my_cesium.js">	//My library.	</script>
+	<!-- <script type="text/javascript" src="js/my_cesium.js">	//My library.	</script> -->
 	<!-- JavaScript: Mi libreria.-->
-	<script type="text/javascript" src="js/my_rute.js"> 	//My library.	</script>
+	<script type="text/javascript" src="js/my_cesium_rute.js"> 	//My library.	</script>
 	<style>
 		body { margin:0; padding:0; }
 		#map { position:absolute; margin-top:3%; margin-left:35%; width:30%; height:73%}
@@ -24,7 +24,7 @@
 
 </head>
 
-<body onload="getRute()">
+<body onload="requestTilesWhenReady()">
 	<div id="map"></div>
 	<div id="buttons"> 
 		<!-- <input type='button' class='button' value='Cambiar Mapa' onclick="changeMap()" /> 
