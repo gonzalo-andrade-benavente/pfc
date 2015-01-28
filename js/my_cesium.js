@@ -11,16 +11,17 @@
 	*/
 	function requestTilesWhenReady() {
 		if (aCesiumTerrainProvider.ready) {
-			console.log("[PFC]:Server Terrain Provider ready");
+			console.log("[PFC]:Cesium Server Terrain Provider ready");
 			init();
 		} else {
 			//console.log("[PFC]:Waiting a Terrain Provider is ready");
 			setTimeout(requestTilesWhenReady, 10);
 		}
 	}
-	
 	requestTilesWhenReady();
-	
+	/*
+		Function init();
+	*/
 	function init(){
 		/*
 			I have acces to variables coordinates and map.
@@ -41,11 +42,7 @@
 		L.rectangle(bounds, {color: "#ffffff", weight: 2, fillOpacity:0 }).addTo(map);
 		//map.setZoom(14);
 		map.setMaxBounds(bounds);
-		
-		aCesiumTerrainProvider.requestTileGeometry(positionTileXY.x,positionTileXY.y,12,true).then(function(data){
-			//mesh(data, x, y, z);
-			createMesh();
-		});
+		console.log("[PFC]:TileCesium in Mapbox.");
 	}
 	
 	function createMesh() {

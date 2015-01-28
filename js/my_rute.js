@@ -100,7 +100,7 @@
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
 					if (xhr.responseText == "") {
-						console.log("OK!");
+						window.open("./PFCMyMesh.html", "_self");
 						/*
 							gpx uploaded ok!
 							texture ok!
