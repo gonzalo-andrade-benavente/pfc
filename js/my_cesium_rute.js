@@ -130,15 +130,12 @@
 			xhr.send();
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
-				console.log(direction);
-					/*
 					if (xhr.responseText == "") {
 						window.open("./PFCMyMesh.html", "_self");
 					}
 					else {
 						console.log("[PFC]: Error upload texture Ajax.");
 					}
-					*/
 				}
 			}
 		}
