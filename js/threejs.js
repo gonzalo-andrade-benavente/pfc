@@ -4,11 +4,11 @@
 	VARIABLES GLOBALES.
 */
 var container, stats;
-var camera, controlCamera, scene, renderer, gui;
+var camera, controlCamera, scene, renderer;
 /* 
 	CARGAR SI EL NAVEGADOR ES COMPATIBLE.
 */
-function load() {
+function loadThreeJS() {
 	if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 	else {
 		init();
@@ -32,10 +32,9 @@ function init() {
 
 	var container = document.createElement('div');
 	document.body.appendChild(container);
-
 	stats = initialStats();
 	// Clock - Para trackballs
-	clock = new THREE.Clock();
+	// clock = new THREE.Clock();
 	//-------------------- Creaciónn de la escena que contendrá los objetos, cámaras, luces.
 	scene = new THREE.Scene();
 	//-------------------- Creamos la cámara
@@ -49,23 +48,6 @@ function init() {
 	camera.position.z = 100;
 	camera.lookAt(scene.position);
 	controlCamera = new THREE.OrbitControls(camera,renderer.domElement); 
-	
-	//camara.lookAt(new THREE.Vector3(0, 0, 0));
-	//------------------ Ratón
-	/*
-	trackballControls = new THREE.TrackballControls(camera);
-	trackballControls.rotateSpeed = 1.0;
-	trackballControls.zoomSpeed = 1.0;
-	trackballControls.panSpeed = 1.0;
-	trackballControls.staticMoving = true;		
-	*/
-	//------------------ Luz
-	/*
-	scene.add(new THREE.HemisphereLight(0xC0C0C0, 0x826F26));
-	var light = new THREE.PointLight(0xffffff);
-	light.position.set(0,250,0);
-	scene.add(light);
-	*/
 	container.appendChild(renderer.domElement);
 	render();
 }
@@ -73,9 +55,9 @@ function init() {
 
 function render() {
 	//var delta = clock.getDelta();
+	//trackballControls.update(delta);
 	controlCamera.update();
 	stats.update();
-	//trackballControls.update(delta);
 	requestAnimationFrame(render);
 	renderer.render(scene, camera);
 }

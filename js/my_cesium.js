@@ -26,14 +26,10 @@
 		/*
 			I have acces to variables coordinates and map.
 		*/
-		var mesh_x, mesh_y, mesh_z, latitude, longitude;		
-		mesh_x = 0; mesh_y = 0; mesh_z = 0;
-		var coor_middle = Math.round(coordinates.length/2);
-		latitude = coordinates[coor_middle][0], longitude = coordinates[coor_middle][1];
-		var positionLonLat = Cesium.Cartographic.fromDegrees(longitude, latitude);
+		//var coor_middle = Math.round(coordinates.length/2);
+		var positionLonLat = Cesium.Cartographic.fromDegrees(coordinates[0][1], coordinates[0][0]);
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
 		tile = getTile(positionTileXY);
-		
 		/*
 			Map Rectangle for the first coordinate, study the rest of coordinates.
 			North-West and South-East
