@@ -48,25 +48,28 @@ function createGUI() {
 			scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: false, side:THREE.DoubleSide} )));
 			scene.children[1].rotation.x = Math.PI / 180 * (-90);
 			*/
+			/*
 			var geometry = scene.children[0].geometry.clone();
 			geometry2 = geometry.clone();
 			
 			for(var i = 0; i < geometry2.vertices.length; i++) {
 				geometry.vertices.push(new THREE.Vector3(geometry2.vertices[i].x, geometry2.vertices[i].y, 0));
 			}
+			*/
 			
 			/*
 			console.log(geometry2.vertices[0].x +","+ geometry2.vertices[0].y +","+ geometry2.vertices[0].z);
 			console.log(geometry.vertices[geometry2.vertices.length].x, geometry.vertices[geometry2.vertices.length].y, geometry.vertices[geometry2.vertices.length].z);
 			console.log(geometry.vertices[geometry2.vertices.length + 1].x, geometry.vertices[geometry2.vertices.length + 1].y, geometry.vertices[geometry2.vertices.length + 1].z);
 			*/
+			/*
 			console.log(geometry.vertices.length);
 			for(var i = 0; i < 84 ; i++ ) {
 				geometry.faces.push(new THREE.Face3(i, geometry2.vertices.length + i , geometry2.vertices.length + (i + 1)));
 				geometry.faces.push(new THREE.Face3(i+1, geometry2.vertices.length + i , geometry2.vertices.length + (i + 1)));
 				console.log(geometry2.vertices.length + (i + 1));
 			}
-			
+			*/
 			/*
 			geometry.faces.push(new THREE.Face3(0, geometry2.vertices.length, geometry2.vertices.length + 1));
 			geometry.faces.push(new THREE.Face3(1, geometry2.vertices.length, geometry2.vertices.length + 1));
