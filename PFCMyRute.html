@@ -1,5 +1,5 @@
-<html  xml:lang="es" lang="es">
-
+<!-- <html  xml:lang="es" lang="es"> -->
+<html>
 <head>
 	<!-- JavaScript: Mapbox. -->
 	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
@@ -19,6 +19,7 @@
 		body { margin:0; padding:0; }
 		#map { position:absolute; margin-top:3%; margin-left:35%; width:30%; height:73%}
 		#buttons {position:absolute; margin-top:3%; margin-left:45%; width:30%; }
+		#file {position:relative; float:right;}
 	</style>
 	<title> PFC Three.js  </title>
 
@@ -26,6 +27,7 @@
 
 <body onload="requestTilesWhenReady()">
 	<div id="map"></div>
+	<div id="file"> </div>
 	<div id="buttons"> 
 		<!-- <input type='button' class='button' value='Cambiar Mapa' onclick="changeMap()" /> 
 			 <input type='button' class='button' value='Dibujar Mapa' onclick="drawRute()" /> -->

@@ -12,6 +12,10 @@
 	function requestTilesWhenReady() {
 		if (aCesiumTerrainProvider.ready) {
 			console.log("[PFC]:Cesium Server Terrain Provider ready");
+			var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
+			var file_name = name.substring(0, name.indexOf("."));
+			sessionStorage.name = file_name;
+			document.getElementById('file').innerHTML = "Trabajando con el fichero <i>gps</i> " + sessionStorage.name + ".gpx <a href='PFCIndex.html'>cambiar</a>";
 			getRute();
 		} else {
 			//console.log("[PFC]:Waiting a Terrain Provider is ready");
@@ -44,11 +48,11 @@
 		}
 	}
 	
-	function createMap(coord){
-		//console.log(coordinates);
+	function createMap(coord) {
 		map = L.mapbox.map('map', id_maps[id_map]);
 		map.setZoom(14);
 		coordinates = coord;
+		checkTile(coordinates);
 		loadGpx();
 	}
 	/*
@@ -59,7 +63,9 @@
 		var gpxLayer = omnivore.gpx(sessionStorage.rute)
 		.on('ready', function() {
 			//fitBounds pone el máximo zoom posible para la ruta.
-			var positionLonLat = Cesium.Cartographic.fromDegrees(coordinates[0][1], coordinates[0][0]);
+			var positionLonLat, positionTileXY, tile;
+			positionLonLat = Cesium.Cartographic.fromDegrees(coordinates[0][1], coordinates[0][0]);
+			//positionLonLat = Cesium.Cartographic.fromDegrees(coordinates[coordinates.length-1][1], coordinates[coordinates.length-1][0]);
 			positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
 			tile = getTile(positionTileXY);
 			/*
@@ -83,7 +89,7 @@
 	/*
 		Create rute gpx point to polygin and create static image.
 	*/
-	function drawRute(){
+	function drawRute() {
 		var polyline_options = { color: '#000'};
 		var polyOptions = { strokeColor: '#000000',	strokeOpacity: 1.0,	strokeWeight: 3};
 		poly = new google.maps.Polyline(polyOptions);
@@ -94,7 +100,8 @@
 			path.push(myLatlng);
 		}
 		var encodeString = google.maps.geometry.encoding.encodePath(path);
-		var width = 504, height = 630;		
+		var width = 504, height = 630;	
+		//var width = 2000, height = 2000;		
 		// Static image contain url to mapbox rute.
 		if (id_map == -1)
 			var staticImage = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/path-4+026-0.75('+encodeString+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ 14 +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
@@ -106,7 +113,7 @@
 	/*
 		Change layer map Mapbox.
 	*/
-	function changeMap(){
+	function changeMap() {
 		map.remove();
 		id_map++;
 		map = L.mapbox.map('map', id_maps[id_map]);
@@ -118,7 +125,7 @@
 	/*
 		Ajax to create texture.
 	*/
-	function getTexture(direction){
+	function getTexture(direction) {
 		if (xhr1.upload) {
 			var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 			var file_name = name.substring(0, name.indexOf("."));
@@ -139,6 +146,43 @@
 				}
 			}
 		}
+	}
+	/*
+		Check coordinates in Tile Cesium(limits nw ne sw se).
+	*/
+	function checkTile(coord) {
+		var array_coordinate = new Array();
+		var pos, compare_pos, positionLonLat, initial_pos;
+		var north = 0, south = 0, east = 0, west = 0;
+		array_coordinate.push(new Coordinate(coord[0][0], coord[0][1]));
+		positionLonLat = Cesium.Cartographic.fromDegrees(coord[0][1], coord[0][0]);
+		pos = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
+		initial_pos = pos;
+		for(var i=1; i < coord.length; i++){
+			positionLonLat = Cesium.Cartographic.fromDegrees(coord[i][1], coord[i][0]);
+			compare_pos = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
+			if (pos.x != compare_pos.x) {
+				array_coordinate.push(new Coordinate(coord[i][0], coord[i][1]));
+				console.log("[PFC]: Coordinate change:"+i);
+				if (pos.x < compare_pos.x)
+					east = east + 1;
+				else
+					west = west + 1;
+				pos = compare_pos;
+			} else if (pos.y != compare_pos.y) {
+				array_coordinate.push(new Coordinate(coord[i][0], coord[i][1]));
+				console.log("Coordinate change:"+i);
+				if (pos.y < compare_pos.y)
+					south = south + 1;
+				else
+					north = north + 1;
+				pos = compare_pos;
+			}
+		}
+		console.log(array_coordinate);
+		console.log("[PFC]: Total coordinates:" + coord.length);
+		console.log("[PFC]: Initial Tile: X:" + initial_pos.x + " Y:" + initial_pos.y);
+		console.log("[PFC]: west:"+west+"/east:"+east+"/north:"+north+"/south:"+south);
 	}
 	/*
 	##############################################################################################

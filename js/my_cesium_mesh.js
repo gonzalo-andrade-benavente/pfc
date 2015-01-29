@@ -86,10 +86,13 @@
 			geometry = addFaceVertexUvs(geometry);
 			var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
 			var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true } );
+			//geometry.faces.push(new THREE.Face3( 86, 87, 88));
 			//var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true } );
+			/*
 			material.needsUpdate = true;
 			geometry.buffersNeedUpdate = true;
 			geometry.uvsNeedUpdate = true;
+			*/
 			mesh = new THREE.Mesh( geometry, material );
 			mesh.rotation.x =  Math.PI / 180 * (-90);
 			mesh.position.set(x, y, z);
@@ -104,9 +107,11 @@
 	function load(coor) {
 		coordinates = coor;
 		console.log("[PFC]: File " + sessionStorage.rute + " loaded.");
+		//Create scene Three.js
 		loadThreeJS();
+		//Create Graphic User Interface.
 		createGUI();
-		var mesh_x = -20, mesh_y = 0, mesh_z = 0, latitude = coordinates[0][0], longitude = coordinates[0][1];
+		var mesh_x = -40, mesh_y = 0, mesh_z = 0, latitude = coordinates[0][0], longitude = coordinates[0][1];
 		//var mesh_x = -20, mesh_y = 0, mesh_z = 0, latitude = 43.314, longitude = -2.002;
 		console.log("[PFC]: Coordinates: " + latitude + " - " + longitude);
 		loadedTerrainProvider(mesh_x, mesh_y, mesh_z, latitude, longitude);

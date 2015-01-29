@@ -1,6 +1,7 @@
 /* dnd.js */
 var xhr = new XMLHttpRequest();
 window.onload=function() {
+	sessionStorage.clear();
 	if (window.File && window.FileList && window.FileReader) {
 		var fileselect = document.getElementById("fileselect"),
 			filedrag = document.getElementById("filedrag"),
