@@ -30,15 +30,17 @@ function createGUI() {
 			}
 			//Like is a copy, go over the original points.
 			//Create point of each vertice with z = 0;
+			/*
 			for(var i = 0; i < geometry2.vertices.length; i++) {
 				geometry.faces.push(new THREE.Face3(i, geometry2.vertices.length + i, i));
 			}
+			*/
 			//geometry = createFaces(geometry, geometry2);
 			//geometry = createBase(geometry);
 			//geometry = addFaceVertexUvs(geometry);		
 			//The last don´t be trate jet.
 			geometry = studyGeometry(geometry, geometry2);
-			console.log(geometry);
+			//studyGeometry(geometry, geometry2);
 			//var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
 			//scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { map: texture, wireframe: false } )));
 			scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true, side:THREE.DoubleSide} )));
@@ -131,10 +133,58 @@ function addFaceVertexUvs(geometry) {
 
 function studyGeometry(geometry, geometry2) {
 	//In geometry2 have the old data of geometry.
-	var southVertices = new Array();
+	var southVertices = new Array(),
+		northVertices = new Array(),
+		eastVertices = new Array(),
+		westVertices = new Array();
+	
+	//Save the index of the limits(west, east, north, south).
+	geometry2.computeBoundingBox();
 	for(var i = 0; i < geometry2.vertices.length; i++) {
-	
-	
+		/*
+		if (geometry.vertices[i].y === geometry2.boundingBox.min.y)
+			southVertices.push(i);			
+		else if (geometry.vertices[i].x === geometry2.boundingBox.min.x)
+			westVertices.push(i);
+		else if (geometry.vertices[i].x === geometry2.boundingBox.max.x)
+			eastVertices.push(i);	
+		else if (geometry.vertices[i].y === geometry2.boundingBox.max.y)
+			northVertices.push(i);	
+		*/
+		if (geometry2.vertices[i].x == geometry2.boundingBox.min.x)
+			westVertices.push(geometry2.vertices[i]);
+	}
+	sortVector(geometry, westVertices, "y");
+	/*
+	var displace = geometry2.vertices.length;
+	for(var i = 0; i < southVertices.length-1; i++) {
+		geometry.faces.push(new THREE.Face3( southVertices[i], southVertices[i] + displace, southVertices[i+1]+displace));
+		geometry.faces.push(new THREE.Face3( southVertices[i], southVertices[i+1], southVertices[i+1]+displace));
+	}
+	for(var i = 0; i < westVertices.length-1; i++) {
+		geometry.faces.push(new THREE.Face3( westVertices[i], westVertices[i] + displace, westVertices[i+1]+displace));
+		geometry.faces.push(new THREE.Face3( westVertices[i], westVertices[i+1], westVertices[i+1]+displace));
+	}
+	//intersection (south-west)
+	geometry.faces.push(new THREE.Face3( southVertices[0], westVertices[0], westVertices[0]+displace));
+	geometry.faces.push(new THREE.Face3( southVertices[0]+displace, westVertices[0]+displace, southVertices[0]));
+	*/
+	//sortVector(geometry2, southVertices);
+
+	return geometry;
+}
+
+function sortVector(geometry, vertices, coordinate) {
+	var i,j;
+	var aux;
+	var control = true;
+	if (coordinate == "y"){
+		while(control) {
+			for(i = 0; i < vertices.length; i++) {
+				console.log("hola");
+			}
+			control = false;
+		}
 	}
 }
 
