@@ -33,19 +33,14 @@ function createGUI() {
 			for(var i = 0; i < geometry2.vertices.length; i++) {
 				geometry.faces.push(new THREE.Face3(i, geometry2.vertices.length + i, i));
 			}
-			
-			//for(var i = 0; )
-			//Create the base
-			geometry.computeBoundingBox();
-			geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.min.x, geometry.boundingBox.min.y, 0));
-			geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.max.x, geometry.boundingBox.min.y, 0));
-			geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.min.x, geometry.boundingBox.max.y, 0));
-			geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.max.x, geometry.boundingBox.max.y, 0));
-			geometry.faces.push(new THREE.Face3(geometry.vertices.length-4, geometry.vertices.length-3, geometry.vertices.length-2));
-			geometry.faces.push(new THREE.Face3(geometry.vertices.length-2, geometry.vertices.length-3, geometry.vertices.length-1));
-			
+			//geometry = createFaces(geometry, geometry2);
+			//geometry = createBase(geometry);
+			//geometry = addFaceVertexUvs(geometry);		
 			//The last don´t be trate jet.
+			geometry = studyGeometry(geometry, geometry2);
 			console.log(geometry);
+			//var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
+			//scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { map: texture, wireframe: false } )));
 			scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true, side:THREE.DoubleSide} )));
 			scene.children[1].rotation.x = Math.PI / 180 * (-90);
 			/*
@@ -89,6 +84,58 @@ function createGUI() {
 		folder.close();
 	*/
 	//gui.close();			
+}
+
+function createBase(geometry) {
+	//for(var i = 0; )
+	//Create the base
+	geometry.computeBoundingBox();
+	geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.min.x, geometry.boundingBox.min.y, 0));
+	geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.max.x, geometry.boundingBox.min.y, 0));
+	geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.min.x, geometry.boundingBox.max.y, 0));
+	geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.max.x, geometry.boundingBox.max.y, 0));
+	geometry.faces.push(new THREE.Face3(geometry.vertices.length-4, geometry.vertices.length-3, geometry.vertices.length-2));
+	geometry.faces.push(new THREE.Face3(geometry.vertices.length-2, geometry.vertices.length-3, geometry.vertices.length-1));
+	return geometry;
+}
+
+function createFaces(geometry, geometry2) {
+	//In geometry2 have the old data of geometry.
+	for(var i = 0; i < geometry2.vertices.length-2; i++ ) {
+		geometry.faces.push(new THREE.Face3(i,geometry2.vertices.length + i, geometry2.vertices.length + i + 1));
+		geometry.faces.push(new THREE.Face3(i,geometry2.vertices.length + i + 1, geometry2.vertices.length + i + 2));
+	}
+	return geometry;
+}
+
+function addFaceVertexUvs(geometry) {
+	geometry.computeBoundingBox();
+	var max = geometry.boundingBox.max,
+		min = geometry.boundingBox.min;
+	var offset = new THREE.Vector2(0 - min.x, 0 - min.y);
+	var range = new THREE.Vector2(max.x - min.x, max.y - min.y);
+	geometry.faceVertexUvs[0] = [];
+	for (i = 0; i < geometry.faces.length ; i++) {
+		var v1 = geometry.vertices[geometry.faces[i].a], v2 = geometry.vertices[geometry.faces[i].b], v3 = geometry.vertices[geometry.faces[i].c];
+		geometry.faceVertexUvs[0].push(
+		[
+			new THREE.Vector2((v1.x + offset.x)/range.x ,(v1.y + offset.y)/range.y),
+			new THREE.Vector2((v2.x + offset.x)/range.x ,(v2.y + offset.y)/range.y),
+			new THREE.Vector2((v3.x + offset.x)/range.x ,(v3.y + offset.y)/range.y)
+		]);
+
+	}
+	geometry.uvsNeedUpdate = true;
+	return geometry;
+}
+
+function studyGeometry(geometry, geometry2) {
+	//In geometry2 have the old data of geometry.
+	var southVertices = new Array();
+	for(var i = 0; i < geometry2.vertices.length; i++) {
+	
+	
+	}
 }
 
 /*
