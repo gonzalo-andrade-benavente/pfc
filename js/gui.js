@@ -153,8 +153,10 @@ function studyGeometry(geometry, geometry2) {
 		*/
 		if (geometry2.vertices[i].x == geometry2.boundingBox.min.x)
 			westVertices.push(geometry2.vertices[i]);
+		else if (geometry2.vertices[i].x == geometry2.boundingBox.max.x)
+			eastVertices.push(geometry2.vertices[i]);
 	}
-	sortVector(geometry, westVertices, "y");
+	sortVector(geometry, eastVertices, "y");
 	/*
 	var displace = geometry2.vertices.length;
 	for(var i = 0; i < southVertices.length-1; i++) {
@@ -175,17 +177,40 @@ function studyGeometry(geometry, geometry2) {
 }
 
 function sortVector(geometry, vertices, coordinate) {
+	/*
 	var i,j;
-	var aux;
+	var aux, value;
 	var control = true;
+	console.log(vertices);
 	if (coordinate == "y"){
-		while(control) {
-			for(i = 0; i < vertices.length; i++) {
-				console.log("hola");
+			for(i = 0; i < vertices.length-1; i++) {
+				if (vertices[i].y > vertices[i+1].y){
+					console.log(vertices[i].y +" > "+ vertices[i+1].y );
+					aux = vertices[i];
+					vertices[i] = vertices[i+1];
+					vertices[i+1] = aux;
+				}
+
 			}
-			control = false;
+	}
+	console.log(vertices);
+	*/
+	var array_num = new Array(11,25,26,31,28,10,9,0,4,33);
+	console.log(array_num);
+	control = true;
+	while(control) {
+		control = false;
+		for (var i =0; i<array_num.length; i++ ) {
+			if(array_num[i] > array_num[i+1] ) {
+				console.log(array_num[i] +"-"+ array_num[i+1]);
+				aux = array_num[i];
+				array_num[i] = array_num[i+1];
+				array_num[i+1] = aux;
+				control = true;
+			}
 		}
 	}
+	console.log(array_num);
 }
 
 /*
