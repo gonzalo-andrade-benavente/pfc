@@ -1,0 +1,39 @@
+<!-- <html  xml:lang="es" lang="es"> -->
+<html>
+<head>
+	<!-- JavaScript: Mapbox. -->
+	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
+	<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+	<link href='https://mapbox.com/base/latest/base.css?v1.0' rel='stylesheet' />
+	<!-- JavaScript: Para codificar las coordenadas -->
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry"></script>
+	<!-- JavaScript: include method omnivore para gpx, kml-->
+	<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
+	<!-- JavaScript: CesiumJS and myCesium -->
+	<script type="text/javascript" src="js/Cesium.js"> 		//Cesium		</script>
+	<!-- <script type="text/javascript" src="js/my_cesium.js">	//My library.	</script> -->
+	<!-- JavaScript: Mi libreria.-->
+	<script type="text/javascript" src="js/my_cesium_rute.js"> 	//My library.	</script>
+	<style>
+		body { margin:0; padding:0; }
+		#map { position:absolute; margin-top:3%; margin-left:35%; width:30%; height:73%}
+		#buttons {position:absolute; margin-top:3%; margin-left:45%; width:30%; }
+		#file {position:relative; float:right;}
+	</style>
+	<title> PFC Three.js  </title>
+
+</head>
+
+<body onload="requestTilesWhenReady()">
+	<div id="map"></div>
+	<div id="file"> </div>
+	<div id="buttons"> 
+		<!-- <input type='button' class='button' value='Cambiar Mapa' onclick="changeMap()" /> 
+			 <input type='button' class='button' value='Dibujar Mapa' onclick="drawRute()" /> -->
+		<a class='icon layers button' onclick="changeMap()">Cambiar Mapa</a>
+		<a class='icon pencil button' onclick="drawRute()">Modelar 3D</a>
+	</div>
+</body>
+
+</html>

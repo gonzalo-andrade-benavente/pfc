@@ -1,0 +1,32 @@
+<html  xml:lang="es" lang="es">
+
+<head>
+<meta charset=utf-8 />
+<title>Mapbox Rectangle</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+<style>
+  body { margin:0; padding:0; }
+  <!-- Ajuste manual -->
+  <!-- #map { position:absolute; top:0; bottom:0; width:450; height:510 } -->
+  <!-- #map { position:absolute; top:0; bottom:0; width:700; height:700 } -->
+   #map { position:absolute; top:0; bottom:0; width:30%; height:85%}
+</style>
+</head>
+<body>
+<div id='map'></div>
+<script>
+	L.mapbox.accessToken = 'pk.eyJ1IjoiZ29uemFsaXRvIiwiYSI6IlVJTGIweFUifQ.waoF7m8PZbBM6u8Tg_rR7A';
+
+	var map = L.mapbox.map('map', 'gonzalito.k53kcf3d');
+	
+	var bounds = [[43.2861328125, -2.021484375000009], [43.330078125, -1.9775390625000044]];
+	L.rectangle(bounds, {color: "#ff7800", weight: 2, fillOpacity:0 }).addTo(map);
+	map.setZoom(14);
+	map.setMaxBounds(bounds);
+	
+</script>
+</body>
+
+</html>

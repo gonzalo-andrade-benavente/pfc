@@ -177,7 +177,6 @@
 
 		}
 		geometry.uvsNeedUpdate = true;
-		//geometry.computeTangents();
 		return geometry;
 	}
 		
