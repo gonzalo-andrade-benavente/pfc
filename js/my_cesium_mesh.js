@@ -111,9 +111,12 @@
 		loadThreeJS();
 		//Create Graphic User Interface.
 		createGUI();
+		/* 
+			Change the mesh, change the coordinates.
+		*/
 		var mesh_x = -40, mesh_y = 0, mesh_z = 0, latitude = coordinates[0][0], longitude = coordinates[0][1];
 		//var mesh_x = -20, mesh_y = 0, mesh_z = 0, latitude = 43.314, longitude = -2.002;
-		console.log("[PFC]: Coordinates: " + latitude + " - " + longitude);
+		//console.log("[PFC]: Coordinates: " + latitude + " - " + longitude);
 		loadedTerrainProvider(mesh_x, mesh_y, mesh_z, latitude, longitude);
 	}
 	
