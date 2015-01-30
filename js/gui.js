@@ -33,13 +33,17 @@ function createGUI() {
 			for(var i = 0; i < geometry2.vertices.length; i++) {
 				geometry.faces.push(new THREE.Face3(i, geometry2.vertices.length + i, i));
 			}
-			//Make faces with the new points, make rectangule!
-			/*
-			for(var i = geometry2.vertices.length; i < geometry.vertices.length - 3; i++) {
-				geometry.faces.push(new THREE.Face3(i, i + 1, i + 2));
-				geometry.faces.push(new THREE.Face3(i, i + 2, i + 3));
-			}
-			*/
+			
+			//for(var i = 0; )
+			//Create the base
+			geometry.computeBoundingBox();
+			geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.min.x, geometry.boundingBox.min.y, 0));
+			geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.max.x, geometry.boundingBox.min.y, 0));
+			geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.min.x, geometry.boundingBox.max.y, 0));
+			geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.max.x, geometry.boundingBox.max.y, 0));
+			geometry.faces.push(new THREE.Face3(geometry.vertices.length-4, geometry.vertices.length-3, geometry.vertices.length-2));
+			geometry.faces.push(new THREE.Face3(geometry.vertices.length-2, geometry.vertices.length-3, geometry.vertices.length-1));
+			
 			//The last don´t be trate jet.
 			console.log(geometry);
 			scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true, side:THREE.DoubleSide} )));
