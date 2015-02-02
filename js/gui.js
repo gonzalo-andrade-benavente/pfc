@@ -34,9 +34,9 @@ function createGUI() {
 			geometry = completeGeometry(geometry, geometry2);
 			geometry = addFaceVertexUvs(geometry);
 			console.log(geometry);
-			//var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
-			//scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { map: texture, wireframe: false } )));
-			scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true, side:THREE.DoubleSide} )));
+			var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
+			scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { map: texture, wireframe: false } )));
+			//scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: false, side:THREE.DoubleSide} )));
 			scene.children[1].rotation.x = Math.PI / 180 * (-90);
 		}
 	}
