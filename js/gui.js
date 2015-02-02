@@ -25,31 +25,17 @@ function createGUI() {
 			var geometry = scene.children[0].geometry.clone(),
 				geometry2 = scene.children[0].geometry.clone(); 
 		
+			/*
+				Add to geometry her base.
+			*/
 			for(var i = 0; i < geometry2.vertices.length; i++) {
 				geometry.vertices.push(new THREE.Vector3(geometry2.vertices[i].x, geometry2.vertices[i].y, 0));
 			}
-			//Like is a copy, go over the original points.
-			//Create point of each vertice with z = 0;
-			/*
-			for(var i = 0; i < geometry2.vertices.length; i++) {
-				geometry.faces.push(new THREE.Face3(i, geometry2.vertices.length + i, i));
-			}
-			*/
-			//geometry = createFaces(geometry, geometry2);
-			//geometry = createBase(geometry);
-			//geometry = addFaceVertexUvs(geometry);		
-			//The last don´t be trate jet.
 			geometry = studyGeometry(geometry, geometry2);
-			//studyGeometry(geometry, geometry2);
 			//var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
 			//scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { map: texture, wireframe: false } )));
 			scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true, side:THREE.DoubleSide} )));
 			scene.children[1].rotation.x = Math.PI / 180 * (-90);
-			/*
-			for(var i = 0; i < geometry2.faces.length; i++) {
-				geometry.faces.push(new THREE.Face3(geometry2.faces[i].a + geometry2.vertices.length, geometry2.faces[i].b + geometry2.vertices.length, geometry2.faces[i].c + geometry2.vertices.length));
-			}
-			*/
 		}
 	}
 	
@@ -86,28 +72,6 @@ function createGUI() {
 		folder.close();
 	*/
 	//gui.close();			
-}
-
-function createBase(geometry) {
-	//for(var i = 0; )
-	//Create the base
-	geometry.computeBoundingBox();
-	geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.min.x, geometry.boundingBox.min.y, 0));
-	geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.max.x, geometry.boundingBox.min.y, 0));
-	geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.min.x, geometry.boundingBox.max.y, 0));
-	geometry.vertices.push(new THREE.Vector3(geometry.boundingBox.max.x, geometry.boundingBox.max.y, 0));
-	geometry.faces.push(new THREE.Face3(geometry.vertices.length-4, geometry.vertices.length-3, geometry.vertices.length-2));
-	geometry.faces.push(new THREE.Face3(geometry.vertices.length-2, geometry.vertices.length-3, geometry.vertices.length-1));
-	return geometry;
-}
-
-function createFaces(geometry, geometry2) {
-	//In geometry2 have the old data of geometry.
-	for(var i = 0; i < geometry2.vertices.length-2; i++ ) {
-		geometry.faces.push(new THREE.Face3(i,geometry2.vertices.length + i, geometry2.vertices.length + i + 1));
-		geometry.faces.push(new THREE.Face3(i,geometry2.vertices.length + i + 1, geometry2.vertices.length + i + 2));
-	}
-	return geometry;
 }
 
 function addFaceVertexUvs(geometry) {
@@ -157,17 +121,29 @@ function studyGeometry(geometry, geometry2) {
 	eastVertices = sortVector(geometry2, eastVertices, "y");
 	northVertices = sortVector(geometry2, northVertices, "x");
 	
-	for(i = 0; i < southVertices.length-1; i++){
-		geometry.faces.push(new THREE.Face3(southVertices[i], southVertices[i]+displace, southVertices[i+1]+displace));
-		geometry.faces.push(new THREE.Face3(southVertices[i+1], southVertices[i], southVertices[i+1]+displace));
-	}
+	addRelieve(geometry, southVertices, displace);
+	addRelieve(geometry, westVertices, displace);
+	addRelieve(geometry, eastVertices, displace);
+	addRelieve(geometry, northVertices, displace);
+	/*
+		West and east miss a point and north two point.
+	*/
+	geometry.faces.push(new THREE.Face3(westVertices[0], westVertices[0]+displace, southVertices[0]+displace));
+	geometry.faces.push(new THREE.Face3(southVertices[0], westVertices[0], southVertices[0]+displace));
+	
 	return geometry;
 }
 
+function addRelieve(geometry, vertices, displace) {
+	for(var i = 0; i < vertices.length-1; i++){
+		geometry.faces.push(new THREE.Face3(vertices[i], vertices[i]+displace, vertices[i+1]+displace));
+		geometry.faces.push(new THREE.Face3(vertices[i+1], vertices[i], vertices[i+1]+displace));
+	}
+}
+
+
 function sortVector(geometry, vertices, coordinate) {
 	var index_aux, control = true, i;
-	console.log(vertices);
-	
 	if(coordinate == "y") {
 		while(control) {
 			control = false;
@@ -193,7 +169,6 @@ function sortVector(geometry, vertices, coordinate) {
 			}
 		}
 	}
-	console.log(vertices);
 	return vertices;
 }
 
