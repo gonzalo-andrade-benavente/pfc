@@ -1,0 +1,38 @@
+<html  xml:lang="es" lang="es">
+	<head>
+		<script type="text/javascript" src="threeJS/build/three.js"></script>
+	</head>
+	<body>
+		<script>
+			console.log("JavaScript");
+			var array = new Array();
+			array.push(new THREE.Vector3(1,2,1));
+			array.push(new THREE.Vector3(1,1,1));
+			array.push(new THREE.Vector3(1,11,1));
+			array.push(new THREE.Vector3(1,12,1));
+			array.push(new THREE.Vector3(1,1,1));
+			array.push(new THREE.Vector3(1,2,1));
+			array.push(new THREE.Vector3(1,3,1));
+			array.push(new THREE.Vector3(1,15,1));
+			array.push(new THREE.Vector3(1,12,1));
+			array.push(new THREE.Vector3(1,9,1));
+			
+			var indices = [0,1,2,3,4,5,6,7,8,9];
+			console.log(indices);
+			var index_aux, control = true;
+			while(control) {
+				control = false;
+				for(var i=0; i < indices.length-1; i++) {
+					if (array[indices[i]].y > array[indices[i+1]].y) {
+						index_aux = indices[i+1];
+						indices[i+1] = indices[i];
+						indices[i] = index_aux;
+						control = true;
+					}
+				}
+			}
+			console.log("correcto: 1,4,0,5,6,9,2,3,8,7");
+			console.log(indices);
+		</script>
+	</body>
+</html>
