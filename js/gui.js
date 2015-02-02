@@ -31,7 +31,9 @@ function createGUI() {
 			for(var i = 0; i < geometry2.vertices.length; i++) {
 				geometry.vertices.push(new THREE.Vector3(geometry2.vertices[i].x, geometry2.vertices[i].y, 0));
 			}
-			geometry = studyGeometry(geometry, geometry2);
+			geometry = completeGeometry(geometry, geometry2);
+			geometry = addFaceVertexUvs(geometry);
+			console.log(geometry);
 			//var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
 			//scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { map: texture, wireframe: false } )));
 			scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true, side:THREE.DoubleSide} )));
@@ -95,14 +97,13 @@ function addFaceVertexUvs(geometry) {
 	return geometry;
 }
 
-function studyGeometry(geometry, geometry2) {
+function completeGeometry(geometry, geometry2) {
 	//In geometry2 have the old data of geometry.
 	var southVertices = new Array(),
 		northVertices = new Array(),
 		eastVertices = new Array(),
 		westVertices = new Array(),
 		i;
-	
 	//Save the index of the limits(west, east, north, south).
 	geometry2.computeBoundingBox();
 	for(i = 0; i < geometry2.vertices.length; i++) {
@@ -128,9 +129,21 @@ function studyGeometry(geometry, geometry2) {
 	/*
 		West and east miss a point and north two point.
 	*/
+	//West-south
 	geometry.faces.push(new THREE.Face3(westVertices[0], westVertices[0]+displace, southVertices[0]+displace));
 	geometry.faces.push(new THREE.Face3(southVertices[0], westVertices[0], southVertices[0]+displace));
-	
+	//East-south
+	geometry.faces.push(new THREE.Face3(eastVertices[0], eastVertices[0]+displace, southVertices[southVertices.length-1]+displace));
+	geometry.faces.push(new THREE.Face3(southVertices[southVertices.length-1], eastVertices[0], southVertices[southVertices.length-1]+displace));
+	//North-West 
+	geometry.faces.push(new THREE.Face3(westVertices[westVertices.length-1], westVertices[westVertices.length-1]+displace, northVertices[0]+displace));
+	geometry.faces.push(new THREE.Face3(northVertices[0], westVertices[westVertices.length-1], northVertices[0]+displace));
+	//North-East
+	geometry.faces.push(new THREE.Face3(eastVertices[eastVertices.length-1], eastVertices[eastVertices.length-1]+displace, northVertices[northVertices.length-1]+displace));
+	geometry.faces.push(new THREE.Face3(northVertices[northVertices.length-1], eastVertices[eastVertices.length-1], northVertices[northVertices.length-1]+displace));
+	/*add Base goemtry*/
+	geometry.faces.push(new THREE.Face3(southVertices[0]+displace, eastVertices[eastVertices.length-1]+displace, southVertices[southVertices.length-1]+displace));
+	geometry.faces.push(new THREE.Face3(southVertices[0]+displace, westVertices[westVertices.length-1]+displace, eastVertices[eastVertices.length-1]+displace));
 	return geometry;
 }
 
