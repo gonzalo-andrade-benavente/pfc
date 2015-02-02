@@ -136,11 +136,12 @@ function studyGeometry(geometry, geometry2) {
 	var southVertices = new Array(),
 		northVertices = new Array(),
 		eastVertices = new Array(),
-		westVertices = new Array();
+		westVertices = new Array(),
+		i;
 	
 	//Save the index of the limits(west, east, north, south).
 	geometry2.computeBoundingBox();
-	for(var i = 0; i < geometry2.vertices.length; i++) {
+	for(i = 0; i < geometry2.vertices.length; i++) {
 		if (geometry.vertices[i].y === geometry2.boundingBox.min.y)
 			southVertices.push(i);			
 		else if (geometry.vertices[i].x === geometry2.boundingBox.min.x)
@@ -151,52 +152,48 @@ function studyGeometry(geometry, geometry2) {
 			northVertices.push(i);	
 	}
 	var displace = geometry2.vertices.length;
-	console.log(southVertices);
-	southVertices = sortVector(geometry2, southVertices, "y");
-	geometry.faces.push(new THREE.Face3(southVertices[0],southVertices[0]+displace,southVertices[0]));
-	console.log(southVertices);
+	southVertices = sortVector(geometry2, southVertices, "x");
+	westVertices = sortVector(geometry2, westVertices, "y");
+	eastVertices = sortVector(geometry2, eastVertices, "y");
+	northVertices = sortVector(geometry2, northVertices, "x");
+	
+	for(i = 0; i < southVertices.length-1; i++){
+		geometry.faces.push(new THREE.Face3(southVertices[i], southVertices[i]+displace, southVertices[i+1]+displace));
+		geometry.faces.push(new THREE.Face3(southVertices[i+1], southVertices[i], southVertices[i+1]+displace));
+	}
 	return geometry;
 }
 
 function sortVector(geometry, vertices, coordinate) {
-	control = true;
-	if (coordinate == "y") {
-		for(j=0; j < 5; j ++) {
-			for (var i = 0; i< vertices.length-1; i++ ) {
-				if(geometry.vertices[i].y > geometry.vertices[i+1].y ) {
-						//console.log(geometry.vertices[i].y + ">" + geometry.vertices[i+1].y);
-						aux = vertices[i];
-						vertices[i] = vertices[i+1];
-						vertices[i+1] = aux;
-				}
-			}
-		}
-	} else if (coordinate == "x") {
-		for(j=0; j < 5; j ++) {
-			for (var i = 0; i< vertices.length-1; i++ ) {
-				if(geometry.vertices[i].x > geometry.vertices[i+1].x ) {
-						//console.log(geometry.vertices[i].y + ">" + geometry.vertices[i+1].y);
-						aux = vertices[i];
-						vertices[i] = vertices[i+1];
-						vertices[i+1] = aux;
-				}
-			}
-		}
+	var index_aux, control = true, i;
+	console.log(vertices);
 	
+	if(coordinate == "y") {
+		while(control) {
+			control = false;
+			for(var i=0; i < vertices.length-1; i++) {
+				if (geometry.vertices[vertices[i]].y > geometry.vertices[vertices[i+1]].y) {
+					index_aux = vertices[i+1];
+					vertices[i+1] = vertices[i];
+					vertices[i] = index_aux;
+					control = true;
+				}
+			}
+		}		
+	} else if(coordinate == "x") {
+		while(control) {
+			control = false;
+			for(var i=0; i < vertices.length-1; i++) {
+				if (geometry.vertices[vertices[i]].x > geometry.vertices[vertices[i+1]].x) {
+					index_aux = vertices[i+1];
+					vertices[i+1] = vertices[i];
+					vertices[i] = index_aux;
+					control = true;
+				}
+			}
+		}
 	}
-	/*
-	while(control) {
-		control = false;
-		for (var i = 0; i< vertices.length-1; i++ ) {
-			if(geometry.vertices[i].y > geometry.vertices[i+1].y ) {
-				aux = vertices[i];
-				vertices[i] = vertices[i+1];
-				vertices[i+1] = aux;
-				control = true;
-			}
-		}
-	}*/
-	
+	console.log(vertices);
 	return vertices;
 }
 
