@@ -74,8 +74,9 @@
 			*/
 			var bounds = [[tile.northwest.latitude, tile.northwest.longitude], [tile.southeast.latitude, tile.southeast.longitude]];
 			L.rectangle(bounds, {color: "#ffffff", weight: 2, fillOpacity:0 }).addTo(map);
-			//map.setZoom(14);
-			map.setMaxBounds(bounds);
+			map.setZoom(14);
+			map.fitBounds(bounds);
+			//map.setMaxBounds(bounds);
 			console.log("[PFC]:TileCesium in Mapbox set bounds.");
 			
 		})
@@ -157,6 +158,7 @@
 		array_coordinate.push(new Coordinate(coord[0][0], coord[0][1]));
 		positionLonLat = Cesium.Cartographic.fromDegrees(coord[0][1], coord[0][0]);
 		pos = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
+		console.log(pos);
 		initial_pos = pos;
 		for(var i=1; i < coord.length; i++){
 			positionLonLat = Cesium.Cartographic.fromDegrees(coord[i][1], coord[i][0]);
@@ -179,7 +181,7 @@
 				pos = compare_pos;
 			}
 		}
-		console.log(array_coordinate);
+		//console.log(array_coordinate);
 		console.log("[PFC]: Total coordinates:" + coord.length);
 		console.log("[PFC]: Initial Tile: X:" + initial_pos.x + " Y:" + initial_pos.y);
 		console.log("[PFC]: west:"+west+"/east:"+east+"/north:"+north+"/south:"+south);
