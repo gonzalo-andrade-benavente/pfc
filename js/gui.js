@@ -31,9 +31,8 @@ function createGUI() {
 			for(var i = 0; i < geometry2.vertices.length; i++) {
 				geometry.vertices.push(new THREE.Vector3(geometry2.vertices[i].x, geometry2.vertices[i].y, 0));
 			}
-			//geometry = addFaceVertexUvs(geometry);
 			geometry = completeGeometry(geometry, geometry2);
-			geometry = addFaceVertexUvs(geometry);
+			//geometry = addFaceVertexUvs(geometry);
 			console.log(geometry);
 			var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
 			scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide } )));

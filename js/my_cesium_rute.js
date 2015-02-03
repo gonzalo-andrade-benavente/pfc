@@ -159,10 +159,10 @@
 		Save in sessionStorage the tiles.
 	*/
 	function checkTile(coord) {
-		var array_coordinate = new Array();
+		//var array_coordinate = new Array();
 		var pos, compare_pos, positionLonLat, initial_pos;
 		var north = 0, south = 0, east = 0, west = 0;
-		array_coordinate.push(new Coordinate(coord[0][0], coord[0][1]));
+		//array_coordinate.push(new Coordinate(coord[0][0], coord[0][1]));
 		positionLonLat = Cesium.Cartographic.fromDegrees(coord[0][1], coord[0][0]);
 		pos = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
 		initial_pos = pos;
@@ -170,7 +170,7 @@
 			positionLonLat = Cesium.Cartographic.fromDegrees(coord[i][1], coord[i][0]);
 			compare_pos = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
 			if (pos.x != compare_pos.x) {
-				array_coordinate.push(new Coordinate(coord[i][0], coord[i][1]));
+				//array_coordinate.push(new Coordinate(coord[i][0], coord[i][1]));
 				//console.log("[PFC]: Coordinate change:"+i);
 				if (pos.x < compare_pos.x)
 					east = east + 1;
@@ -178,7 +178,7 @@
 					west = west + 1;
 				pos = compare_pos;
 			} else if (pos.y != compare_pos.y) {
-				array_coordinate.push(new Coordinate(coord[i][0], coord[i][1]));
+				//array_coordinate.push(new Coordinate(coord[i][0], coord[i][1]));
 				//console.log("Coordinate change:"+i);
 				if (pos.y < compare_pos.y)
 					south = south + 1;
