@@ -32,7 +32,7 @@
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
 					if (xhr.responseText != "") {
-						createMesh(JSON.parse(xhr.responseText));
+						studyRute(JSON.parse(xhr.responseText));
 						load(JSON.parse(xhr.responseText));
 					}else {
 						console.log("[PFC my_cesium_mesh.js]: Error donwload rute gpx Ajax.");
@@ -66,9 +66,6 @@
 		return geometry;
 	}
 	
-	function loadedTerrainProviderTile(){
-	
-	}
 	function loadedTerrainProvider(x, y, z, latitude, longitude) {
 		var positionLonLat = Cesium.Cartographic.fromDegrees(longitude, latitude);
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
@@ -120,7 +117,7 @@
 		var mesh_x = -40, mesh_y = 0, mesh_z = 0, latitude = coordinates[0][0], longitude = coordinates[0][1];
 		//var mesh_x = -20, mesh_y = 0, mesh_z = 0, latitude = 43.314, longitude = -2.002;
 		//console.log("[PFC]: Coordinates: " + latitude + " - " + longitude);
-		loadedTerrainProvider(mesh_x, mesh_y, mesh_z, latitude, longitude);
+		//loadedTerrainProvider(mesh_x, mesh_y, mesh_z, latitude, longitude);
 	}
 	
 	

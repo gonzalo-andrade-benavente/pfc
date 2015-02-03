@@ -46,11 +46,11 @@ function createGUI() {
 	//gui.add(controls, 'lon').name('Longitude');
 	
 	gui.add(controls, 'visible').name('Visible').onChange(function (e) {
-		scene.children[0].visible = e;
+		scene.children[scene.children.length-1].visible = e;
 	});
 	
 	gui.add(controls, 'wireframe').name('Marcos de malla').onChange(function (e) {
-		scene.children[0].material.wireframe = e;
+		scene.children[scene.children.length-1].material.wireframe = e;
 	});
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
