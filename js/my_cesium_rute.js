@@ -79,9 +79,9 @@
 			//map.setZoom(13);
 			var map_bounds = [[bounds[0][0], bounds[0][1]],[final_bounds[1][0], final_bounds[1][1]]];
 			//L.rectangle(map_bounds, {color: "#DFFA12", weight: 2, fillOpacity:0 }).addTo(map);
-			//map.setMaxBounds(bounds);
 			//map.fitBounds(map_bounds);
-			map.setMaxBounds(map_bounds);
+			map.setMaxBounds(bounds);
+			//map.setMaxBounds(map_bounds);
 			console.log("[PFC]:TileCesium in Mapbox set bounds.");
 			
 		})
@@ -111,9 +111,9 @@
 		// Static image contain url to mapbox rute.
 		// Control ZOOM!!
 		if (id_map == -1)
-			var staticImage = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/path-4+026-0.75('+encodeString+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ 14 +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+			var staticImage = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/path-4+026-0.75('+encodeString+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ map.getZoom() +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 		else
-			var staticImage = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/path-4+026-0.75('+encodeString+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ 14 +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+			var staticImage = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/path-4+026-0.75('+encodeString+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ map.getZoom() +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 		getTexture(staticImage);
 	}
 
