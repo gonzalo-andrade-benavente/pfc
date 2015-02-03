@@ -65,7 +65,9 @@
 		return geometry;
 	}
 	
+	function loadedTerrainProviderTile(){
 	
+	}
 	function loadedTerrainProvider(x, y, z, latitude, longitude) {
 		var positionLonLat = Cesium.Cartographic.fromDegrees(longitude, latitude);
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
