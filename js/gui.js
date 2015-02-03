@@ -50,7 +50,9 @@ function createGUI() {
 	});
 	
 	gui.add(controls, 'wireframe').name('Marcos de malla').onChange(function (e) {
-		scene.children[scene.children.length-1].material.wireframe = e;
+		//scene.children[scene.children.length-1].material.wireframe = e;
+		for (var i = 0; i < scene.children.length; i++ )
+			scene.children[i].material.wireframe = e;
 	});
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');

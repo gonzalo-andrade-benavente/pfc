@@ -17,14 +17,12 @@ function createMesh(x, y, z, pos_x, pos_y) {
 				geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 			}
 			// Texture only in surface.
-			//geometry = addFaceVertexUvs(geometry);
-			
+			geometry = addFaceVertexUvs(geometry);
 			geometry = addBase(geometry);
 			
-			//var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
-			//var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true } );
-			//geometry.faces.push(new THREE.Face3( 86, 87, 88));
-			var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+			var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
+			var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
+			//var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 			/*
 			material.needsUpdate = true;
 			geometry.buffersNeedUpdate = true;
