@@ -33,7 +33,7 @@ function createGUI() {
 			}
 			geometry = completeGeometry(geometry, geometry2);
 			//geometry = addFaceVertexUvs(geometry);
-			console.log(geometry);
+			//console.log(geometry);
 			var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
 			scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide } )));
 			//scene.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: false, side:THREE.DoubleSide} )));
