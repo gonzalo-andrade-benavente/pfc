@@ -13,7 +13,7 @@
 	*/
 	function requestTilesWhenReady() {
 		if (aCesiumTerrainProvider.ready) {
-			console.log("[PFC]: Cesium Server Terrain Provider ready");
+			console.log("[PFC my_cesium_mesh.js]: Cesium Server Terrain Provider ready");
 			getRute();
 		} else {
 			//console.log("[PFC]:Waiting a Terrain Provider is ready");
@@ -32,9 +32,10 @@
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
 					if (xhr.responseText != "") {
+						createMesh(JSON.parse(xhr.responseText));
 						load(JSON.parse(xhr.responseText));
 					}else {
-						console.log("[PFC]: Error donwload rute gpx Ajax.");
+						console.log("[PFC my_cesium_mesh.js]: Error donwload rute gpx Ajax.");
 					}
 					
 				}
@@ -100,7 +101,7 @@
 			mesh.position.set(x, y, z);
 			mesh.name = latitude + "/" + longitude;
 			scene.add(mesh);
-			console.log("[PFC]: Mesh added to scene.");
+			console.log("[PFC my_cesium_mesh.js]: Mesh added to scene.");
 		});
 	}
 	/*
@@ -108,7 +109,7 @@
 	*/
 	function load(coor) {
 		coordinates = coor;
-		console.log("[PFC]: File " + sessionStorage.rute + " loaded.");
+		console.log("[PFC my_cesium_mesh.js]: File " + sessionStorage.rute + " loaded.");
 		//Create scene Three.js
 		loadThreeJS();
 		//Create Graphic User Interface.
