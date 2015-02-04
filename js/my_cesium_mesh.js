@@ -56,7 +56,7 @@ function load(coord) {
 	//Create Graphic User Interface with gui.js
 	createGUI();
 	info_tiles = checkTile(coord);
-	
+
 	for(i = 0; i < info_tiles.length; i++) {
 		switch (info_tiles[i].cardinality) {
 			case "c":	createMesh(0, 0, 0, info_tiles[i].x, info_tiles[i].y, sessionStorage.name + i + info_tiles[i].cardinality);
@@ -71,6 +71,7 @@ function load(coord) {
 						break;
 		}
 	}
+	
 }
 	
 	

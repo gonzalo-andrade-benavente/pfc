@@ -122,8 +122,9 @@ function createMesh(x, y, z, pos_x, pos_y, mapbox_texture) {
 				geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 			}
 			// Texture only in surface.
-			geometry = addFaceVertexUvs(geometry);
+			//geometry = addFaceVertexUvs(geometry);
 			geometry = addBase(geometry);
+			geometry = addFaceVertexUvs(geometry);
 			var texture = THREE.ImageUtils.loadTexture( "./textures/"+ mapbox_texture +".png" );
 			var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
 			//var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
