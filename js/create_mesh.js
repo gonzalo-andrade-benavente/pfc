@@ -28,11 +28,10 @@ function createMesh(x, y, z, pos_x, pos_y) {
 			geometry.buffersNeedUpdate = true;
 			geometry.uvsNeedUpdate = true;
 			*/
-			console.log(geometry);
+			//console.log(geometry);
 			mesh = new THREE.Mesh( geometry, material );
 			mesh.rotation.x =  Math.PI / 180 * (-90);
 			mesh.position.set(x, y, z);
-			//mesh.name = latitude + "/" + longitude;
 			scene.add(mesh);
 		});
 	//}
@@ -122,13 +121,12 @@ function studyRute(coord) {
 		}
 	}
 	
-	
+	/*
 	createMesh(0, 0, 0, tiles[0][0], tiles[0][1]);
 	createMesh(0, 0, 33.2, tiles[0][0], tiles[0][1]+1);
 	createMesh(33.2, 0, 0, tiles[0][0]+1, tiles[0][1]);
 	createMesh(33.2, 0, 33.2, tiles[0][0]+1, tiles[0][1]+1);
 	createMesh(-33.2, 0, 0, tiles[0][0]-1, tiles[0][1]);
-	createMesh(-33.2, 0, 33.2, tiles[0][0]-1, tiles[0][1]+1);
-	
-	
+	createMesh(-33.2, 0, 33.2, tiles[0][0]-1, tiles[0][1]+1);	
+	*/
 }

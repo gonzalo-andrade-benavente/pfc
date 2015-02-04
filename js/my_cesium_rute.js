@@ -11,7 +11,7 @@
 	*/
 	function requestTilesWhenReady() {
 		if (aCesiumTerrainProvider.ready) {
-			console.log("[PFC]:Cesium Server Terrain Provider ready");
+			console.log("[PFC my_cesium_rute.js]:Cesium Server Terrain Provider ready");
 			var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 			var file_name = name.substring(0, name.indexOf("."));
 			sessionStorage.name = file_name;
@@ -27,10 +27,24 @@
 	var id_maps = new Array('gonzalito.k53kcf3d', 'gonzalito.k53e4462','gonzalito.k53h65oo', 'gonzalito.78706231');
 	var map, id_map = 0;
 	var coordinates;
-	L.mapbox.accessToken = 'pk.eyJ1IjoiZ29uemFsaXRvIiwiYSI6IlVJTGIweFUifQ.waoF7m8PZbBM6u8Tg_rR7A';
+	//L.mapbox.accessToken = 'pk.eyJ1IjoiZ29uemFsaXRvIiwiYSI6IlVJTGIweFUifQ.waoF7m8PZbBM6u8Tg_rR7A';
 	var final_bounds;
-
-
+	/*
+		info_tiles contains all information about tiles of the rute gpx.
+		Each element of the array is a InfoTile element.
+	*/
+	var info_tiles = new Array();
+	/*
+		Class to save x and y Cesium and bounds Cesium to Mapbox.
+		Cardinality: c:center, w:west, e:east, n:north, s:south;
+	*/
+	function InfoTile(x, y, cardinality, northwest_latitude, northwest_longitude, southeast_latitude, southeast_longitude){
+		this.x = x;
+		this.y = y;
+		this.bounds = [[northwest_latitude, northwest_longitude],[southeast_latitude, southeast_longitude]];
+		this.cardinality = cardinality;
+	}
+	
 	function getRute() {
 		if (xhr.upload) {
 			var url = "getRute.php";
@@ -42,7 +56,7 @@
 					if (xhr.responseText != "") {
 						createMap(JSON.parse(xhr.responseText));
 					}else {
-						console.log("[PFC]: Error donwload rute gpx Ajax.");
+						console.log("[PFC my_cesium_rute.js]: Error donwload rute gpx Ajax.");
 					}
 					
 				}
@@ -51,8 +65,8 @@
 	}
 	
 	function createMap(coord) {
+		L.mapbox.accessToken = 'pk.eyJ1IjoiZ29uemFsaXRvIiwiYSI6IlVJTGIweFUifQ.waoF7m8PZbBM6u8Tg_rR7A';
 		map = L.mapbox.map('map', id_maps[id_map]);
-		//map.setZoom(14);
 		coordinates = coord;
 		checkTile(coordinates);
 		loadGpx();
@@ -64,29 +78,24 @@
 	//Añadimos la ruta a través del método omnivore, se podría dibujar la línea como polyline.
 		var gpxLayer = omnivore.gpx(sessionStorage.rute)
 		.on('ready', function() {
-			//fitBounds pone el máximo zoom posible para la ruta.
+			/*
 			var positionLonLat, positionTileXY, tile;
 			positionLonLat = Cesium.Cartographic.fromDegrees(coordinates[0][1], coordinates[0][0]);
-			//positionLonLat = Cesium.Cartographic.fromDegrees(coordinates[coordinates.length-1][1], coordinates[coordinates.length-1][0]);
 			positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
 			tile = getTile(positionTileXY);
-			/*
-				Map Rectangle for the first coordinate, study the rest of coordinates.
-				North-West and South-East
-			*/
 			var bounds = [[tile.northwest.latitude, tile.northwest.longitude], [tile.southeast.latitude, tile.southeast.longitude]];
 			L.rectangle(bounds, {color: "#ffffff", weight: 2, fillOpacity:0 }).addTo(map);
-			//map.setZoom(13);
 			var map_bounds = [[bounds[0][0], bounds[0][1]],[final_bounds[1][0], final_bounds[1][1]]];
-			//L.rectangle(map_bounds, {color: "#DFFA12", weight: 2, fillOpacity:0 }).addTo(map);
-			//map.fitBounds(map_bounds);
+			map.setZoom(14);
 			map.setMaxBounds(bounds);
-			//map.setMaxBounds(map_bounds);
-			console.log("[PFC]:TileCesium in Mapbox set bounds.");
+			*/
+			var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
+			map.setMaxBounds(bounds);
+			console.log("[PFC my_cesium_rute.js]:TileCesium in Mapbox set bounds.");
 			
 		})
 		.on('error', function() {
-			alert('[PFC]: Error loaded omnivore file gpx');
+			alert('[PFC my_cesium_rute.js]: Error loaded omnivore file gpx');
 		// fired if the layer can't be loaded over AJAX
 		// or can't be parsed
 		})
@@ -95,13 +104,13 @@
 	/*
 		Create rute gpx point to polygin and create static image.
 	*/
-	function drawRute() {
+	function drawRute() {	
 		var polyline_options = { color: '#000'};
 		var polyOptions = { strokeColor: '#000000',	strokeOpacity: 1.0,	strokeWeight: 3};
-		poly = new google.maps.Polyline(polyOptions);
+		var poly = new google.maps.Polyline(polyOptions);
 		poly.setMap = map;
-		var path = poly.getPath();
-		for(var i=0; i < coordinates.length  ; i++){
+		var path = poly.getPath(), i;
+		for(i = 0; i < coordinates.length  ; i++){
 			var myLatlng = new google.maps.LatLng(coordinates[i][0], coordinates[i][1]);
 			path.push(myLatlng);
 		}
@@ -110,11 +119,20 @@
 		//var width = 2000, height = 2000;		
 		// Static image contain url to mapbox rute.
 		// Control ZOOM!!
-		if (id_map == -1)
-			var staticImage = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/path-4+026-0.75('+encodeString+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ map.getZoom() +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-		else
-			var staticImage = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/path-4+026-0.75('+encodeString+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ map.getZoom() +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-		getTexture(staticImage);
+		//map.setZoom(14);
+		for(i = 0; i < info_tiles.length; i++) {
+			bounds = bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
+			map.setMaxBounds(bounds);
+			zoom = 14;
+			if (id_map == -1)
+				var staticImage = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/path-4+026-0.75('+encodeString+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+			else
+				var staticImage = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/path-4+026-0.75('+encodeString+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+				
+			console.log("[PFC my_cesium_rute.js]: Static image url:"+staticImage);
+			getTexture(staticImage, i, info_tiles[i].cardinality);
+		}
+
 	}
 
 	/*
@@ -124,7 +142,7 @@
 		map.remove();
 		id_map++;
 		map = L.mapbox.map('map', id_maps[id_map]);
-		//map.setZoom(14);
+		map.setZoom(13);
 		loadGpx();
 		if (id_map == (id_maps.length-1))
 			id_map = -1;
@@ -132,14 +150,14 @@
 	/*
 		Ajax to create texture.
 	*/
-	function getTexture(direction) {
+	function getTexture(direction, index, cardinality) {
 		if (xhr1.upload) {
 			var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 			var file_name = name.substring(0, name.indexOf("."));
-			sessionStorage.name = file_name;
+			sessionStorage.name = file_name + index + cardinality;
 			var url = "getTexture.php";
 			console.log(file_name);
-			var contenido = "direction="+direction+"&name="+file_name;
+			var contenido = "direction="+direction+"&name="+file_name + index + cardinality;
 			xhr.open("GET", url+"?"+contenido, true);
 			xhr.send();
 			xhr.onreadystatechange = function () {
@@ -156,7 +174,8 @@
 	}
 	/*
 		Check coordinates in Tile Cesium(limits nw ne sw se).
-		Save in sessionStorage the tiles.
+		Obtain all mesh from the rute gpx also we need to add more.
+		Add all tiles into info_tiles ARRAY.
 	*/
 	function checkTile(coord) {
 		//var array_coordinate = new Array();
@@ -164,27 +183,29 @@
 		var north = 0, south = 0, east = 0, west = 0;
 		//array_coordinate.push(new Coordinate(coord[0][0], coord[0][1]));
 		positionLonLat = Cesium.Cartographic.fromDegrees(coord[0][1], coord[0][0]);
-		pos = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
-		initial_pos = pos;
+		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
+		var tile = getTile(positionTileXY);
+		info_tiles.push(new InfoTile(positionTileXY.x, positionTileXY.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude));
+		initial_pos = positionTileXY;
 		for(var i=1; i < coord.length; i++){
 			positionLonLat = Cesium.Cartographic.fromDegrees(coord[i][1], coord[i][0]);
 			compare_pos = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
-			if (pos.x != compare_pos.x) {
+			if (positionTileXY.x != compare_pos.x) {
 				//array_coordinate.push(new Coordinate(coord[i][0], coord[i][1]));
 				//console.log("[PFC]: Coordinate change:"+i);
-				if (pos.x < compare_pos.x)
+				if (positionTileXY.x < compare_pos.x)
 					east = east + 1;
 				else
 					west = west + 1;
-				pos = compare_pos;
-			} else if (pos.y != compare_pos.y) {
+				positionTileXY = compare_pos;
+			} else if (positionTileXY.y != compare_pos.y) {
 				//array_coordinate.push(new Coordinate(coord[i][0], coord[i][1]));
 				//console.log("Coordinate change:"+i);
-				if (pos.y < compare_pos.y)
+				if (positionTileXY.y < compare_pos.y)
 					south = south + 1;
 				else
 					north = north + 1;
-				pos = compare_pos;
+				positionTileXY = compare_pos;
 			}
 		}
 		
@@ -195,8 +216,6 @@
 		moreMesh(east, initial_pos, "e");
 		moreMesh(north, initial_pos, "n");
 		moreMesh(south, initial_pos, "s");
-		//console.log("[PFC]: Total coordinates:" + coord.length);
-		//console.log("[PFC]: west:"+west+"/east:"+east+"/north:"+north+"/south:"+south);
 	}
 	
 	function moreMesh(contador, tile, cardinalidad) {
@@ -210,7 +229,8 @@
 								tile.x--;
 								new_tile = getTile(tile);
 								bounds = [[new_tile.northwest.latitude, new_tile.northwest.longitude], [new_tile.southeast.latitude, new_tile.southeast.longitude]];
-								L.rectangle(bounds, {color: "#191414", weight: 2, fillOpacity:0 }).addTo(map);
+								//L.rectangle(bounds, {color: "#191414", weight: 2, fillOpacity:0 }).addTo(map);
+								info_tiles.push(new InfoTile(tile.x, tile.y, "w", new_tile.northwest.latitude, new_tile.northwest.longitude, new_tile.southeast.latitude, new_tile.southeast.longitude));
 								contador--;
 							}
 							break;
@@ -220,7 +240,8 @@
 								tile.x++;
 								new_tile = getTile(tile);
 								bounds = [[new_tile.northwest.latitude, new_tile.northwest.longitude], [new_tile.southeast.latitude, new_tile.southeast.longitude]];
-								L.rectangle(bounds, {color: "#191414", weight: 2, fillOpacity:0 }).addTo(map);
+								//L.rectangle(bounds, {color: "#191414", weight: 2, fillOpacity:0 }).addTo(map);
+								info_tiles.push(new InfoTile(tile.x, tile.y, "e", new_tile.northwest.latitude, new_tile.northwest.longitude, new_tile.southeast.latitude, new_tile.southeast.longitude));
 								contador--;
 							}
 							break;
@@ -230,7 +251,8 @@
 								tile.y--;
 								new_tile = getTile(tile);
 								bounds = [[new_tile.northwest.latitude, new_tile.northwest.longitude], [new_tile.southeast.latitude, new_tile.southeast.longitude]];
-								L.rectangle(bounds, {color: "#191414", weight: 2, fillOpacity:0 }).addTo(map);
+								//L.rectangle(bounds, {color: "#191414", weight: 2, fillOpacity:0 }).addTo(map);
+								info_tiles.push(new InfoTile(tile.x, tile.y, "n", new_tile.northwest.latitude, new_tile.northwest.longitude, new_tile.southeast.latitude, new_tile.southeast.longitude));
 								contador--;
 							}
 							break;
@@ -240,7 +262,8 @@
 								tile.y++;
 								new_tile = getTile(tile);
 								bounds = [[new_tile.northwest.latitude, new_tile.northwest.longitude], [new_tile.southeast.latitude, new_tile.southeast.longitude]];
-								L.rectangle(bounds, {color: "#191414", weight: 2, fillOpacity:0 }).addTo(map);
+								//L.rectangle(bounds, {color: "#191414", weight: 2, fillOpacity:0 }).addTo(map);
+								info_tiles.push(new InfoTile(tile.x, tile.y, "s", new_tile.northwest.latitude, new_tile.northwest.longitude, new_tile.southeast.latitude, new_tile.southeast.longitude));
 								contador--;
 								final_bounds = bounds;
 							}

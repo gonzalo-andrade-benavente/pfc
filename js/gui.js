@@ -42,15 +42,12 @@ function createGUI() {
 	}
 	
 	gui = new dat.GUI();
-	//gui.add(controls, 'lat').name('Latitude');
-	//gui.add(controls, 'lon').name('Longitude');
 	
 	gui.add(controls, 'visible').name('Visible').onChange(function (e) {
 		scene.children[scene.children.length-1].visible = e;
 	});
 	
 	gui.add(controls, 'wireframe').name('Marcos de malla').onChange(function (e) {
-		//scene.children[scene.children.length-1].material.wireframe = e;
 		for (var i = 0; i < scene.children.length; i++ )
 			scene.children[i].material.wireframe = e;
 	});
@@ -59,23 +56,6 @@ function createGUI() {
 	
 	gui.add(controls, 'create').name('Crear mesh');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
-	
-	
-	/*
-	gui.add(controles, 'z', -200, 200).name('Eje Z');
-	gui.add(controles, 'rotationSpeed',0,0.5).name('Velocidad de rotación');
-	gui.addColor(controles, 'color').onChange(function (e) {
-		materialCubo.color.setStyle(e)
-	}).name('Color material');
-	*/
-		
-	/*
-	var folder = gui.addFolder('Folder');
-		folder.add( controls, 'control1' );
-		folder.add( controls, 'control2' );
-		folder.close();
-	*/
-	//gui.close();			
 }
 
 function addFaceVertexUvs(geometry) {
