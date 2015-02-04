@@ -7,6 +7,10 @@ var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
 	url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
 });
 /*
+	Variable global to handler the asynchronous cesium terrain provider.
+*/
+var combined_mesh = new THREE.Geometry();
+/*
 	Function request data.
 */
 function requestTilesWhenReady() {
@@ -55,7 +59,11 @@ function load(coord) {
 	//Create Graphic User Interface with gui.js
 	createGUI();
 	info_tiles = checkTile(coord);
-	showGeometries(info_tiles);
+	for(i = 0; i < info_tiles.length; i++) {
+		aCesiumTerrainProvider.requestTileGeometry(info_tiles[i].x, info_tiles[i].y, 12, true).then(function(data){
+		
+		});
+	}
 
 }
 
