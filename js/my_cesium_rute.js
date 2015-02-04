@@ -154,7 +154,7 @@
 		if (xhr1.upload) {
 			var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 			var file_name = name.substring(0, name.indexOf("."));
-			sessionStorage.name = file_name + index + cardinality;
+			//sessionStorage.name = file_name;
 			var url = "getTexture.php";
 			console.log(file_name);
 			var contenido = "direction="+direction+"&name="+file_name + index + cardinality;

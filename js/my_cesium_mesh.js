@@ -59,15 +59,15 @@ function load(coord) {
 	
 	for(i = 0; i < info_tiles.length; i++) {
 		switch (info_tiles[i].cardinality) {
-			case "c":	createMesh(0, 0, 0, info_tiles[i].x, info_tiles[i].y);
+			case "c":	createMesh(0, 0, 0, info_tiles[i].x, info_tiles[i].y, sessionStorage.name + i + info_tiles[i].cardinality);
 						break;
-			case "s":	createMesh(0, 0, 33, info_tiles[i].x, info_tiles[i].y);
+			case "s":	createMesh(0, 0, 33, info_tiles[i].x, info_tiles[i].y, sessionStorage.name + i + info_tiles[i].cardinality);
 						break;
-			case "n":	createMesh(0, 0, -33, info_tiles[i].x, info_tiles[i].y);
+			case "n":	createMesh(0, 0, -33, info_tiles[i].x, info_tiles[i].y, sessionStorage.name + i + info_tiles[i].cardinality);
 						break;
-			case "w":	createMesh(-33, 0, 0, info_tiles[i].x, info_tiles[i].y);
+			case "w":	createMesh(-33, 0, 0, info_tiles[i].x, info_tiles[i].y, sessionStorage.name + i + info_tiles[i].cardinality);
 						break;
-			case "e":	createMesh(33, 0, 0, info_tiles[i].x, info_tiles[i].y);
+			case "e":	createMesh(33, 0, 0, info_tiles[i].x, info_tiles[i].y, sessionStorage.name + i + info_tiles[i].cardinality);
 						break;
 		}
 	}

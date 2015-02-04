@@ -106,7 +106,7 @@ function moreMesh(contador, tile, cardinalidad, info_tiles) {
 /*
 	Create a mesh in position (x,y,z) from a tile.
 */
-function createMesh(x, y, z, pos_x, pos_y) {
+function createMesh(x, y, z, pos_x, pos_y, mapbox_texture) {
 		aCesiumTerrainProvider.requestTileGeometry(pos_x, pos_y, 12, true).then(function(data){
 			var mesh, verticesQuantized, facesQuantized, geometry;
 			verticesQuantized = data._quantizedVertices;
@@ -124,9 +124,9 @@ function createMesh(x, y, z, pos_x, pos_y) {
 			// Texture only in surface.
 			geometry = addFaceVertexUvs(geometry);
 			geometry = addBase(geometry);
-			//var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name +".png" );
-			//var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
-			var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+			var texture = THREE.ImageUtils.loadTexture( "./textures/"+ mapbox_texture +".png" );
+			var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
+			//var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 			/*
 			material.needsUpdate = true;
 			geometry.buffersNeedUpdate = true;
