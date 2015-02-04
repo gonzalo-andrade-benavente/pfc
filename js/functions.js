@@ -125,6 +125,7 @@ function createMesh(x, y, z, pos_x, pos_y, mapbox_texture) {
 			//geometry = addFaceVertexUvs(geometry);
 			geometry = addBase(geometry);
 			geometry = addFaceVertexUvs(geometry);
+			console.log(mapbox_texture);
 			var texture = THREE.ImageUtils.loadTexture( "./textures/"+ mapbox_texture +".png" );
 			var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
 			//var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
