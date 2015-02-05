@@ -19,6 +19,14 @@ function createGUI() {
 		this.refresh = function() {
 			location.reload();
 		}
+		this.combined = function() {
+			if (combined_mesh) {
+				var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+				scene.add(new THREE.Mesh(combined_mesh, material));
+			}else {
+				console.log("don't exist");
+			}
+		}
 	}
 	
 	gui = new dat.GUI();
@@ -32,6 +40,7 @@ function createGUI() {
 		for (var i = 0; i < scene.children.length; i++ )
 			scene.children[i].material.wireframe = e;
 	});
+	gui.add(controls, 'combined').name('Combinado');
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');

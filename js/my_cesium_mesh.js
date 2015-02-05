@@ -110,7 +110,9 @@ function combineMesh(data){
 	}
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
-	scene.add(mesh);
+	//scene.add(mesh);
+	mesh.updateMatrix();
+	combined_mesh.merge(mesh.geometry, mesh.matrix);
 	index_tile++;
 }
 
