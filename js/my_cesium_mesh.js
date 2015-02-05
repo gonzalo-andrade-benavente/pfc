@@ -65,17 +65,17 @@ function load(coord) {
 		//mapbox_texture = sessionStorage.name + i + info_tiles[i].cardinality;
 		aCesiumTerrainProvider.requestTileGeometry(info_tiles[i].x, info_tiles[i].y, 12, true).then(function(data){
 			// Send data of Cesium to combine Mesh.
-			combineMesh(data, false);
+			combineMesh(data);
 		});
 		
 	}
-	index_tile = 0;
+	
 }
 /*
 	Function to handler the information from Cesium asynchronous function requestTileGeometry.
 	Change values of info_tiles.
 */
-function combineMesh(data, mostrar){
+function combineMesh(data){
 	//combined_mesh
 	var mesh, verticesQuantized, facesQuantized, geometry;
 	verticesQuantized = data._quantizedVertices;
@@ -91,16 +91,24 @@ function combineMesh(data, mostrar){
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 	}
 	// Texture only in surface.
-	//geometry = addFaceVertexUvs(geometry);
-	geometry = addBase(geometry);
 	geometry = addFaceVertexUvs(geometry);
+	geometry = addBase(geometry);
+	//geometry = addFaceVertexUvs(geometry);
 	var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name + index_tile + info_tiles[index_tile].cardinality +".png" );
 	var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
 	mesh = new THREE.Mesh( geometry, material );
 	switch (info_tiles[index_tile].cardinality) {
 			case "c":	x = 0; y = 0;
+						studyVertices(geometry, "c");
+						mesh.rotation.x =  Math.PI / 180 * (-90);
+						mesh.position.set(x, y, z);
+						scene.add(mesh);
 						break;
 			case "s":	z = z + 33;
+						studyVertices(geometry, "s")
+						mesh.rotation.x =  Math.PI / 180 * (-90);
+						mesh.position.set(x, y, z);
+						scene.add(mesh);
 						break;
 			case "n":	z = z - 33;
 						break;
@@ -111,12 +119,42 @@ function combineMesh(data, mostrar){
 	}
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
-	if (mostrar)
-		scene.add(mesh);
 	//scene.add(mesh);
 	mesh.updateMatrix();
 	combined_mesh.merge(mesh.geometry, mesh.matrix);
 	index_tile++;
+}
+
+function studyVertices(geometry, study) {
+	var vertex = new Array();
+	console.log(geometry);
+	switch (study) {
+		case "c":	{
+						for(i = 0; i < geometry.vertices.length; i++) {
+							if ((geometry.vertices[i].y === geometry.boundingBox.min.y) && (geometry.vertices[i].z != 0))
+								vertex.push(i);			
+						}
+						console.log(vertex);
+						for(i = 0; i < vertex.length; i++)
+						console.log(geometry.vertices[vertex[i]]);
+						break;	
+					}
+		case "s":	{
+						/*
+							Study north vertices of south mesh.
+						*/
+						for(i = 0; i < geometry.vertices.length; i++) {
+							if ((geometry.vertices[i].y === geometry.boundingBox.max.y) && (geometry.vertices[i].z != 0))
+								vertex.push(i);			
+						}
+						console.log(vertex);
+						for(i = 0; i < vertex.length; i++)
+						console.log(geometry.vertices[vertex[i]]);
+						break;	
+					}
+	}
+	
+			
 }
 
 /*
