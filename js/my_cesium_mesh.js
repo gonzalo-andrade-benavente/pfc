@@ -65,17 +65,16 @@ function load(coord) {
 		//mapbox_texture = sessionStorage.name + i + info_tiles[i].cardinality;
 		aCesiumTerrainProvider.requestTileGeometry(info_tiles[i].x, info_tiles[i].y, 12, true).then(function(data){
 			// Send data of Cesium to combine Mesh.
-			loadTiles(data);
+			combineMesh(data);
 		});
 		
 	}
-	console.log(info_tiles);
 }
 /*
 	Function to handler the information from Cesium asynchronous function requestTileGeometry.
 	Change values of info_tiles.
 */
-function loadTiles(data){
+function combineMesh(data){
 	//combined_mesh
 	var mesh, verticesQuantized, facesQuantized, geometry;
 	verticesQuantized = data._quantizedVertices;
@@ -94,11 +93,26 @@ function loadTiles(data){
 	//geometry = addFaceVertexUvs(geometry);
 	geometry = addBase(geometry);
 	geometry = addFaceVertexUvs(geometry);
-	info_tiles[index_tile].geometry = geometry;
-	info_tiles[index_tile].map = sessionStorage.name + index_tile + info_tiles[index_tile].cardinality;
+	var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name + index_tile + info_tiles[index_tile].cardinality +".png" );
+	var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
+	mesh = new THREE.Mesh( geometry, material );
+	switch (info_tiles[index_tile].cardinality) {
+			case "c":	x = 0; y = 0;
+						break;
+			case "s":	z = z + 33;
+						break;
+			case "n":	z = z - 33;
+						break;
+			case "w":	x = x - 33;
+						break;
+			case "e":	x = x + 33;
+						break;
+	}
+	mesh.rotation.x =  Math.PI / 180 * (-90);
+	mesh.position.set(x, y, z);
+	scene.add(mesh);
 	index_tile++;
 }
-
 
 /*
 function showGeometries(info_tiles) {
