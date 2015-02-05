@@ -65,16 +65,17 @@ function load(coord) {
 		//mapbox_texture = sessionStorage.name + i + info_tiles[i].cardinality;
 		aCesiumTerrainProvider.requestTileGeometry(info_tiles[i].x, info_tiles[i].y, 12, true).then(function(data){
 			// Send data of Cesium to combine Mesh.
-			combineMesh(data);
+			combineMesh(data, false);
 		});
 		
 	}
+	index_tile = 0;
 }
 /*
 	Function to handler the information from Cesium asynchronous function requestTileGeometry.
 	Change values of info_tiles.
 */
-function combineMesh(data){
+function combineMesh(data, mostrar){
 	//combined_mesh
 	var mesh, verticesQuantized, facesQuantized, geometry;
 	verticesQuantized = data._quantizedVertices;
@@ -110,6 +111,8 @@ function combineMesh(data){
 	}
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
+	if (mostrar)
+		scene.add(mesh);
 	//scene.add(mesh);
 	mesh.updateMatrix();
 	combined_mesh.merge(mesh.geometry, mesh.matrix);
