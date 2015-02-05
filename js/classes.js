@@ -26,5 +26,6 @@ function InfoTile(x, y, cardinality, northwest_latitude, northwest_longitude, so
 	this.y = y;
 	this.bounds = [[northwest_latitude, northwest_longitude],[southeast_latitude, southeast_longitude]];
 	this.cardinality = cardinality;
-	this.texture = "";
+	this.map;
+	this.geometry;
 }

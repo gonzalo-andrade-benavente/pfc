@@ -9,7 +9,10 @@ var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
 /*
 	Variable global to handler the asynchronous cesium terrain provider.
 */
+var info_tiles;
 var combined_mesh = new THREE.Geometry();
+var x = 0, y = 0, z = 0;
+var mapbox_texture, index_tile = 0;
 /*
 	Function request data.
 */
@@ -52,21 +55,52 @@ function load(coord) {
 	/*
 		info_tiles contains all information about tiles of the rute gpx.
 		Each element of the array is a InfoTile element.
-	*/
-	var info_tiles, combined_geometries;
+	*/ 
 	//Create scene ThreeJs with threejs.js
 	loadThreeJS();
 	//Create Graphic User Interface with gui.js
 	createGUI();
 	info_tiles = checkTile(coord);
 	for(i = 0; i < info_tiles.length; i++) {
+		//mapbox_texture = sessionStorage.name + i + info_tiles[i].cardinality;
 		aCesiumTerrainProvider.requestTileGeometry(info_tiles[i].x, info_tiles[i].y, 12, true).then(function(data){
-		
+			// Send data of Cesium to combine Mesh.
+			loadTiles(data);
 		});
+		
 	}
-
+	console.log(info_tiles);
+}
+/*
+	Function to handler the information from Cesium asynchronous function requestTileGeometry.
+	Change values of info_tiles.
+*/
+function loadTiles(data){
+	//combined_mesh
+	var mesh, verticesQuantized, facesQuantized, geometry;
+	verticesQuantized = data._quantizedVertices;
+	var xx = data._uValues, 
+		yy = data._vValues,
+		heights = data._heightValues;
+	facesQuantized = data._indices;
+	var geometry = new THREE.Geometry();
+	for(var i=0; i < heights.length; i++){
+		geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/1000),Math.round(yy[i]/1000),Math.round(heights[i]/1000)));
+	}
+	for(var i=0; i < facesQuantized.length; i=i+3){
+		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
+	}
+	// Texture only in surface.
+	//geometry = addFaceVertexUvs(geometry);
+	geometry = addBase(geometry);
+	geometry = addFaceVertexUvs(geometry);
+	info_tiles[index_tile].geometry = geometry;
+	info_tiles[index_tile].map = sessionStorage.name + index_tile + info_tiles[index_tile].cardinality;
+	index_tile++;
 }
 
+
+/*
 function showGeometries(info_tiles) {
 	for(i = 0; i < info_tiles.length; i++) {
 		switch (info_tiles[i].cardinality) {
@@ -83,5 +117,6 @@ function showGeometries(info_tiles) {
 		}	
 	}
 }
+*/
 	
 	
