@@ -124,7 +124,22 @@ function combineMesh(data){
 	combined_mesh.merge(mesh.geometry, mesh.matrix);
 	index_tile++;
 }
-
+/*
+	Adjust size of z-axis of the mesh.
+*/
+function adjustVertices(x, y, z) {
+	var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+	var geometry = new THREE.BoxGeometry(1,1,1);
+	console.log(geometry);
+	var mesh = new THREE.Mesh( geometry, material );
+	mesh.rotation.x =  Math.PI / 180 * (-90);
+	mesh.position.set(x, y, z);
+	scene.add(mesh);
+	
+}
+/*
+	Study dimensions of vertices.
+*/
 function studyVertices(geometry, study) {
 	var vertex = new Array();
 	console.log(geometry);
@@ -134,6 +149,7 @@ function studyVertices(geometry, study) {
 							if ((geometry.vertices[i].y === geometry.boundingBox.min.y) && (geometry.vertices[i].z != 0))
 								vertex.push(i);			
 						}
+						vertex = sortVector(geometry, vertex, "x");
 						console.log(vertex);
 						for(i = 0; i < vertex.length; i++)
 						console.log(geometry.vertices[vertex[i]]);
@@ -147,6 +163,7 @@ function studyVertices(geometry, study) {
 							if ((geometry.vertices[i].y === geometry.boundingBox.max.y) && (geometry.vertices[i].z != 0))
 								vertex.push(i);			
 						}
+						vertex = sortVector(geometry, vertex, "x");
 						console.log(vertex);
 						for(i = 0; i < vertex.length; i++)
 						console.log(geometry.vertices[vertex[i]]);
