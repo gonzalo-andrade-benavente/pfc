@@ -3,11 +3,6 @@ var controls;
 
 function createGUI() {
 	var controls = new function() {
-		//this.numberOfObjects = escena.children.length;
-		//this.lat = 43.314;
-		//this.lon = -2.002;	
-		//this.control1 = "control1";
-		//this.control2 = "control2";
 		this.wireframe = true;
 		this.visible = true;
 		this.home = function() {
@@ -22,9 +17,9 @@ function createGUI() {
 		this.combined = function() {
 			if (combined_mesh) {
 				//combined_mesh = geometry = addFaceVertexUvs(combined_mesh);
-				//var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name + "0c.png" );
-				//var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
-				var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+				var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name + "0c.png" );
+				var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
+				//var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 				scene.add(new THREE.Mesh(combined_mesh, material));
 			}else {
 				console.log("don't exist");

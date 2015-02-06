@@ -95,25 +95,25 @@ function combineMesh(data){
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 	}
 	// Texture only in surface.
-	geometry = addFaceVertexUvs(geometry);
-	geometry = addBase(geometry);
 	//geometry = addFaceVertexUvs(geometry);
+	geometry = addBase(geometry);
+	geometry = addFaceVertexUvs(geometry);
 	var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name + index_tile + info_tiles[index_tile].cardinality +".png" );
-	var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
+	var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide } );
 	switch (info_tiles[index_tile].cardinality) {
 			case "c":	x = 0; y = 0;
-						geoemtry = studyVertices(geometry, "c");
+						geometry = studyVertices(geometry, "c");
 						mesh = new THREE.Mesh( geometry, material );
 						mesh.rotation.x =  Math.PI / 180 * (-90);
 						mesh.position.set(x, y, z);
-						scene.add(mesh);
+						//scene.add(mesh);
 						break;
 			case "s":	z = z + 33;
 						geometry = studyVertices(geometry, "s");
 						mesh = new THREE.Mesh( geometry, material );
 						mesh.rotation.x =  Math.PI / 180 * (-90);
 						mesh.position.set(x, y, z);
-						scene.add(mesh);
+						//scene.add(mesh);
 						break;
 			case "n":	z = z - 33;
 						break;
@@ -187,8 +187,8 @@ function studyVertices(geometry, study) {
 							Change value of vertices "z" height respect the maximum value of mesh center or another mesh.
 						*/
 						for(i = 0; i < geometry.vertices.length; i++) {
-							a = max * geometry.vertices[i].z;
-							geometry.vertices[i].z = Math.round(a/max_vertice);
+							a = max_vertice * geometry.vertices[i].z;
+							geometry.vertices[i].z = Math.round(a/max);
 						}
 						break;	
 					}
