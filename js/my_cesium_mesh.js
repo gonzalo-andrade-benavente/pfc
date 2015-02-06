@@ -97,23 +97,30 @@ function combineMesh(data){
 	// Texture only in surface.
 	//geometry = addFaceVertexUvs(geometry);
 	geometry = addBase(geometry);
+	/*
 	geometry = addFaceVertexUvs(geometry);
 	var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name + index_tile + info_tiles[index_tile].cardinality +".png" );
 	var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide } );
+	*/
+	var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 	switch (info_tiles[index_tile].cardinality) {
 			case "c":	x = 0; y = 0;
 						geometry = studyVertices(geometry, "c");
+						/*
 						mesh = new THREE.Mesh( geometry, material );
 						mesh.rotation.x =  Math.PI / 180 * (-90);
 						mesh.position.set(x, y, z);
-						//scene.add(mesh);
+						scene.add(mesh);
+						*/
 						break;
 			case "s":	z = z + 33;
 						geometry = studyVertices(geometry, "s");
+						/*
 						mesh = new THREE.Mesh( geometry, material );
 						mesh.rotation.x =  Math.PI / 180 * (-90);
 						mesh.position.set(x, y, z);
-						//scene.add(mesh);
+						scene.add(mesh);
+						*/
 						break;
 			case "n":	z = z - 33;
 						break;
@@ -122,6 +129,8 @@ function combineMesh(data){
 			case "e":	x = x + 33;
 						break;
 	}
+	console.log(geometry);
+	mesh = new THREE.Mesh( geometry, material );
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
 	//scene.add(mesh);
@@ -154,8 +163,9 @@ function majorValue(geometry, vertex){
 	Study dimensions of vertices and modify.
 */
 function studyVertices(geometry, study) {
+	if (geometry.boundingBox == null)
+		geometry.computeBoundingBox();
 	var vertex = new Array();
-	//console.log(geometry);
 	switch (study) {
 		case "c":	{
 						for(i = 0; i < geometry.vertices.length; i++) {
