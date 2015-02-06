@@ -14,6 +14,10 @@ var combined_mesh = new THREE.Geometry();
 var x = 0, y = 0, z = 0;
 var mapbox_texture, index_tile = 0;
 /*
+	Variable global contains maximum value of height(z) in the vertex.
+*/
+var max_vertice;
+/*
 	Function request data.
 */
 function requestTilesWhenReady() {
@@ -96,16 +100,17 @@ function combineMesh(data){
 	//geometry = addFaceVertexUvs(geometry);
 	var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name + index_tile + info_tiles[index_tile].cardinality +".png" );
 	var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
-	mesh = new THREE.Mesh( geometry, material );
 	switch (info_tiles[index_tile].cardinality) {
 			case "c":	x = 0; y = 0;
-						studyVertices(geometry, "c");
+						geoemtry = studyVertices(geometry, "c");
+						mesh = new THREE.Mesh( geometry, material );
 						mesh.rotation.x =  Math.PI / 180 * (-90);
 						mesh.position.set(x, y, z);
 						scene.add(mesh);
 						break;
 			case "s":	z = z + 33;
-						studyVertices(geometry, "s")
+						geometry = studyVertices(geometry, "s");
+						mesh = new THREE.Mesh( geometry, material );
 						mesh.rotation.x =  Math.PI / 180 * (-90);
 						mesh.position.set(x, y, z);
 						scene.add(mesh);
@@ -137,12 +142,20 @@ function adjustVertices(x, y, z) {
 	scene.add(mesh);
 	
 }
+function majorValue(geometry, vertex){
+	var val = geometry.vertices[vertex[0]].z;
+	for(i = 1; i < vertex.length; i++) {
+		if (geometry.vertices[vertex[i]].z > val)
+			val = geometry.vertices[vertex[i]].z;
+	}
+	return val;
+}
 /*
-	Study dimensions of vertices.
+	Study dimensions of vertices and modify.
 */
 function studyVertices(geometry, study) {
 	var vertex = new Array();
-	console.log(geometry);
+	//console.log(geometry);
 	switch (study) {
 		case "c":	{
 						for(i = 0; i < geometry.vertices.length; i++) {
@@ -150,9 +163,14 @@ function studyVertices(geometry, study) {
 								vertex.push(i);			
 						}
 						vertex = sortVector(geometry, vertex, "x");
+						/*
 						console.log(vertex);
 						for(i = 0; i < vertex.length; i++)
-						console.log(geometry.vertices[vertex[i]]);
+							console.log(geometry.vertices[vertex[i]]);
+						
+						console.log(majorValue(geometry, vertex));
+						*/
+						max_vertice = majorValue(geometry, vertex);
 						break;	
 					}
 		case "s":	{
@@ -164,13 +182,18 @@ function studyVertices(geometry, study) {
 								vertex.push(i);			
 						}
 						vertex = sortVector(geometry, vertex, "x");
-						console.log(vertex);
-						for(i = 0; i < vertex.length; i++)
-						console.log(geometry.vertices[vertex[i]]);
+						var max = majorValue(geometry, vertex), escale;
+						/*
+							Change value of vertices "z" height respect the maximum value of mesh center or another mesh.
+						*/
+						for(i = 0; i < geometry.vertices.length; i++) {
+							a = max * geometry.vertices[i].z;
+							geometry.vertices[i].z = Math.round(a/max_vertice);
+						}
 						break;	
 					}
 	}
-	
+	return geometry;
 			
 }
 
