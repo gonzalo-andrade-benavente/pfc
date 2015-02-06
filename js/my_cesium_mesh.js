@@ -18,6 +18,10 @@ var mapbox_texture, index_tile = 0;
 */
 var max_vertice;
 /*
+	To create the connection vertex.
+*/
+var geometry_before;
+/*
 	Function request data.
 */
 function requestTilesWhenReady() {
@@ -95,8 +99,9 @@ function combineMesh(data){
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 	}
 	// Texture only in surface.
-	//geometry = addFaceVertexUvs(geometry);
+	
 	geometry = addBase(geometry);
+	geometry = addFaceVertexUvs(geometry);
 	/*
 	geometry = addFaceVertexUvs(geometry);
 	var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name + index_tile + info_tiles[index_tile].cardinality +".png" );
@@ -106,15 +111,21 @@ function combineMesh(data){
 	switch (info_tiles[index_tile].cardinality) {
 			case "c":	x = 0; y = 0;
 						geometry = studyVertices(geometry, "c");
+						geometry_before = geometry;
 						/*
 						mesh = new THREE.Mesh( geometry, material );
 						mesh.rotation.x =  Math.PI / 180 * (-90);
 						mesh.position.set(x, y, z);
 						scene.add(mesh);
 						*/
+						console.log(geometry.vertices.length);
 						break;
 			case "s":	z = z + 33;
 						geometry = studyVertices(geometry, "s");
+						vertexs_before = getVertex(geometry_before, "s");
+						vertexs_actually = getVertex(geometry, "n");
+						//geometry.faces.push(vertexs_before[0], vertexs_actually[0], vertexs_before[0]);
+						console.log(geometry.vertices[0]);
 						/*
 						mesh = new THREE.Mesh( geometry, material );
 						mesh.rotation.x =  Math.PI / 180 * (-90);
@@ -129,7 +140,8 @@ function combineMesh(data){
 			case "e":	x = x + 33;
 						break;
 	}
-	console.log(geometry);
+	//console.log(geometry);
+	//geometry = addFaceVertexUvs(geometry);
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
@@ -137,6 +149,32 @@ function combineMesh(data){
 	mesh.updateMatrix();
 	combined_mesh.merge(mesh.geometry, mesh.matrix);
 	index_tile++;
+}
+/*
+	Obtains values of vertex, add East and West.
+*/
+function getVertex(geometry, cardinality) {
+		var vertex = new Array();
+		switch (cardinality) {
+			case "s":	
+						for(i = 0; i < geometry.vertices.length; i++) {
+							if (geometry.vertices[i].y === geometry.boundingBox.min.y) 
+								vertex.push(i);			
+						}
+						vertex = sortVector(geometry, vertex, "x");
+						break;
+			case "n":	for(i = 0; i < geometry.vertices.length; i++) {
+							if (geometry.vertices[i].y === geometry.boundingBox.max.y)
+								vertex.push(i);			
+						}
+						vertex = sortVector(geometry, vertex, "x");
+						break;
+			case "e":	
+						break;
+			case "w":	
+						break;
+		}
+		return vertex;
 }
 /*
 	Adjust size of z-axis of the mesh.
@@ -160,7 +198,8 @@ function majorValue(geometry, vertex){
 	return val;
 }
 /*
-	Study dimensions of vertices and modify.
+	Study dimensions of vertices and modify the scale of the mesh.
+	add cases west, north, east.
 */
 function studyVertices(geometry, study) {
 	if (geometry.boundingBox == null)
@@ -168,17 +207,16 @@ function studyVertices(geometry, study) {
 	var vertex = new Array();
 	switch (study) {
 		case "c":	{
+						/*
+							Get south vertex.
+						*/
 						for(i = 0; i < geometry.vertices.length; i++) {
 							if ((geometry.vertices[i].y === geometry.boundingBox.min.y) && (geometry.vertices[i].z != 0))
 								vertex.push(i);			
 						}
 						vertex = sortVector(geometry, vertex, "x");
 						/*
-						console.log(vertex);
-						for(i = 0; i < vertex.length; i++)
-							console.log(geometry.vertices[vertex[i]]);
-						
-						console.log(majorValue(geometry, vertex));
+							Maximum vertex to scale the next mesh.
 						*/
 						max_vertice = majorValue(geometry, vertex);
 						break;	
