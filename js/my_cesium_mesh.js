@@ -10,7 +10,7 @@ var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
 	Variable global to handler the asynchronous cesium terrain provider.
 */
 var info_tiles;
-var combined_mesh = new THREE.Geometry();
+var combined_geometry = new THREE.Geometry();
 var x = 0, y = 0, z = 0;
 var mapbox_texture, index_tile = 0;
 /*
@@ -111,6 +111,7 @@ function combineMesh(data){
 	switch (info_tiles[index_tile].cardinality) {
 			case "c":	x = 0; y = 0;
 						geometry = studyVertices(geometry, "c");
+						//Geometry of reference.
 						geometry_before = geometry;
 						/*
 						mesh = new THREE.Mesh( geometry, material );
@@ -118,20 +119,24 @@ function combineMesh(data){
 						mesh.position.set(x, y, z);
 						scene.add(mesh);
 						*/
-						console.log(geometry.vertices.length);
+						
 						break;
-			case "s":	z = z + 33;
+			case "s":	z = z + 43;
 						geometry = studyVertices(geometry, "s");
 						vertexs_before = getVertex(geometry_before, "s");
 						vertexs_actually = getVertex(geometry, "n");
+						console.log(vertexs_before);
+						console.log(vertexs_actually);
+						
 						//geometry.faces.push(vertexs_before[0], vertexs_actually[0], vertexs_before[0]);
-						console.log(geometry.vertices[0]);
+						
 						/*
 						mesh = new THREE.Mesh( geometry, material );
 						mesh.rotation.x =  Math.PI / 180 * (-90);
 						mesh.position.set(x, y, z);
 						scene.add(mesh);
 						*/
+						
 						break;
 			case "n":	z = z - 33;
 						break;
@@ -147,11 +152,13 @@ function combineMesh(data){
 	mesh.position.set(x, y, z);
 	//scene.add(mesh);
 	mesh.updateMatrix();
-	combined_mesh.merge(mesh.geometry, mesh.matrix);
+	combined_geometry.merge(mesh.geometry, mesh.matrix);
+	//To obtain the another tile.
 	index_tile++;
 }
 /*
 	Obtains values of vertex, add East and West.
+	Vertex sort minimum - maximum.
 */
 function getVertex(geometry, cardinality) {
 		var vertex = new Array();
