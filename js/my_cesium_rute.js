@@ -112,10 +112,10 @@
 		var polyOptions = { 
 			strokeColor: '#000000',	
 			strokeOpacity: 1.0,	
-			strokeWeight: 3
+			strokeWeight: 3,
 		};
 		var poly = new google.maps.Polyline(polyOptions);
-		poly.setMap = map;
+		//poly.setMap = map;
 		
 		var path = poly.getPath(), i;
 		var line_points = new Array(coordinates.length);
@@ -130,11 +130,11 @@
 		}
 		//Draw polilyne on map.
 		var polyline = L.polyline(line_points, polyline_options).addTo(map);
-		//var encode_string = google.maps.geometry.encoding.encodePath(path);
+
 		var encode_string = google.maps.geometry.encoding.encodePath(path);
-		//var encode_string = google.maps.geometry.encoding.encodePath(path).replace(/\\/g,"\\\\");
-		//var width = 504, height = 630;	
-		var width = 2000, height = 2000;		
+		encode_string = encode_string.replace(/\\/g,'\\\\');
+		var width = 504, height = 630;	
+		//var width = 2000, height = 2000;		
 		// Static image contain url to mapbox rute.
 		// Control ZOOM!!
 		//map.setZoom(14);
@@ -152,9 +152,41 @@
 			//Obtain texture file.
 			//getTexture(staticImage, i, info_tiles[i].cardinality);
 		}
+		
+		var new_encode = encode2(line_points, '');
+		console.log(new_encode);
+		
 
 	}
+	function encode(coordinate, factor) {
+		coordinate = Math.round(coordinate * factor);
+		coordinate <<= 1;
+		if (coordinate < 0) {
+			coordinate = ~coordinate;
+		}
+		var output = '';
+		while (coordinate >= 0x20) {
+			output += String.fromCharCode((0x20 | (coordinate & 0x1f)) + 63);
+			coordinate >>= 5;
+		}
+		output += String.fromCharCode(coordinate + 63);
+		return output;
+	}
+	
+	function encode2(coordinates, precision) {
+		if (!coordinates.length) return '';
 
+		var factor = Math.pow(10, precision || 5),
+			output = encode(coordinates[0][0], factor) + encode(coordinates[0][1], factor);
+
+		for (var i = 1; i < coordinates.length; i++) {
+			var a = coordinates[i], b = coordinates[i - 1];
+			output += encode(a[0] - b[0], factor);
+			output += encode(a[1] - b[1], factor);
+		}
+
+		return output;
+	}
 	/*
 		Change layer map Mapbox.
 	*/
