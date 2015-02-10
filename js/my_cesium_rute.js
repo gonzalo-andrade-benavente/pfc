@@ -38,11 +38,16 @@
 		Class to save x and y Cesium and bounds Cesium to Mapbox.
 		Cardinality: c:center, w:west, e:east, n:north, s:south;
 	*/
-	function InfoTile(x, y, cardinality, northwest_latitude, northwest_longitude, southeast_latitude, southeast_longitude){
+	function InfoTile(x, y, cardinality, northwest_latitude, northwest_longitude, southeast_latitude, southeast_longitude, longitude, latitude){
 		this.x = x;
 		this.y = y;
 		this.bounds = [[northwest_latitude, northwest_longitude],[southeast_latitude, southeast_longitude]];
 		this.cardinality = cardinality;
+		/*
+			Reverse, to create correctly GeoJson.
+			Normal is [latitude, longitude];
+		*/
+		this.coordinate = [longitude, latitude];
 	}
 	
 	function getRute() {
@@ -143,8 +148,8 @@
 		var reverse_line_points = new Array(line_points.length);
 		for(i = 0; i < reverse_line_points.length; i++){
 			reverse_line_points[i] = new Array(2);
-			reverse_line_points[i][0] = line_points[i][1];
-			reverse_line_points[i][1] = line_points[i][0];
+			reverse_line_points[i][0] = parseFloat(line_points[i][1].toFixed(4));
+			reverse_line_points[i][1] = parseFloat(line_points[i][0].toFixed(4));
 		}
 		
 		var geo_json = {
@@ -173,10 +178,10 @@
 			map.setMaxBounds(bounds);
 			zoom = 14;
 			if (id_map == -1) {
-				static_image_path = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/path-4+026-0.75('+encode_string+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+				//static_image_path = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/path-4+026-0.75('+encode_string+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 			} else {
-				static_image_path = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/path-4+026-0.75('+encode_string+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+				//static_image_path = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/path-4+026-0.75('+encode_string+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 			}
 				
@@ -184,27 +189,6 @@
 			console.log("[PFC my_cesium_rute.js]: Static image url geojson: "+static_image_json);
 			//Obtain texture file.
 			//getTexture(staticImage, i, info_tiles[i].cardinality);
-		}
-	}
-	/*
-		Function encode.
-	*/	
-	function encodeJson(json) {
-		if (xhr.upload) {
-			var url = "getEncode.php";
-			var contenido = "json="+JSON.stringify(json);
-			xhr.open("GET", url+"?"+contenido, true);
-			xhr.send();
-			xhr.onreadystatechange = function () {
-				if (xhr.readyState == 4 && xhr.status == 200) {
-					if (xhr.responseText != "") {
-						console.log(xhr.responseText);
-					}else {
-						console.log("[PFC my_cesium_rute.js]: Error donwload rute gpx Ajax.");
-					}
-					
-				}
-			}
 		}
 	}
 	/*
@@ -255,14 +239,14 @@
 		positionLonLat = Cesium.Cartographic.fromDegrees(coord[0][1], coord[0][0]);
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
 		tile = getTile(positionTileXY);
-		info_tiles.push(new InfoTile(positionTileXY.x, positionTileXY.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude));
+		info_tiles.push(new InfoTile(positionTileXY.x, positionTileXY.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[0][1], coord[0][0]));
 		for (i = 1; i < coord.length; i ++) {
 			var positionLonLat_actual, positionTileXY_actual;
 			positionLonLat_actual = Cesium.Cartographic.fromDegrees(coord[i][1], coord[i][0]);
 			positionTileXY_actual = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat_actual,12);
 			if ((positionTileXY.x != positionTileXY_actual.x) || (positionTileXY.y != positionTileXY_actual.y)) {
 				tile = getTile(positionTileXY_actual);
-				info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude));
+				info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0]));
 				positionTileXY = positionTileXY_actual;
 			}
 		}
