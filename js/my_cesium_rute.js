@@ -164,12 +164,9 @@
 				/*
 					All tiles minus last.
 				*/
-				if (i != info_tiles.length-1) {
-					console.log("[PFC my_cesium_rute.js]: Mesh:" + i);
-					console.log("[PFC my_cesium_rute.js]: index:" + info_tiles[i].index);					
+				if (i != info_tiles.length-1) {			
 					long_array = info_tiles[i+1].index - info_tiles[i].index;
-					console.log("[PFC my_cesium_rute.js]: long_array:" +long_array);
-					for(j = info_tiles[i].index; j < long_array ; j++) {
+					for(j = info_tiles[i].index; j < (info_tiles[i].index + long_array) ; j++) {
 						console.log("hola"+i);
 					}
 				
@@ -177,7 +174,6 @@
 				/*
 					Last tile.
 				*/
-					console.log("[PFC my_cesium_rute.js]: Last mesh:" + i);
 					long_array = coordinates.length - info_tiles[i].index;
 					for(j = info_tiles[i].index; j < coordinates.length ; j++) {
 						console.log("hola"+i);
