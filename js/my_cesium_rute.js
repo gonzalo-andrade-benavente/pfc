@@ -140,7 +140,13 @@
 		// Control ZOOM!!
 		//map.setZoom(14);
 		//for(i = 0; i < info_tiles.length; i++) {
-				
+		var reverse_line_points = new Array(line_points.length);
+		for(i = 0; i < reverse_line_points.length; i++){
+			reverse_line_points[i] = new Array(2);
+			reverse_line_points[i][0] = line_points[i][1];
+			reverse_line_points[i][1] = line_points[i][0];
+		}
+		
 		var geo_json = {
 			"type": "Feature",
 			 "properties": {
@@ -149,7 +155,7 @@
 			},
 			"geometry": {
 				"type": "LineString",
-				"coordinates": [[line_points[0][0], line_points[0][1]], [line_points[1][0],line_points[1][1]]]
+				"coordinates": reverse_line_points
 			}
 
 		};
