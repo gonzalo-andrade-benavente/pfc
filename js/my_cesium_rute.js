@@ -119,6 +119,7 @@
 		
 		var path = poly.getPath(), i;
 		var line_points = new Array(coordinates.length);
+		console.log(coordinates.length);
 		for(i = 0; i < coordinates.length; i++) {
 			//To encode.
 			var myLatlng = new google.maps.LatLng(coordinates[i][0], coordinates[i][1]);
@@ -139,53 +140,66 @@
 		// Control ZOOM!!
 		//map.setZoom(14);
 		//for(i = 0; i < info_tiles.length; i++) {
+				
+		var geo_json = {
+			"type": "Feature",
+			 "properties": {
+				"stroke": "#fc4353",
+				"stroke-width": 5
+			},
+			"geometry": {
+				"type": "LineString",
+				"coordinates": [[line_points[0][0], line_points[0][1]], [line_points[1][0],line_points[1][1]]]
+			}
+
+		};
+		
+		var encode_json = JSON.stringify(geo_json);
+		//console.log(encode_json);
+		var encode_json_uri = encodeURIComponent(encode_json);
+		//console.log(encode_json_uri.replace(/%22/g, "\""));
+		//console.log('%7B"type"%3A"Feature"%2C"properties"%3A%7B"stroke-width"%3A4%2C"stroke"%3A"%23ff4444"%2C"stroke-opacity"%3A0.5%7D%2C"geometry"%3A%7B"type"%3A"LineString"%2C"coordinates"%3A%5B%5B-73.97994339466094%2C40.75477505414824%5D%2C%5B-73.97949278354645%2C40.75540897325886%5D%2C%5B-73.98272752761841%2C40.756774316967416%5D%2C%5B-73.98041009902954%2C40.759923440317884%5D%2C%5B-73.9771968126297%2C40.75854190779627%5D%5D%7D%7D');
+		//encodeJson(geo_json);
+	
+		var static_image_path, static_image_json;
 		for(i = 0; i < 1; i++) {
 			bounds = bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
 			map.setMaxBounds(bounds);
 			zoom = 14;
-			if (id_map == -1)
-				var staticImage = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/path-4+026-0.75('+encode_string+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-			else
-				var staticImage = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/path-4+026-0.75('+encode_string+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+			if (id_map == -1) {
+				static_image_path = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/path-4+026-0.75('+encode_string+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+			} else {
+				static_image_path = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/path-4+026-0.75('+encode_string+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+			}
 				
-			console.log("[PFC my_cesium_rute.js]: Static image url:"+staticImage);
+			//console.log("[PFC my_cesium_rute.js]: Static image url path: "+static_image_path);
+			console.log("[PFC my_cesium_rute.js]: Static image url geojson: "+static_image_json);
 			//Obtain texture file.
 			//getTexture(staticImage, i, info_tiles[i].cardinality);
 		}
-		
-		var new_encode = encode2(line_points, '');
-		console.log(new_encode);
-		
-
 	}
-	function encode(coordinate, factor) {
-		coordinate = Math.round(coordinate * factor);
-		coordinate <<= 1;
-		if (coordinate < 0) {
-			coordinate = ~coordinate;
+	/*
+		Function encode.
+	*/	
+	function encodeJson(json) {
+		if (xhr.upload) {
+			var url = "getEncode.php";
+			var contenido = "json="+JSON.stringify(json);
+			xhr.open("GET", url+"?"+contenido, true);
+			xhr.send();
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 4 && xhr.status == 200) {
+					if (xhr.responseText != "") {
+						console.log(xhr.responseText);
+					}else {
+						console.log("[PFC my_cesium_rute.js]: Error donwload rute gpx Ajax.");
+					}
+					
+				}
+			}
 		}
-		var output = '';
-		while (coordinate >= 0x20) {
-			output += String.fromCharCode((0x20 | (coordinate & 0x1f)) + 63);
-			coordinate >>= 5;
-		}
-		output += String.fromCharCode(coordinate + 63);
-		return output;
-	}
-	
-	function encode2(coordinates, precision) {
-		if (!coordinates.length) return '';
-
-		var factor = Math.pow(10, precision || 5),
-			output = encode(coordinates[0][0], factor) + encode(coordinates[0][1], factor);
-
-		for (var i = 1; i < coordinates.length; i++) {
-			var a = coordinates[i], b = coordinates[i - 1];
-			output += encode(a[0] - b[0], factor);
-			output += encode(a[1] - b[1], factor);
-		}
-
-		return output;
 	}
 	/*
 		Change layer map Mapbox.
