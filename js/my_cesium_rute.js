@@ -166,14 +166,10 @@
 		};
 		
 		var encode_json = JSON.stringify(geo_json);
-		//console.log(encode_json);
 		var encode_json_uri = encodeURIComponent(encode_json);
-		//console.log(encode_json_uri.replace(/%22/g, "\""));
-		//console.log('%7B"type"%3A"Feature"%2C"properties"%3A%7B"stroke-width"%3A4%2C"stroke"%3A"%23ff4444"%2C"stroke-opacity"%3A0.5%7D%2C"geometry"%3A%7B"type"%3A"LineString"%2C"coordinates"%3A%5B%5B-73.97994339466094%2C40.75477505414824%5D%2C%5B-73.97949278354645%2C40.75540897325886%5D%2C%5B-73.98272752761841%2C40.756774316967416%5D%2C%5B-73.98041009902954%2C40.759923440317884%5D%2C%5B-73.9771968126297%2C40.75854190779627%5D%5D%7D%7D');
-		//encodeJson(geo_json);
 	
 		var static_image_path, static_image_json;
-		for(i = 0; i < 1; i++) {
+		for(i = 0; i < info_tiles.length; i++) {
 			bounds = bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
 			map.setMaxBounds(bounds);
 			zoom = 14;
@@ -182,13 +178,13 @@
 				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 			} else {
 				//static_image_path = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/path-4+026-0.75('+encode_string+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 			}
-				
-			//console.log("[PFC my_cesium_rute.js]: Static image url path: "+static_image_path);
 			console.log("[PFC my_cesium_rute.js]: Static image url geojson: "+static_image_json);
 			//Obtain texture file.
-			//getTexture(staticImage, i, info_tiles[i].cardinality);
+			console.log(id_map);
+			console.log("ID MAP: " + id_maps[id_maps.length-1]);
+			getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
 		}
 	}
 	/*
@@ -218,12 +214,16 @@
 			xhr.send();
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
+					/*
 					if (xhr.responseText == "") {
-						window.open("./PFCMyMesh.html", "_self");
+						console.log(xhr.responseText);
+						//window.open("./PFCMyMesh.html", "_self");
 					}
 					else {
 						console.log("[PFC]: Error upload texture Ajax.");
 					}
+					*/
+					console.log(xhr.responseText);
 				}
 			}
 		}
