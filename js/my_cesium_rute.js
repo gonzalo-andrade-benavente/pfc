@@ -173,17 +173,12 @@
 			bounds = bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
 			map.setMaxBounds(bounds);
 			zoom = 14;
-			if (id_map == -1) {
-				//static_image_path = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/path-4+026-0.75('+encode_string+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+			if (id_map == -1) 
 				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-			} else {
-				//static_image_path = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/path-4+026-0.75('+encode_string+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+			else 
 				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-			}
-			console.log("[PFC my_cesium_rute.js]: Static image url geojson: "+static_image_json);
+			
 			//Obtain texture file.
-			console.log(id_map);
-			console.log("ID MAP: " + id_maps[id_maps.length-1]);
 			getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
 		}
 	}
