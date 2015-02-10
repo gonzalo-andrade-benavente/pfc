@@ -115,7 +115,7 @@
 	*/
 	function drawRute() {	
 		var polyline_options = { color: '#000'};		
-		var i;
+		var i,j;
 		var line_points = new Array(coordinates.length);
 		for(i = 0; i < coordinates.length; i++) {
 			//Polyline map.
@@ -155,15 +155,38 @@
 		var static_image_json;
 		var width = 504, height = 630;
 		for(i = 0; i < info_tiles.length; i++) {
-			var reverse_line_points;
-			console.log(info_tiles[i].coordinate);
-			console.log(info_tiles[i].index);
+			var reverse_line_points, long_array;
 			/*
 				One or more tiles.
 			*/
 			if (info_tiles.length > 1) {
-							
+				console.log("[PFC my_cesium_rute.js]: More than one mesh.");
+				/*
+					All tiles minus last.
+				*/
+				if (i != info_tiles.length-1) {
+					console.log("[PFC my_cesium_rute.js]: Mesh:" + i);
+					console.log("[PFC my_cesium_rute.js]: index:" + info_tiles[i].index);					
+					long_array = info_tiles[i+1].index - info_tiles[i].index;
+					console.log("[PFC my_cesium_rute.js]: long_array:" +long_array);
+					for(j = info_tiles[i].index; j < long_array ; j++) {
+						console.log("hola"+i);
+					}
+				
+				} else {
+				/*
+					Last tile.
+				*/
+					console.log("[PFC my_cesium_rute.js]: Last mesh:" + i);
+					long_array = coordinates.length - info_tiles[i].index;
+					for(j = info_tiles[i].index; j < coordinates.length ; j++) {
+						console.log("hola"+i);
+					}
+					
+				
+				}			
 			} else {
+				console.log("[PFC my_cesium_rute.js]: One mesh.");
 				reverse_line_points = new Array(line_points.length);
 				for(i = 0; i < reverse_line_points.length; i++){
 					reverse_line_points[i] = new Array(2);
