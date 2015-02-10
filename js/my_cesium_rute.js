@@ -38,7 +38,7 @@
 		Class to save x and y Cesium and bounds Cesium to Mapbox.
 		Cardinality: c:center, w:west, e:east, n:north, s:south;
 	*/
-	function InfoTile(x, y, cardinality, northwest_latitude, northwest_longitude, southeast_latitude, southeast_longitude, longitude, latitude){
+	function InfoTile(x, y, cardinality, northwest_latitude, northwest_longitude, southeast_latitude, southeast_longitude, longitude, latitude, index){
 		this.x = x;
 		this.y = y;
 		this.bounds = [[northwest_latitude, northwest_longitude],[southeast_latitude, southeast_longitude]];
@@ -48,6 +48,7 @@
 			Normal is [latitude, longitude];
 		*/
 		this.coordinate = [longitude, latitude];
+		this.index = index;
 	}
 	
 	function getRute() {
@@ -113,22 +114,10 @@
 		Create rute gpx point to polygin and create static image.
 	*/
 	function drawRute() {	
-		var polyline_options = { color: '#000'};
-		var polyOptions = { 
-			strokeColor: '#000000',	
-			strokeOpacity: 1.0,	
-			strokeWeight: 3,
-		};
-		var poly = new google.maps.Polyline(polyOptions);
-		//poly.setMap = map;
-		
-		var path = poly.getPath(), i;
+		var polyline_options = { color: '#000'};		
+		var i;
 		var line_points = new Array(coordinates.length);
-		console.log(coordinates.length);
 		for(i = 0; i < coordinates.length; i++) {
-			//To encode.
-			var myLatlng = new google.maps.LatLng(coordinates[i][0], coordinates[i][1]);
-			path.push(myLatlng);
 			//Polyline map.
 			line_points[i] = new Array(2);
 			line_points[i][0] = coordinates[i][0];
@@ -136,15 +125,8 @@
 		}
 		//Draw polilyne on map.
 		var polyline = L.polyline(line_points, polyline_options).addTo(map);
-
-		var encode_string = google.maps.geometry.encoding.encodePath(path);
-		encode_string = encode_string.replace(/\\/g,'\\\\');
+		/*
 		var width = 504, height = 630;	
-		//var width = 2000, height = 2000;		
-		// Static image contain url to mapbox rute.
-		// Control ZOOM!!
-		//map.setZoom(14);
-		//for(i = 0; i < info_tiles.length; i++) {
 		var reverse_line_points = new Array(line_points.length);
 		for(i = 0; i < reverse_line_points.length; i++){
 			reverse_line_points[i] = new Array(2);
@@ -167,10 +149,53 @@
 		
 		var encode_json = JSON.stringify(geo_json);
 		var encode_json_uri = encodeURIComponent(encode_json);
-	
-		var static_image_path, static_image_json;
+		*/
+		
+		console.log(coordinates.length);
+		var static_image_json;
+		var width = 504, height = 630;
 		for(i = 0; i < info_tiles.length; i++) {
-			bounds = bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
+			var reverse_line_points;
+			console.log(info_tiles[i].coordinate);
+			console.log(info_tiles[i].index);
+			/*
+				One or more tiles.
+			*/
+			if (info_tiles.length > 1) {
+							
+			} else {
+				reverse_line_points = new Array(line_points.length);
+				for(i = 0; i < reverse_line_points.length; i++){
+					reverse_line_points[i] = new Array(2);
+					reverse_line_points[i][0] = parseFloat(line_points[i][1].toFixed(4));
+					reverse_line_points[i][1] = parseFloat(line_points[i][0].toFixed(4));
+				}
+				var geo_json = {
+					"type": "Feature",
+					 "properties": {
+						"stroke": "#fc4353",
+						"stroke-width": 5
+					},
+					"geometry": {
+						"type": "LineString",
+						"coordinates": reverse_line_points
+					}
+
+				};
+				var encode_json = JSON.stringify(geo_json);
+				var encode_json_uri = encodeURIComponent(encode_json);
+				//bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]]];
+				//map.setMaxBounds(bounds);
+				zoom = 14;
+				if (id_map == -1) 
+					static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+				else 
+					static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+				
+				console.log(static_image_json);
+			}
+			/*
+			bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
 			map.setMaxBounds(bounds);
 			zoom = 14;
 			if (id_map == -1) 
@@ -180,6 +205,7 @@
 			
 			//Obtain texture file.
 			getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
+			*/
 		}
 	}
 	/*
@@ -234,14 +260,14 @@
 		positionLonLat = Cesium.Cartographic.fromDegrees(coord[0][1], coord[0][0]);
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
 		tile = getTile(positionTileXY);
-		info_tiles.push(new InfoTile(positionTileXY.x, positionTileXY.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[0][1], coord[0][0]));
+		info_tiles.push(new InfoTile(positionTileXY.x, positionTileXY.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[0][1], coord[0][0], 0));
 		for (i = 1; i < coord.length; i ++) {
 			var positionLonLat_actual, positionTileXY_actual;
 			positionLonLat_actual = Cesium.Cartographic.fromDegrees(coord[i][1], coord[i][0]);
 			positionTileXY_actual = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat_actual,12);
 			if ((positionTileXY.x != positionTileXY_actual.x) || (positionTileXY.y != positionTileXY_actual.y)) {
 				tile = getTile(positionTileXY_actual);
-				info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0]));
+				info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
 				positionTileXY = positionTileXY_actual;
 			}
 		}
