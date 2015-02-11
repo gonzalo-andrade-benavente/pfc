@@ -18,6 +18,7 @@ var mapbox_texture, index_tile = 0;
 //to know where put the geometry.
 var tile_x, tile_y;
 var tile_actually_x, tile_actually_y;
+var geometry_previous;
 /*
 	Variable global contains maximum value of height(z) in the vertex.
 */
@@ -106,7 +107,6 @@ function createMeshCesium(data) {
 	for(var i=0; i < facesQuantized.length; i=i+3)
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 	
-	
 	geometry = addBase(geometry);
 	geometry = addFaceVertexUvs(geometry);
 	/*
@@ -133,42 +133,36 @@ function createMeshCesium(data) {
 				Actually is at the south of last tile.
 			*/
 			console.log("South");
-			console.log("[PFC my_cesium_mesh.js]: Initial Tile X "+tile_actually_x+ " Tile Y "+tile_actually_y);
-			console.log("[PFC my_cesium_mesh.js]: Actually Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
-			tile_actually_x = info_tiles[index_tile].x; 
-			tile_actually_y = info_tiles[index_tile].y;
+			geometry = escalateGeometry(geometry, geometry_previous);
 		} else if (mult_y_escalate < 0) {
 			/*
 				Actually is at the north of last tile.
 			*/
 			console.log("North");
-			console.log("[PFC my_cesium_mesh.js]: Initial Tile X "+tile_actually_x+ " Tile Y "+tile_actually_y);
-			console.log("[PFC my_cesium_mesh.js]: Actually Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
-			tile_actually_x = info_tiles[index_tile].x; 
-			tile_actually_y = info_tiles[index_tile].y;
+			geometry = escalateGeometry(geometry, geometry_previous);
 		} else if (mult_x_escalate > 0) {
 			/*
 				Actually is at the easth of last tile.
 			*/
 			console.log("Easth");
-			console.log("[PFC my_cesium_mesh.js]: Initial Tile X "+tile_actually_x+ " Tile Y "+tile_actually_y);
-			console.log("[PFC my_cesium_mesh.js]: Actually Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
-			tile_actually_x = info_tiles[index_tile].x; 
-			tile_actually_y = info_tiles[index_tile].y;
+			geometry = escalateGeometry(geometry, geometry_previous);
 		} else if (mult_x_escalate < 0) {
 			/*
 				Actually is at the west of last tile.
 			*/
 			console.log("West");
-			console.log("[PFC my_cesium_mesh.js]: Initial Tile X "+tile_actually_x+ " Tile Y "+tile_actually_y);
-			console.log("[PFC my_cesium_mesh.js]: Actually Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
-			tile_actually_x = info_tiles[index_tile].x; 
-			tile_actually_y = info_tiles[index_tile].y;
+			geometry = escalateGeometry(geometry, geometry_previous);
 		}
+		console.log("[PFC my_cesium_mesh.js]: Initial Tile X "+tile_actually_x+ " Tile Y "+tile_actually_y);
+		console.log("[PFC my_cesium_mesh.js]: Actually Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
+		tile_actually_x = info_tiles[index_tile].x; 
+		tile_actually_y = info_tiles[index_tile].y;
 		
 		x = x + (33 * mult_x);
 		z = z + (33 * mult_y);
 		
+	} else {
+		geometry_previous = geometry;
 	}
 	var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 	mesh = new THREE.Mesh( geometry, material );
@@ -181,6 +175,19 @@ function createMeshCesium(data) {
 	x = 0; y = 0; z = 0;
 	scene.add(mesh);
 	index_tile++;
+}
+/*
+	Receive the actual geometry and the previous geometry, so we need to change
+	the values of the geometry.
+*/
+function escalateGeometry(geometry, geometry_pre) {
+	console.log("[PFC my_cesium_mesh]: Escalate geometry");
+	if (geometry.boundingBox == null)
+		geometry.computeBoundingBox();
+	
+	var vertex = new Array();
+	
+	return(geometry);
 }
 /*
 	Function to handler the information from Cesium asynchronous function requestTileGeometry.
