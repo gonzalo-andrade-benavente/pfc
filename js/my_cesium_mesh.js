@@ -98,33 +98,40 @@ function createMeshCesium(data) {
 		heights = data._heightValues;
 	facesQuantized = data._indices;
 	var geometry = new THREE.Geometry();
-	for(var i=0; i < heights.length; i++){
+	for(var i=0; i < heights.length; i++)
 		geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/1000),Math.round(yy[i]/1000),Math.round(heights[i]/1000)));
-	}
-	for(var i=0; i < facesQuantized.length; i=i+3){
+	
+	for(var i=0; i < facesQuantized.length; i=i+3)
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
-	}
-	var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
-	mesh = new THREE.Mesh( geometry, material );
-	mesh.rotation.x =  Math.PI / 180 * (-90);
+	
+	
+	geometry = addBase(geometry);
+	geometry = addFaceVertexUvs(geometry);
 	/*
 		mult provide the factor to multiply to know the new position
 		of the mesh. Before do the rest with the central position.
 	*/
 	var mult_x = 0, mult_y = 0, subtraction;
 	if (info_tiles[index_tile].cardinality != 'c') {
-		console.log("[PFC my_cesium_mesh.js]: Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
-		console.log("[PFC my_cesium_mesh.js]: Cardinality "+info_tiles[index_tile].cardinality);
-		
 		mult_x = info_tiles[index_tile].x - tile_x;
 		mult_y = info_tiles[index_tile].y - tile_y;
+		/*
+		console.log("[PFC my_cesium_mesh.js]: Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
+		console.log("[PFC my_cesium_mesh.js]: Cardinality "+info_tiles[index_tile].cardinality);
 		console.log("[PFC my_cesium_mesh.js]: mult_x "+mult_x+ " mult_y "+mult_y);
+		*/
 		x = x + (33 * mult_x);
 		z = z + (33 * mult_y);
 		
-	}	
+	}
+	var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
-	console.log("[PFC my_cesium_mesh.js]: Tile position (" + x + "," + y + "," + z + ")");
+	//console.log("[PFC my_cesium_mesh.js]: Tile position (" + x + "," + y + "," + z + ")");
+	/*
+		Set x,y,z equal zero to come back to center point.
+	*/
 	x = 0; y = 0; z = 0;
 	scene.add(mesh);
 	index_tile++;
