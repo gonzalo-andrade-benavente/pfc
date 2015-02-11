@@ -67,20 +67,46 @@ function load(coord) {
 	//Create scene ThreeJs with threejs.js
 	loadThreeJS();
 	//Create Graphic User Interface with gui.js
-	createGUI();
+	//createGUI();
 	info_tiles = new Array(); 
 	checkTile(coord);
 	
-	for(i = 0; i < info_tiles.length; i++) {
-		//mapbox_texture = sessionStorage.name + i + info_tiles[i].cardinality;
+	for(i = 0; i < 1; i++) {
+	//for(i = 0; i < info_tiles.length; i++) {
+		//mapbox_texture = sessionStorage.name + i + info_tiles[i].cardinality
 		aCesiumTerrainProvider.requestTileGeometry(info_tiles[i].x, info_tiles[i].y, 12, true).then(function(data){
 			// Send data of Cesium to combine Mesh.
-			combineMesh(data);
+			//combineMesh(data);
+			createMeshCesium(data);			
 		});
 		
+	}	
+}
+
+function createMeshCesium(data) {
+	/*
+		index_tile contains the position to each mesh tile.
+	*/
+	console.log("[PFC my_cesium_mesh.js]: Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
+	console.log("[PFC my_cesium_mesh.js]: Cardinality "+info_tiles[index_tile].cardinality);
+	var mesh, facesQuantized, geometry;
+	var xx = data._uValues, 
+		yy = data._vValues,
+		heights = data._heightValues;
+	facesQuantized = data._indices;
+	var geometry = new THREE.Geometry();
+	for(var i=0; i < heights.length; i++){
+		geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/1000),Math.round(yy[i]/1000),Math.round(heights[i]/1000)));
 	}
-	
-	
+	for(var i=0; i < facesQuantized.length; i=i+3){
+		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
+	}
+	var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.rotation.x =  Math.PI / 180 * (-90);
+	mesh.position.set(x, y, z);
+	scene.add(mesh);
+	index_tile++;
 }
 /*
 	Function to handler the information from Cesium asynchronous function requestTileGeometry.
