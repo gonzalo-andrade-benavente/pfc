@@ -40,7 +40,7 @@ function createGUI() {
 		for (var i = 0; i < scene.children.length; i++ )
 			scene.children[i].material.wireframe = e;
 	});
-	gui.add(controls, 'combined').name('Combinado(merge)');
+	//gui.add(controls, 'combined').name('Combinado(merge)');
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');

@@ -71,7 +71,7 @@ function load(coord) {
 	//Create scene ThreeJs with threejs.js
 	loadThreeJS();
 	//Create Graphic User Interface with gui.js
-	//createGUI();
+	createGUI();
 	info_tiles = new Array(); 
 	checkTile(coord);
 	tile_x = info_tiles[0].x ; tile_y = info_tiles[0].y;
