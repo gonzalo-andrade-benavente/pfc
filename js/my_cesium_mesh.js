@@ -17,6 +17,7 @@ var x = 0, y = 0, z = 0;
 var mapbox_texture, index_tile = 0;
 //to know where put the geometry.
 var tile_x, tile_y;
+var tile_actually_x, tile_actually_y;
 /*
 	Variable global contains maximum value of height(z) in the vertex.
 */
@@ -75,6 +76,7 @@ function load(coord) {
 	info_tiles = new Array(); 
 	checkTile(coord);
 	tile_x = info_tiles[0].x ; tile_y = info_tiles[0].y;
+	tile_actually_x = info_tiles[0].x; tile_actually_y = info_tiles[0].y;
 	console.log("[PFC my_cesium_mesh.js]: Central tile X "+tile_x+ " Tile Y "+tile_y);
 	//for(i = 0; i < 1; i++) {
 	for(i = 0; i < info_tiles.length; i++) {
@@ -111,7 +113,7 @@ function createMeshCesium(data) {
 		mult provide the factor to multiply to know the new position
 		of the mesh. Before do the rest with the central position.
 	*/
-	var mult_x = 0, mult_y = 0, subtraction;
+	var mult_x = 0, mult_y = 0, mult_x_escalate = 0, mult_y_escalate = 0;
 	if (info_tiles[index_tile].cardinality != 'c') {
 		mult_x = info_tiles[index_tile].x - tile_x;
 		mult_y = info_tiles[index_tile].y - tile_y;
@@ -120,6 +122,50 @@ function createMeshCesium(data) {
 		console.log("[PFC my_cesium_mesh.js]: Cardinality "+info_tiles[index_tile].cardinality);
 		console.log("[PFC my_cesium_mesh.js]: mult_x "+mult_x+ " mult_y "+mult_y);
 		*/
+		/*
+			Escalate dimensions.
+		*/
+		
+		mult_x_escalate = info_tiles[index_tile].x - tile_actually_x;
+		mult_y_escalate = info_tiles[index_tile].y - tile_actually_y;
+		if (mult_y_escalate > 0) {
+			/*
+				Actually is at the south of last tile.
+			*/
+			console.log("South");
+			console.log("[PFC my_cesium_mesh.js]: Initial Tile X "+tile_actually_x+ " Tile Y "+tile_actually_y);
+			console.log("[PFC my_cesium_mesh.js]: Actually Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
+			tile_actually_x = info_tiles[index_tile].x; 
+			tile_actually_y = info_tiles[index_tile].y;
+		} else if (mult_y_escalate < 0) {
+			/*
+				Actually is at the north of last tile.
+			*/
+			console.log("North");
+			console.log("[PFC my_cesium_mesh.js]: Initial Tile X "+tile_actually_x+ " Tile Y "+tile_actually_y);
+			console.log("[PFC my_cesium_mesh.js]: Actually Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
+			tile_actually_x = info_tiles[index_tile].x; 
+			tile_actually_y = info_tiles[index_tile].y;
+		} else if (mult_x_escalate > 0) {
+			/*
+				Actually is at the easth of last tile.
+			*/
+			console.log("Easth");
+			console.log("[PFC my_cesium_mesh.js]: Initial Tile X "+tile_actually_x+ " Tile Y "+tile_actually_y);
+			console.log("[PFC my_cesium_mesh.js]: Actually Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
+			tile_actually_x = info_tiles[index_tile].x; 
+			tile_actually_y = info_tiles[index_tile].y;
+		} else if (mult_x_escalate < 0) {
+			/*
+				Actually is at the west of last tile.
+			*/
+			console.log("West");
+			console.log("[PFC my_cesium_mesh.js]: Initial Tile X "+tile_actually_x+ " Tile Y "+tile_actually_y);
+			console.log("[PFC my_cesium_mesh.js]: Actually Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
+			tile_actually_x = info_tiles[index_tile].x; 
+			tile_actually_y = info_tiles[index_tile].y;
+		}
+		
 		x = x + (33 * mult_x);
 		z = z + (33 * mult_y);
 		
