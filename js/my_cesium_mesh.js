@@ -11,8 +11,12 @@ var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
 */
 var info_tiles;
 var combined_geometry = new THREE.Geometry();
+//Position gemetries
 var x = 0, y = 0, z = 0;
+//index_tile to each tile in info_tile.
 var mapbox_texture, index_tile = 0;
+//to know where put the geometry.
+var tile_x, tile_y;
 /*
 	Variable global contains maximum value of height(z) in the vertex.
 */
@@ -70,9 +74,10 @@ function load(coord) {
 	//createGUI();
 	info_tiles = new Array(); 
 	checkTile(coord);
-	
-	for(i = 0; i < 1; i++) {
-	//for(i = 0; i < info_tiles.length; i++) {
+	tile_x = info_tiles[0].x ; tile_y = info_tiles[0].y;
+	console.log("[PFC my_cesium_mesh.js]: Central tile X "+tile_x+ " Tile Y "+tile_y);
+	//for(i = 0; i < 1; i++) {
+	for(i = 0; i < info_tiles.length; i++) {
 		//mapbox_texture = sessionStorage.name + i + info_tiles[i].cardinality
 		aCesiumTerrainProvider.requestTileGeometry(info_tiles[i].x, info_tiles[i].y, 12, true).then(function(data){
 			// Send data of Cesium to combine Mesh.
@@ -87,8 +92,6 @@ function createMeshCesium(data) {
 	/*
 		index_tile contains the position to each mesh tile.
 	*/
-	console.log("[PFC my_cesium_mesh.js]: Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
-	console.log("[PFC my_cesium_mesh.js]: Cardinality "+info_tiles[index_tile].cardinality);
 	var mesh, facesQuantized, geometry;
 	var xx = data._uValues, 
 		yy = data._vValues,
@@ -104,7 +107,25 @@ function createMeshCesium(data) {
 	var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.rotation.x =  Math.PI / 180 * (-90);
+	/*
+		mult provide the factor to multiply to know the new position
+		of the mesh. Before do the rest with the central position.
+	*/
+	var mult_x = 0, mult_y = 0, subtraction;
+	if (info_tiles[index_tile].cardinality != 'c') {
+		console.log("[PFC my_cesium_mesh.js]: Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
+		console.log("[PFC my_cesium_mesh.js]: Cardinality "+info_tiles[index_tile].cardinality);
+		
+		mult_x = info_tiles[index_tile].x - tile_x;
+		mult_y = info_tiles[index_tile].y - tile_y;
+		console.log("[PFC my_cesium_mesh.js]: mult_x "+mult_x+ " mult_y "+mult_y);
+		x = x + (33 * mult_x);
+		z = z + (33 * mult_y);
+		
+	}	
 	mesh.position.set(x, y, z);
+	console.log("[PFC my_cesium_mesh.js]: Tile position (" + x + "," + y + "," + z + ")");
+	x = 0; y = 0; z = 0;
 	scene.add(mesh);
 	index_tile++;
 }
