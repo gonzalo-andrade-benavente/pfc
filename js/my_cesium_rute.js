@@ -125,95 +125,78 @@
 		}
 		//Draw polilyne on map.
 		var polyline = L.polyline(line_points, polyline_options).addTo(map);
-		/*
-		var width = 504, height = 630;	
-		var reverse_line_points = new Array(line_points.length);
-		for(i = 0; i < reverse_line_points.length; i++){
-			reverse_line_points[i] = new Array(2);
-			reverse_line_points[i][0] = parseFloat(line_points[i][1].toFixed(4));
-			reverse_line_points[i][1] = parseFloat(line_points[i][0].toFixed(4));
-		}
-		
-		var geo_json = {
-			"type": "Feature",
-			 "properties": {
-				"stroke": "#fc4353",
-				"stroke-width": 5
-			},
-			"geometry": {
-				"type": "LineString",
-				"coordinates": reverse_line_points
-			}
-
-		};
-		
-		var encode_json = JSON.stringify(geo_json);
-		var encode_json_uri = encodeURIComponent(encode_json);
-		*/
-		
-		console.log(coordinates.length);
+		console.log("[PFC my_cesium_rute.js]: Total coordinates "+coordinates.length);
 		var static_image_json;
 		var width = 504, height = 630;
 		for(i = 0; i < info_tiles.length; i++) {
 			var reverse_line_points, long_array;
+			var init, end;
 			/*
 				One or more tiles.
 			*/
 			if (info_tiles.length > 1) {
-				console.log("[PFC my_cesium_rute.js]: More than one mesh.");
 				/*
 					All tiles minus last.
 				*/
-				if (i != info_tiles.length-1) {			
+				if (i != info_tiles.length-1) {
+					/*
+						Coordinates in that tile. info_tile[i].index is the first coordinate 
+						in that tile.
+					*/
+					//console.log("[PFC my_cesium_rute.js]: Mesh:"+i);
 					long_array = info_tiles[i+1].index - info_tiles[i].index;
-					for(j = info_tiles[i].index; j < (info_tiles[i].index + long_array) ; j++) {
-						console.log("hola"+i);
-					}
-				
+					init = info_tiles[i].index;
+					end = info_tiles[i].index + long_array;
 				} else {
 				/*
 					Last tile.
 				*/
+					//console.log("[PFC my_cesium_rute.js]: Mesh:"+i);
 					long_array = coordinates.length - info_tiles[i].index;
-					for(j = info_tiles[i].index; j < coordinates.length ; j++) {
-						console.log("hola"+i);
-					}
-					
-				
+					init = info_tiles[i].index;
+					end = coordinates.length;
 				}			
 			} else {
-				console.log("[PFC my_cesium_rute.js]: One mesh.");
-				reverse_line_points = new Array(line_points.length);
-				for(i = 0; i < reverse_line_points.length; i++){
-					reverse_line_points[i] = new Array(2);
-					reverse_line_points[i][0] = parseFloat(line_points[i][1].toFixed(4));
-					reverse_line_points[i][1] = parseFloat(line_points[i][0].toFixed(4));
-				}
-				var geo_json = {
-					"type": "Feature",
-					 "properties": {
-						"stroke": "#fc4353",
-						"stroke-width": 5
-					},
-					"geometry": {
-						"type": "LineString",
-						"coordinates": reverse_line_points
-					}
-
-				};
-				var encode_json = JSON.stringify(geo_json);
-				var encode_json_uri = encodeURIComponent(encode_json);
-				//bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]]];
-				//map.setMaxBounds(bounds);
-				zoom = 14;
-				if (id_map == -1) 
-					static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-				else 
-					static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-				
-				console.log(static_image_json);
+				//console.log("[PFC my_cesium_rute.js]: One mesh.");
+				long_array = line_points.length;
+				init = 0;
+				end = long_array;
 			}
-			/*
+			
+			reverse_line_points = new Array(long_array);
+			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+reverse_line_points.length);
+			for(j = 0; j < reverse_line_points.length; j++) {
+				reverse_line_points[j] = new Array(2);
+				reverse_line_points[j][0] = line_points[init][1];
+				reverse_line_points[j][1] = line_points[init][0];
+				init++;
+			}
+			
+			var geo_json = {
+				"type": "Feature",
+				 "properties": {
+					"stroke": "#fc4353",
+					"stroke-width": 5
+				},
+				"geometry": {
+					"type": "LineString",
+					"coordinates": reverse_line_points
+				}
+
+			};
+			var width = 504, height = 630;	
+			var encode_json = JSON.stringify(geo_json);
+			var encode_json_uri = encodeURIComponent(encode_json);
+			//bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]]];
+			//map.setMaxBounds(bounds);
+			zoom = 14;
+			if (id_map == -1) 
+				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+			else 
+				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+			
+			console.log(static_image_json);
+			
 			bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
 			map.setMaxBounds(bounds);
 			zoom = 14;
@@ -224,7 +207,6 @@
 			
 			//Obtain texture file.
 			getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
-			*/
 		}
 	}
 	/*
@@ -254,16 +236,14 @@
 			xhr.send();
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
-					/*
 					if (xhr.responseText == "") {
-						console.log(xhr.responseText);
+						console.log("[PFC my_cesium_rute.js]: Texture upload ok. ");
 						//window.open("./PFCMyMesh.html", "_self");
 					}
 					else {
-						console.log("[PFC]: Error upload texture Ajax.");
+						console.log("[PFC my_cesium_rute.js]: Error upload texture Ajax.");
 					}
-					*/
-					console.log(xhr.responseText);
+					
 				}
 			}
 		}
@@ -309,6 +289,13 @@
 			for(j = 1; j < pos.length; j++)
 				info_tiles.splice(pos[j],1);
 		}
+		/*
+			Compare the two last.
+		*/
+		if (info_tiles.length > 1) 
+			if ((info_tiles[info_tiles.length-1].x == info_tiles[info_tiles.length-2].x) && (info_tiles[info_tiles.length-1].y == info_tiles[info_tiles.length-2].y)) {
+				info_tiles.splice(info_tiles.length-1,1);
+			}
 		//info_tiles.splice(info_tiles.length-1, 1);
 		
 		for(i = 0; i < info_tiles.length; i++) {
