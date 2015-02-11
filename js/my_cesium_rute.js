@@ -238,12 +238,11 @@
 				if (xhr.readyState == 4 && xhr.status == 200) {
 					if (xhr.responseText == "") {
 						console.log("[PFC my_cesium_rute.js]: Texture upload ok. ");
-						//window.open("./PFCMyMesh.html", "_self");
 					}
 					else {
 						console.log("[PFC my_cesium_rute.js]: Error upload texture Ajax.");
 					}
-					
+				window.open("./PFCMyMesh.html", "_self");
 				}
 			}
 		}
@@ -266,7 +265,14 @@
 			positionTileXY_actual = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat_actual,12);
 			if ((positionTileXY.x != positionTileXY_actual.x) || (positionTileXY.y != positionTileXY_actual.y)) {
 				tile = getTile(positionTileXY_actual);
-				info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
+				if (positionTileXY.x < positionTileXY_actual.x)
+					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "w",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
+				else if (positionTileXY.x > positionTileXY_actual.x)	
+					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "e",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
+				else if (positionTileXY.y < positionTileXY_actual.y)
+					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "s",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
+				else if (positionTileXY.y > positionTileXY_actual.y)
+					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "n",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
 				positionTileXY = positionTileXY_actual;
 			}
 		}
