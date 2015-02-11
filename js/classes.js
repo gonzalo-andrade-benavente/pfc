@@ -21,11 +21,19 @@ function Coordinate(latitude, longitude) {
 	Class to save x and y Cesium and bounds Cesium to Mapbox.
 	Cardinality: c:center, w:west, e:east, n:north, s:south;
 */
-function InfoTile(x, y, cardinality, northwest_latitude, northwest_longitude, southeast_latitude, southeast_longitude){
+/*
+	Class to save x and y Cesium and bounds Cesium to Mapbox.
+	Cardinality: c:center, w:west, e:east, n:north, s:south;
+*/
+function InfoTile(x, y, cardinality, northwest_latitude, northwest_longitude, southeast_latitude, southeast_longitude, longitude, latitude, index){
 	this.x = x;
 	this.y = y;
 	this.bounds = [[northwest_latitude, northwest_longitude],[southeast_latitude, southeast_longitude]];
 	this.cardinality = cardinality;
-	this.map;
-	this.geometry;
+	/*
+		Reverse, to create correctly GeoJson.
+		Normal is [latitude, longitude];
+	*/
+	this.coordinate = [longitude, latitude];
+	this.index = index;
 }
