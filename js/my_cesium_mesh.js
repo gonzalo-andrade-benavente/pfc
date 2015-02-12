@@ -176,97 +176,98 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 	console.log("[PFC my_cesium_mesh]: Escalate geometry");
 	if (geometry_pre.boundingBox == null)
 		geometry_pre.computeBoundingBox();
-	var max_geometry, i;
+	var max_previous, max_actually, i;
 	var vertex = new Array();
 	switch (cardinality) {
 		case 's': 	{
 						console.log("South");
 						//Find vertex in geometry previous.
 
-						for(i = 0; i < geometry_pre.vertices.length; i++) {
-							if ((geometry_pre.vertices[i].y === geometry_pre.boundingBox.min.y) && (geometry_pre.vertices[i].z != 0)) 
-								vertex.push(i);			
-						}
-						//Sort vector where height is equal and distinct of zero (z).
-						vertex = sortVector(geometry_pre, vertex, "x");
-						//Maximum vertex to scale the next mesh.
-						max_vertice = majorValue(geometry_pre, vertex);
-						console.log("[PFC my_cesium_mesh]: Vertex maximum previous geometry:" + max_vertice);
-						
-						vertex.length = 0;
-						for(i = 0; i < geometry.vertices.length; i++) {
-							if ((geometry.vertices[i].y === geometry.boundingBox.max.y) && (geometry.vertices[i].z != 0)) 
-								vertex.push(i);			
-						}
-						max_geometry = majorValue(geometry, vertex);
-						console.log("[PFC my_cesium_mesh]: Vertex maximum geometry:" + max_geometry);
-						break;
-					}
-		case 'n': 	{
-						console.log("North");
-						//Find vertex in geometry previous.
-						for(i = 0; i < geometry_pre.vertices.length; i++) {
-							if ((geometry_pre.vertices[i].y === geometry_pre.boundingBox.max.y) && (geometry_pre.vertices[i].z != 0)) 
-								vertex.push(i);			
-						}
-						//Sort vector where height is equal and distinct of zero (z).
-						vertex = sortVector(geometry_pre, vertex, "x");
-						//Maximum vertex to scale the next mesh.
-						max_vertice = majorValue(geometry_pre, vertex);
-						console.log("[PFC my_cesium_mesh]: Vertex maximum previous geometry:" + max_vertice);
-						
-						vertex.length = 0;
 						for(i = 0; i < geometry.vertices.length; i++) {
 							if ((geometry.vertices[i].y === geometry.boundingBox.min.y) && (geometry.vertices[i].z != 0)) 
 								vertex.push(i);			
 						}
-						max_geometry = majorValue(geometry, vertex);
-						console.log("[PFC my_cesium_mesh]: Vertex maximum geometry:" + max_geometry);
+						//Sort vector where height is equal and distinct of zero (z).
+						vertex = sortVector(geometry, vertex, "x");
+						//Maximum vertex to scale the next mesh.
+						max_actually = majorValue(geometry, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum geometry:" + max_actually);
+						
+						vertex.length = 0;
+						for(i = 0; i < geometry_pre.vertices.length; i++) {
+							if ((geometry_pre.vertices[i].y === geometry_pre.boundingBox.max.y) && (geometry_pre.vertices[i].z != 0)) 
+								vertex.push(i);			
+						}
+						max_previous = majorValue(geometry_pre, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum previous:" + max_previous);
+						break;
+					}
+		case 'n': 	{
+						console.log("North");
+						
+						//Find vertex in geometry previous.
+						for(i = 0; i < geometry.vertices.length; i++) {
+							if ((geometry.vertices[i].y === geometry.boundingBox.max.y) && (geometry.vertices[i].z != 0)) 
+								vertex.push(i);			
+						}
+						//Sort vector where height is equal and distinct of zero (z).
+						vertex = sortVector(geometry, vertex, "x");
+						//Maximum vertex to scale the next mesh.
+						max_actually = majorValue(geometry, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum previous geometry:" + max_actually);
+						
+						vertex.length = 0;
+						for(i = 0; i < geometry_pre.vertices.length; i++) {
+							if ((geometry_pre.vertices[i].y === geometry_pre.boundingBox.min.y) && (geometry_pre.vertices[i].z != 0)) 
+								vertex.push(i);			
+						}
+						max_previous = majorValue(geometry_pre, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum geometry:" + max_previous);
+						
 						break;
 					}
 		case 'w': 	{
 						console.log("East");
 						//Find vertex in geometry previous.
-						for(i = 0; i < geometry_pre.vertices.length; i++) {
-							if ((geometry_pre.vertices[i].x === geometry_pre.boundingBox.max.x) && (geometry_pre.vertices[i].z != 0)) 
+						for(i = 0; i < geometry.vertices.length; i++) {
+							if ((geometry.vertices[i].x === geometry.boundingBox.max.x) && (geometry.vertices[i].z != 0)) 
 								vertex.push(i);			
 						}
 						//Sort vector where height is equal and distinct of zero (z).
-						vertex = sortVector(geometry_pre, vertex, "y");
+						vertex = sortVector(geometry, vertex, "y");
 						//Maximum vertex to scale the next mesh.
-						max_vertice = majorValue(geometry_pre, vertex);
-						console.log("[PFC my_cesium_mesh]: Vertex maximum previous geometry:" + max_vertice);
+						max_actually = majorValue(geometry, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum previous geometry:" + max_actually);
 						
 						vertex.length = 0;
-						for(i = 0; i < geometry.vertices.length; i++) {
-							if ((geometry.vertices[i].x === geometry.boundingBox.min.x) && (geometry.vertices[i].z != 0)) 
+						for(i = 0; i < geometry_pre.vertices.length; i++) {
+							if ((geometry_pre.vertices[i].x === geometry_pre.boundingBox.min.x) && (geometry_pre.vertices[i].z != 0)) 
 								vertex.push(i);			
 						}
-						max_geometry = majorValue(geometry, vertex);
-						console.log("[PFC my_cesium_mesh]: Vertex maximum geometry:" + max_geometry);
+						max_previous = majorValue(geometry_pre, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum geometry:" + max_previous);
 						break;
 					}
 		case 'e': 	{
 						console.log("West");
 						//Find vertex in geometry previous.
-						for(i = 0; i < geometry_pre.vertices.length; i++) {
-							if ((geometry_pre.vertices[i].x === geometry_pre.boundingBox.min.x) && (geometry_pre.vertices[i].z != 0)) 
+						for(i = 0; i < geometry.vertices.length; i++) {
+							if ((geometry.vertices[i].x === geometry.boundingBox.min.x) && (geometry.vertices[i].z != 0)) 
 								vertex.push(i);			
 						}
 						//Sort vector where height is equal and distinct of zero (z).
-						vertex = sortVector(geometry_pre, vertex, "y");
+						vertex = sortVector(geometry, vertex, "y");
 						//Maximum vertex to scale the next mesh.
-						max_vertice = majorValue(geometry_pre, vertex);
-						console.log("[PFC my_cesium_mesh]: Vertex maximum previous geometry:" + max_vertice);
+						max_actually = majorValue(geometry, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum previous geometry:" + max_actually);
 						
 						vertex.length = 0;
-						for(i = 0; i < geometry.vertices.length; i++) {
-							if ((geometry.vertices[i].x === geometry.boundingBox.max.x) && (geometry.vertices[i].z != 0)) 
+						for(i = 0; i < geometry_pre.vertices.length; i++) {
+							if ((geometry_pre.vertices[i].x === geometry_pre.boundingBox.max.x) && (geometry_pre.vertices[i].z != 0)) 
 								vertex.push(i);			
 						}
-						max_geometry = majorValue(geometry, vertex);
-						console.log("[PFC my_cesium_mesh]: Vertex maximum geometry:" + max_geometry);
-						
+						max_previous = majorValue(geometry_pre, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum geometry:" + max_previous);
 						break;
 					}
 	}
@@ -276,6 +277,13 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 		########################## Escale ###########################
 	*/
 	var quotient;
+	if (max_actually > max_previous) {
+		console.log("[PFC my_cesium_mesh]: Reduce value of geometry");
+	
+	} else {
+		console.log("[PFC my_cesium_mesh]: increase value of geometry");
+	}
+	/*
 	if (max_vertice > max_geometry) {
 		//Reduce value.
 		console.log("[PFC my_cesium_mesh]: Reduce value of geometry");
@@ -289,7 +297,7 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 	
 	
 	}
-	
+	*/
 	
 	
 	/*
