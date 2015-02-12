@@ -274,15 +274,19 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 	*/
 	
 	if (max_vertice < max_geometry) {
-	
-	
+		for(i = 0; i < geometry.vertices.length; i++) {
+			a = max_vertice * geometry.vertices[i].z;
+			geometry.vertices[i].z = Math.round(a/max_geometry);
+		}
+	} else {
+		for(i = 0; i < geometry.vertices.length; i++) {
+			
+			a = max_geometry * geometry.vertices[i].z;
+			geometry.vertices[i].z = Math.round(a/max_vertice);
+			
+		}
 	}
-	/*
-	for(i = 0; i < geometry.vertices.length; i++) {
-		a = max_vertice * geometry.vertices[i].z;
-		geometry.vertices[i].z = Math.round(a/max_geometry);
-	}
-	*/
+
 	return geometry;
 }
 /*
