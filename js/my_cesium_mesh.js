@@ -140,8 +140,8 @@ function createMeshCesium(data) {
 			//Actually is at the west of last tile.
 			geometry = escalateGeometry(geometry, geometry_previous, 'w');
 		}
-		console.log("[PFC my_cesium_mesh.js]: Initial Tile X "+tile_actually_x+ " Tile Y "+tile_actually_y);
-		console.log("[PFC my_cesium_mesh.js]: Actually Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
+		//console.log("[PFC my_cesium_mesh.js]: Initial Tile X "+tile_actually_x+ " Tile Y "+tile_actually_y);
+		//console.log("[PFC my_cesium_mesh.js]: Actually Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
 		tile_actually_x = info_tiles[index_tile].x; 
 		tile_actually_y = info_tiles[index_tile].y;
 		
@@ -189,6 +189,7 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 						vertex = sortVector(geometry_pre, vertex, "x");
 						//Maximum vertex to scale the next mesh.
 						max_vertice = majorValue(geometry_pre, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum previous geometry:" + max_vertice);
 						
 						vertex.length = 0;
 						for(i = 0; i < geometry.vertices.length; i++) {
@@ -196,6 +197,7 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 								vertex.push(i);			
 						}
 						max_geometry = majorValue(geometry, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum geometry:" + max_geometry);
 						break;
 					}
 		case 'n': 	{
@@ -209,7 +211,15 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 						vertex = sortVector(geometry_pre, vertex, "x");
 						//Maximum vertex to scale the next mesh.
 						max_vertice = majorValue(geometry_pre, vertex);
-						//max_geometry = majorValue(geometry, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum previous geometry:" + max_vertice);
+						
+						vertex.length = 0;
+						for(i = 0; i < geometry.vertices.length; i++) {
+							if ((geometry.vertices[i].y === geometry.boundingBox.min.y) && (geometry.vertices[i].z != 0)) 
+								vertex.push(i);			
+						}
+						max_geometry = majorValue(geometry, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum geometry:" + max_geometry);
 						break;
 					}
 		case 'w': 	{
@@ -223,7 +233,15 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 						vertex = sortVector(geometry_pre, vertex, "y");
 						//Maximum vertex to scale the next mesh.
 						max_vertice = majorValue(geometry_pre, vertex);
-						//max_geometry = majorValue(geometry, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum previous geometry:" + max_vertice);
+						
+						vertex.length = 0;
+						for(i = 0; i < geometry.vertices.length; i++) {
+							if ((geometry.vertices[i].x === geometry.boundingBox.min.x) && (geometry.vertices[i].z != 0)) 
+								vertex.push(i);			
+						}
+						max_geometry = majorValue(geometry, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum geometry:" + max_geometry);
 						break;
 					}
 		case 'e': 	{
@@ -237,7 +255,16 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 						vertex = sortVector(geometry_pre, vertex, "y");
 						//Maximum vertex to scale the next mesh.
 						max_vertice = majorValue(geometry_pre, vertex);
-						//max_geometry = majorValue(geometry, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum previous geometry:" + max_vertice);
+						
+						vertex.length = 0;
+						for(i = 0; i < geometry.vertices.length; i++) {
+							if ((geometry.vertices[i].x === geometry.boundingBox.max.x) && (geometry.vertices[i].z != 0)) 
+								vertex.push(i);			
+						}
+						max_geometry = majorValue(geometry, vertex);
+						console.log("[PFC my_cesium_mesh]: Vertex maximum geometry:" + max_geometry);
+						
 						break;
 					}
 	}
@@ -246,10 +273,16 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 		Change value of vertices "z" height respect the maximum value of mesh center or another mesh.
 	*/
 	
+	if (max_vertice < max_geometry) {
+	
+	
+	}
+	/*
 	for(i = 0; i < geometry.vertices.length; i++) {
 		a = max_vertice * geometry.vertices[i].z;
 		geometry.vertices[i].z = Math.round(a/max_geometry);
 	}
+	*/
 	return geometry;
 }
 /*
