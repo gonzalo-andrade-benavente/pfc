@@ -176,7 +176,7 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 	console.log("[PFC my_cesium_mesh]: Escalate geometry");
 	if (geometry_pre.boundingBox == null)
 		geometry_pre.computeBoundingBox();
-	var max_geometry;
+	var max_geometry, i;
 	var vertex = new Array();
 	switch (cardinality) {
 		case 's': 	{
@@ -273,26 +273,48 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 	
 	/*
 		Change value of vertices "z" height respect the maximum value of mesh center or another mesh.
+		########################## Escale ###########################
 	*/
+	var quotient;
+	if (max_vertice > max_geometry) {
+		//Reduce value.
+		console.log("[PFC my_cesium_mesh]: Reduce value of geometry");
+		quotient = max_vertice/max_geometry;
+		
 	
-	if (max_vertice < max_geometry) {
-		console.log("[PFC my_cesium_mesh]: actually mesh > previous mesh.");
-		/*
-		for(i = 0; i < geometry.vertices.length; i++) {
-			a = max_vertice * geometry.vertices[i].z;
-			geometry.vertices[i].z = Math.round(a/max_geometry);
-		}
-		*/
+	
 	} else {
-		console.log("[PFC my_cesium_mesh]: actually mesh < previous mesh.");
-		/*
-		for(i = 0; i < geometry.vertices.length; i++) {
-			a = max_geometry * geometry.vertices[i].z;
-			geometry.vertices[i].z = Math.round(a/max_vertice);
-			
-		}
-		*/
+		quotient = max_geometry/max_vertice;
+		console.log("[PFC my_cesium_mesh]: increase value of geometry");
+	
+	
 	}
+	
+	
+	
+	/*
+	var quotient;
+	if (max_vertice > max_geometry) {
+		quotient = max_vertice/max_geometry;
+		console.log(quotient);
+		for (i = 0; i < geometry.vertices.length; i++) {
+			if (geometry.vertices[i].z != 0) {
+				a = geometry.vertices[i].z * quotient;
+				geometry.vertices[i].z = a;
+			}
+		}
+	} else {
+		quotient = max_geometry/max_vertice;
+		console.log(quotient);
+		for (i = 0; i < geometry.vertices.length; i++) {
+			//geometry.vertices[i].z = geometry.vertices[i].z * quotient;
+			if (geometry.vertices[i].z != 0) {
+				a = geometry.vertices[i].z / quotient;
+				geometry.vertices[i].z = a;
+			}
+		}
+	}
+	*/
 
 	return geometry;
 }
