@@ -10,6 +10,7 @@ var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
 	Variable global to handler the asynchronous cesium terrain provider.
 */
 var info_tiles;
+var mesh_export;
 var combined_geometry = new THREE.Geometry();
 //Position gemetries
 var x = 0, y = 0, z = 0;
@@ -157,6 +158,7 @@ function createMeshCesium(data) {
 	geometry_previous = geometry;
 	var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 	mesh = new THREE.Mesh( geometry, material );
+	mesh_export = mesh;
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
 	/*
