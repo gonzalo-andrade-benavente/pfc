@@ -125,33 +125,20 @@ function createMeshCesium(data) {
 		/*
 			Escalate dimensions.
 		*/
-		
 		mult_x_escalate = info_tiles[index_tile].x - tile_actually_x;
 		mult_y_escalate = info_tiles[index_tile].y - tile_actually_y;
 		if (mult_y_escalate > 0) {
-			/*
-				Actually is at the south of last tile.
-			*/
-			console.log("South");
-			geometry = escalateGeometry(geometry, geometry_previous);
+			//Actually is at the south of last tile.
+			geometry = escalateGeometry(geometry, geometry_previous, 's');
 		} else if (mult_y_escalate < 0) {
-			/*
-				Actually is at the north of last tile.
-			*/
-			console.log("North");
-			geometry = escalateGeometry(geometry, geometry_previous);
+			//Actually is at the north of last tile.
+			geometry = escalateGeometry(geometry, geometry_previous, 'n');
 		} else if (mult_x_escalate > 0) {
-			/*
-				Actually is at the easth of last tile.
-			*/
-			console.log("Easth");
-			geometry = escalateGeometry(geometry, geometry_previous);
+			//Actually is at the easth of last tile.
+			geometry = escalateGeometry(geometry, geometry_previous, 'e');
 		} else if (mult_x_escalate < 0) {
-			/*
-				Actually is at the west of last tile.
-			*/
-			console.log("West");
-			geometry = escalateGeometry(geometry, geometry_previous);
+			//Actually is at the west of last tile.
+			geometry = escalateGeometry(geometry, geometry_previous, 'w');
 		}
 		console.log("[PFC my_cesium_mesh.js]: Initial Tile X "+tile_actually_x+ " Tile Y "+tile_actually_y);
 		console.log("[PFC my_cesium_mesh.js]: Actually Tile X "+info_tiles[index_tile].x+ " Tile Y "+info_tiles[index_tile].y);
@@ -164,11 +151,14 @@ function createMeshCesium(data) {
 	} else {
 		geometry_previous = geometry;
 	}
+	/*
+		Change the geometry previous to compare the actually geometry.
+	*/
+	geometry_previous = geometry;
 	var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
-	//console.log("[PFC my_cesium_mesh.js]: Tile position (" + x + "," + y + "," + z + ")");
 	/*
 		Set x,y,z equal zero to come back to center point.
 	*/
@@ -180,14 +170,87 @@ function createMeshCesium(data) {
 	Receive the actual geometry and the previous geometry, so we need to change
 	the values of the geometry.
 */
-function escalateGeometry(geometry, geometry_pre) {
+function escalateGeometry(geometry, geometry_pre, cardinality) {
 	console.log("[PFC my_cesium_mesh]: Escalate geometry");
-	if (geometry.boundingBox == null)
-		geometry.computeBoundingBox();
-	
+	if (geometry_pre.boundingBox == null)
+		geometry_pre.computeBoundingBox();
+	var max_geometry;
 	var vertex = new Array();
+	switch (cardinality) {
+		case 's': 	{
+						console.log("South");
+						//Find vertex in geometry previous.
+
+						for(i = 0; i < geometry_pre.vertices.length; i++) {
+							if ((geometry_pre.vertices[i].y === geometry_pre.boundingBox.min.y) && (geometry_pre.vertices[i].z != 0)) 
+								vertex.push(i);			
+						}
+						//Sort vector where height is equal and distinct of zero (z).
+						vertex = sortVector(geometry_pre, vertex, "x");
+						//Maximum vertex to scale the next mesh.
+						max_vertice = majorValue(geometry_pre, vertex);
+						
+						vertex.length = 0;
+						for(i = 0; i < geometry.vertices.length; i++) {
+							if ((geometry.vertices[i].y === geometry.boundingBox.max.y) && (geometry.vertices[i].z != 0)) 
+								vertex.push(i);			
+						}
+						max_geometry = majorValue(geometry, vertex);
+						break;
+					}
+		case 'n': 	{
+						console.log("North");
+						//Find vertex in geometry previous.
+						for(i = 0; i < geometry_pre.vertices.length; i++) {
+							if ((geometry_pre.vertices[i].y === geometry_pre.boundingBox.max.y) && (geometry_pre.vertices[i].z != 0)) 
+								vertex.push(i);			
+						}
+						//Sort vector where height is equal and distinct of zero (z).
+						vertex = sortVector(geometry_pre, vertex, "x");
+						//Maximum vertex to scale the next mesh.
+						max_vertice = majorValue(geometry_pre, vertex);
+						//max_geometry = majorValue(geometry, vertex);
+						break;
+					}
+		case 'w': 	{
+						console.log("East");
+						//Find vertex in geometry previous.
+						for(i = 0; i < geometry_pre.vertices.length; i++) {
+							if ((geometry_pre.vertices[i].x === geometry_pre.boundingBox.max.x) && (geometry_pre.vertices[i].z != 0)) 
+								vertex.push(i);			
+						}
+						//Sort vector where height is equal and distinct of zero (z).
+						vertex = sortVector(geometry_pre, vertex, "y");
+						//Maximum vertex to scale the next mesh.
+						max_vertice = majorValue(geometry_pre, vertex);
+						//max_geometry = majorValue(geometry, vertex);
+						break;
+					}
+		case 'e': 	{
+						console.log("West");
+						//Find vertex in geometry previous.
+						for(i = 0; i < geometry_pre.vertices.length; i++) {
+							if ((geometry_pre.vertices[i].x === geometry_pre.boundingBox.min.x) && (geometry_pre.vertices[i].z != 0)) 
+								vertex.push(i);			
+						}
+						//Sort vector where height is equal and distinct of zero (z).
+						vertex = sortVector(geometry_pre, vertex, "y");
+						//Maximum vertex to scale the next mesh.
+						max_vertice = majorValue(geometry_pre, vertex);
+						//max_geometry = majorValue(geometry, vertex);
+						break;
+					}
+	}
 	
-	return(geometry);
+	/*
+		Change value of vertices "z" height respect the maximum value of mesh center or another mesh.
+	*/
+	
+	for(i = 0; i < geometry.vertices.length; i++) {
+		a = max_vertice * geometry.vertices[i].z;
+		geometry.vertices[i].z = Math.round(a/max_geometry);
+	}
+	return geometry;
 }
 /*
 	Function to handler the information from Cesium asynchronous function requestTileGeometry.
