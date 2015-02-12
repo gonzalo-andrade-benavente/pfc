@@ -276,17 +276,22 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 	*/
 	
 	if (max_vertice < max_geometry) {
+		console.log("[PFC my_cesium_mesh]: actually mesh > previous mesh.");
+		/*
 		for(i = 0; i < geometry.vertices.length; i++) {
 			a = max_vertice * geometry.vertices[i].z;
 			geometry.vertices[i].z = Math.round(a/max_geometry);
 		}
+		*/
 	} else {
+		console.log("[PFC my_cesium_mesh]: actually mesh < previous mesh.");
+		/*
 		for(i = 0; i < geometry.vertices.length; i++) {
-			
 			a = max_geometry * geometry.vertices[i].z;
 			geometry.vertices[i].z = Math.round(a/max_vertice);
 			
 		}
+		*/
 	}
 
 	return geometry;
