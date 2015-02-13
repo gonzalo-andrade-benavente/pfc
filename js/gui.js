@@ -26,7 +26,19 @@ function createGUI() {
 			}else {
 				console.log("don't exist");
 			}
-		}		
+		}
+		this.scalar = function () {
+			var geometry, mesh, i, j;
+			var geometries = new Array();
+			for (i = 0; i < scene.children.length; i++ ) {
+				geometry = scene.children[i].geometry.clone();
+				console.log(scene.children[i]);
+				for(j = 0; j < geometry.vertices.length; j++)
+					geometry.vertices.z = geometry.vertices.z - 10;
+				geometries.push(geometry);
+			}
+			console.log(geometries);
+		}
 	}
 	
 	gui = new dat.GUI();
@@ -43,6 +55,7 @@ function createGUI() {
 	//gui.add(controls, 'combined').name('Combinado(merge)');
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
+	gui.add(controls, 'scalar').name('Escalar');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
 
