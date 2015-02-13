@@ -234,12 +234,10 @@
 			xhr.send();
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
-					if (xhr.responseText == "") {
+					if (xhr.responseText == "")
 						console.log("[PFC my_cesium_rute.js]: Texture upload ok. ");
-					}
-					else {
+					else 
 						console.log("[PFC my_cesium_rute.js]: Error upload texture Ajax.");
-					}
 				window.open("./PFCMyMesh.html", "_self");
 				}
 			}
@@ -300,12 +298,13 @@
 			if ((info_tiles[info_tiles.length-1].x == info_tiles[info_tiles.length-2].x) && (info_tiles[info_tiles.length-1].y == info_tiles[info_tiles.length-2].y)) {
 				info_tiles.splice(info_tiles.length-1,1);
 			}
-		//info_tiles.splice(info_tiles.length-1, 1);
-		
+
+		/*
 		for(i = 0; i < info_tiles.length; i++) {
 			var bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
 			L.rectangle(bounds, {color: "#191414", weight: 2, fillOpacity:0 }).addTo(map);
 		}
+		*/
 		
 	}
 	

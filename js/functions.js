@@ -48,9 +48,9 @@ function checkTile(coord) {
 			Compare the two last.
 		*/
 		if (info_tiles.length > 1) 
-			if ((info_tiles[info_tiles.length-1].x == info_tiles[info_tiles.length-2].x) && (info_tiles[info_tiles.length-1].y == info_tiles[info_tiles.length-2].y)) {
+			if ((info_tiles[info_tiles.length-1].x == info_tiles[info_tiles.length-2].x) && (info_tiles[info_tiles.length-1].y == info_tiles[info_tiles.length-2].y))
 				info_tiles.splice(info_tiles.length-1,1);
-			}
+	
 		//info_tiles.splice(info_tiles.length-1, 1);
 		
 		/*
