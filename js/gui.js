@@ -1,6 +1,7 @@
 /* PFC GUI - Three.js */
-var controls;
+var controls, meshs;
 function createGUI() {
+	console.log("[PFC gui.js]: GUI Loaded.");
 	var controls = new function() {
 		this.wireframe = true;
 		this.visible = true;
@@ -31,8 +32,22 @@ function createGUI() {
 				scene.remove(scene.children[0]);
 				this.clean();
 			} else {
-
+				console.log("[PFC]: Children in scene removed.")
 			}		
+		}
+		this.clone = function () {
+			var i,j;
+			
+			for(i = 0; i < scene.children.length; i++) {
+				geometry = scene.children[i].clone();
+				/*
+				for(j = 0; j < geometry.vertices.length; j++) {
+					geometry.vertices[j].z = geometry.vertices[j].z - 7; 
+				}
+				material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+				mesh = new THREE.Mesh(geometry, material);
+				*/
+			}
 		}
 	}
 	
@@ -51,6 +66,7 @@ function createGUI() {
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
 	gui.add(controls, 'clean').name('Limpiar escena');
+	gui.add(controls, 'clone').name('Clonar geometrías');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
 
