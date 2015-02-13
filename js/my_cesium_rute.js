@@ -58,14 +58,11 @@
 			xhr.open("GET", url+"?"+contenido, true);
 			xhr.send();
 			xhr.onreadystatechange = function () {
-				if (xhr.readyState == 4 && xhr.status == 200) {
-					if (xhr.responseText != "") {
+				if (xhr.readyState == 4 && xhr.status == 200) 
+					if (xhr.responseText != "") 
 						createMap(JSON.parse(xhr.responseText));
-					}else {
+					else
 						console.log("[PFC my_cesium_rute.js]: Error donwload rute gpx Ajax.");
-					}
-					
-				}
 			}
 		}
 	}
