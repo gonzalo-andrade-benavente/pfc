@@ -1,6 +1,5 @@
 /* PFC GUI - Three.js */
 var controls;
-
 function createGUI() {
 	var controls = new function() {
 		this.wireframe = true;
@@ -27,17 +26,13 @@ function createGUI() {
 				console.log("don't exist");
 			}
 		}
-		this.scalar = function () {
-			var geometry, mesh, i, j;
-			var geometries = new Array();
-			for (i = 0; i < scene.children.length; i++ ) {
-				geometry = scene.children[i].geometry.clone();
-				console.log(scene.children[i]);
-				for(j = 0; j < geometry.vertices.length; j++)
-					geometry.vertices.z = geometry.vertices.z - 10;
-				geometries.push(geometry);
-			}
-			console.log(geometries);
+		this.clean = function () {
+			if (scene.children.length != 0) {
+				scene.remove(scene.children[0]);
+				this.clean();
+			} else {
+
+			}		
 		}
 	}
 	
@@ -55,7 +50,7 @@ function createGUI() {
 	//gui.add(controls, 'combined').name('Combinado(merge)');
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
-	gui.add(controls, 'scalar').name('Escalar');
+	gui.add(controls, 'clean').name('Limpiar escena');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
 
