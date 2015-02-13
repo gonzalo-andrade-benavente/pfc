@@ -36,18 +36,27 @@ function createGUI() {
 			}		
 		}
 		this.clone = function () {
+			/*
 			var i,j;
-			
 			for(i = 0; i < scene.children.length; i++) {
-				geometry = scene.children[i].clone();
-				/*
+				geometry = scene.children[i].geometry.clone();
 				for(j = 0; j < geometry.vertices.length; j++) {
 					geometry.vertices[j].z = geometry.vertices[j].z - 7; 
 				}
 				material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 				mesh = new THREE.Mesh(geometry, material);
-				*/
+				//scene.add(mesh);
+				//material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+				//mesh = new THREE.Mesh(geometry, material);
+				//mesh.position.set(scene.children[i].position.x, scene.children[i].position.y + 10, scene.children[i].position.z);
+				//mesh.rotation.x = scene.children[i].rotation.x;
+				//scene.add(mesh);
 			}
+			*/
+			var mesh = scene.children[0].clone();
+			mesh.position.x = mesh.position.x -10;
+			console.log(mesh);
+			scene.add(mesh);
 		}
 	}
 	
@@ -66,7 +75,7 @@ function createGUI() {
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
 	gui.add(controls, 'clean').name('Limpiar escena');
-	gui.add(controls, 'clone').name('Clonar geometrías');
+	gui.add(controls, 'clone').name('Clonar geometrias');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
 
