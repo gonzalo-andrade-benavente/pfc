@@ -82,12 +82,11 @@ function load(coord) {
 	for(i = 0; i < info_tiles.length; i++) {
 		//mapbox_texture = sessionStorage.name + i + info_tiles[i].cardinality
 		aCesiumTerrainProvider.requestTileGeometry(info_tiles[i].x, info_tiles[i].y, 12, true).then(function(data){
-			// Send data of Cesium to combine Mesh.
-			//combineMesh(data);
 			createMeshCesium(data);			
 		});
-		
-	}	
+	}
+	console.log("[PFC my_cesium_mesh.js]: Scene loaded, childrens " + scene.children.length);
+	
 }
 
 function createMeshCesium(data) {
@@ -259,7 +258,8 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 		########################## Escale ###########################
 	*/
 	var quotient = max_previous/max_actually;
-	console.log("[PFC my_cesium_mesh.js]: quotient:" + quotient);
+	if (quotient > 1)
+		alert("[PFC my_cesium_mesh.js]: quotient bigger, scale geometry:" + quotient);
 	for (i = 0; i < geometry.vertices.length; i++)
 		geometry.vertices[i].z = geometry.vertices[i].z * (max_previous/max_actually);	
 	return geometry;

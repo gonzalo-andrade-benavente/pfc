@@ -1,5 +1,6 @@
 /* PFC GUI - Three.js */
 var controls, meshs;
+
 function createGUI() {
 	console.log("[PFC gui.js]: GUI Loaded.");
 	var controls = new function() {
@@ -53,10 +54,11 @@ function createGUI() {
 				//scene.add(mesh);
 			}
 			*/
+			
 			var mesh = scene.children[0].clone();
-			mesh.position.x = mesh.position.x -10;
-			console.log(mesh);
+			mesh.position.x = mesh.position.x - 20;
 			scene.add(mesh);
+			scene.remove(scene.children[0]);
 		}
 	}
 	
