@@ -33,32 +33,19 @@ function createGUI() {
 				scene.remove(scene.children[0]);
 				this.clean();
 			} else {
-				console.log("[PFC]: Children in scene removed.")
-			}		
+				console.log("[PFC]: Childrens in scene removed.")
+			}
 		}
 		this.clone = function () {
-			/*
-			var i,j;
-			for(i = 0; i < scene.children.length; i++) {
-				geometry = scene.children[i].geometry.clone();
-				for(j = 0; j < geometry.vertices.length; j++) {
-					geometry.vertices[j].z = geometry.vertices[j].z - 7; 
-				}
-				material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
-				mesh = new THREE.Mesh(geometry, material);
-				//scene.add(mesh);
-				//material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
-				//mesh = new THREE.Mesh(geometry, material);
-				//mesh.position.set(scene.children[i].position.x, scene.children[i].position.y + 10, scene.children[i].position.z);
-				//mesh.rotation.x = scene.children[i].rotation.x;
-				//scene.add(mesh);
-			}
-			*/
-			
-			var mesh = scene.children[0].clone();
-			mesh.position.x = mesh.position.x - 20;
-			scene.add(mesh);
+			var geometry = scene.children[0].geometry.clone();
+			for(i = 0; i < geometry.vertices.length; i++)
+				geometry.vertices[i].z = geometry.vertices[i].z/2;
+			var material = new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+			var mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(scene.children[0].position.x - 10, scene.children[0].position.y, scene.children[0].position.z);
+			mesh.rotation.x =  Math.PI / 180 * (-90);
 			scene.remove(scene.children[0]);
+			scene.add(mesh);
 		}
 	}
 	
