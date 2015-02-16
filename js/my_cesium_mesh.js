@@ -85,8 +85,6 @@ function load(coord) {
 			createMeshCesium(data);			
 		});
 	}
-	console.log("[PFC my_cesium_mesh.js]: Scene loaded, childrens " + scene.children.length);
-	
 }
 
 function createMeshCesium(data) {
@@ -156,7 +154,9 @@ function createMeshCesium(data) {
 		Set x,y,z equal zero to come back to center point.
 	*/
 	x = 0; y = 0; z = 0;
-	scene.add(mesh);
+	mesh.updateMatrix();
+	combined_geometry.merge(mesh.geometry, mesh.matrix);
+	//scene.add(mesh);
 	index_tile++;
 }
 /*
@@ -172,7 +172,7 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 	var vertex = new Array();
 	switch (cardinality) {
 		case 's': 	{
-						console.log("South");
+						//console.log("South");
 						//Find north vertex in geometry actually.
 						for(i = 0; i < geometry.vertices.length; i++) {
 							if ((geometry.vertices[i].y === geometry.boundingBox.max.y) && (geometry.vertices[i].z != 0)) 
@@ -192,7 +192,7 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 						break;
 					}
 		case 'n': 	{
-						console.log("North");
+						//console.log("North");
 						//Find south vertex in geometry actually.
 						for(i = 0; i < geometry.vertices.length; i++) {
 							if ((geometry.vertices[i].y === geometry.boundingBox.min.y) && (geometry.vertices[i].z != 0)) 
@@ -212,7 +212,7 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 						break;
 					}
 		case 'w': 	{
-						console.log("West");
+						//console.log("West");
 						//Find east vertex in geometry actually.
 						for(i = 0; i < geometry.vertices.length; i++) {
 							if ((geometry.vertices[i].x === geometry.boundingBox.max.x) && (geometry.vertices[i].z != 0)) 
@@ -232,7 +232,7 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 						break;
 					}
 		case 'e': 	{
-						console.log("East");
+						//console.log("East");
 						//Find west vertex in geometry actually.
 						for(i = 0; i < geometry.vertices.length; i++) {
 							if ((geometry.vertices[i].x === geometry.boundingBox.min.x) && (geometry.vertices[i].z != 0)) 
@@ -258,10 +258,10 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 		########################## Escale ###########################
 	*/
 	var quotient = max_previous/max_actually;
-	if (quotient > 1)
-		alert("[PFC my_cesium_mesh.js]: quotient bigger, scale geometry:" + quotient);
+	//if (quotient > 1)
+		//alert("[PFC my_cesium_mesh.js]: quotient bigger, scale geometry:" + quotient);
 	for (i = 0; i < geometry.vertices.length; i++)
-		geometry.vertices[i].z = geometry.vertices[i].z * (max_previous/max_actually);	
+		geometry.vertices[i].z = geometry.vertices[i].z * quotient;	
 	return geometry;
 }
 /*

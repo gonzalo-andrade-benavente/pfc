@@ -25,7 +25,7 @@ function createGUI() {
 				var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 				scene.add(new THREE.Mesh(combined_geometry, material));
 			}else {
-				console.log("don't exist");
+				console.log("[PFC gui.js]: combined_geometry doesn't exist.")
 			}
 		}
 		this.clean = function () {
@@ -33,7 +33,7 @@ function createGUI() {
 				scene.remove(scene.children[0]);
 				this.clean();
 			} else {
-				console.log("[PFC]: Childrens in scene removed.")
+				console.log("[PFC gui.js]: Childrens in scene removed.")
 			}
 		}
 		this.clone = function () {
@@ -63,8 +63,9 @@ function createGUI() {
 	//gui.add(controls, 'combined').name('Combinado(merge)');
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
-	gui.add(controls, 'clean').name('Limpiar escena');
-	gui.add(controls, 'clone').name('Clonar geometrias');
+	gui.add(controls, 'combined').name('Visualizar Terreno');
+	//gui.add(controls, 'clean').name('Limpiar escena');
+	//gui.add(controls, 'clone').name('Clonar geometrias');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
 
