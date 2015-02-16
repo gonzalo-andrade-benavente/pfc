@@ -200,14 +200,15 @@ function addBase(geometry){
 	addRelieve(geometry, northVertices, displace);
 	/*
 		West and east miss a point and north two point.
-		Makes error in a gpx route:Donosti.
 	*/
-	//West-south
-	geometry.faces.push(new THREE.Face3(westVertices[0], westVertices[0]+displace, southVertices[0]+displace));
-	geometry.faces.push(new THREE.Face3(southVertices[0], westVertices[0], southVertices[0]+displace));
-	//East-south
-	geometry.faces.push(new THREE.Face3(eastVertices[0], eastVertices[0]+displace, southVertices[southVertices.length-1]+displace));
-	geometry.faces.push(new THREE.Face3(southVertices[southVertices.length-1], eastVertices[0], southVertices[southVertices.length-1]+displace));	
+	if (!isNaN(southVertices[0]+displace)){
+		//West-south
+		geometry.faces.push(new THREE.Face3(westVertices[0], westVertices[0]+displace, southVertices[0]+displace));
+		geometry.faces.push(new THREE.Face3(southVertices[0], westVertices[0], southVertices[0]+displace));
+		//East-south
+		geometry.faces.push(new THREE.Face3(eastVertices[0], eastVertices[0]+displace, southVertices[southVertices.length-1]+displace));
+		geometry.faces.push(new THREE.Face3(southVertices[southVertices.length-1], eastVertices[0], southVertices[southVertices.length-1]+displace));	
+	}
 	if (!isNaN(northVertices[0]+displace)){
 		//North-West 
 		geometry.faces.push(new THREE.Face3(westVertices[westVertices.length-1], westVertices[westVertices.length-1]+displace, northVertices[0]+displace));
