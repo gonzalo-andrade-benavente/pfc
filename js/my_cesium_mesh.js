@@ -258,13 +258,18 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 	
 	/*
 		Change value of vertices "z" height respect the maximum value of mesh center or another mesh.
-		Quotient control the escale.
+		Quotient contains the most high value to scalar. 
 		########################## Escale ###########################
 	*/
-	if ((max_previous/max_actually) > 1)
-		if (quotient)
+	if ((max_previous/max_actually) > 1) {
+		if (quotient) {
 			if ((max_previous/max_actually) > quotient)
-				quotient = max_previous/max_actually;
+				quotient = (max_previous/max_actually);
+		} else {
+			quotient = max_previous/max_actually;
+		}
+	}
+
 	for (i = 0; i < geometry.vertices.length; i++)
 		geometry.vertices[i].z = geometry.vertices[i].z * (max_previous/max_actually);	
 	return geometry;
