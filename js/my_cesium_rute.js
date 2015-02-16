@@ -299,12 +299,12 @@
 				info_tiles.splice(info_tiles.length-1,1);
 			}
 
-		/*
+		
 		for(i = 0; i < info_tiles.length; i++) {
 			var bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
 			L.rectangle(bounds, {color: "#191414", weight: 2, fillOpacity:0 }).addTo(map);
 		}
-		*/
+		
 		
 	}
 	

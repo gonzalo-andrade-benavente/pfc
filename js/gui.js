@@ -19,6 +19,9 @@ function createGUI() {
 			if (combined_geometry) {
 				if (quotient) {
 					console.log("[PFC gui.js]: quotient to bigger " + quotient);
+					for(i = 0; i < combined_geometry.vertices.length; i++)
+						combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient/2);
+					console.log("[PFC gui.js]: Combined geometry scaling ");
 				}
 				//console.log(combined_geometry.vertices[0]);
 				//console.log(combined_geometry.vertices[combined_geometry.vertices.length-1]);
