@@ -107,7 +107,8 @@ function createMeshCesium(data) {
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 	
 	geometry = addBase(geometry);
-	geometry = addFaceVertexUvs(geometry);
+	//geometry = addFaceVertexUvs(geometry);
+	
 	/*
 		mult provide the factor to multiply to know the new position
 		of the mesh. Before do the rest with the central position.
