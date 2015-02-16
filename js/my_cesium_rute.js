@@ -169,8 +169,10 @@
 			}
 			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+reverse_line_points.length);
 			//Reduce the array without lose the route.
-			if (reverse_line_points.length > 122)
+			while (reverse_line_points.length > 122)
 				reverse_line_points = modifiedCoordinates(reverse_line_points);
+				
+			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+ reverse_line_points.length);
 			
 			var geo_json = {
 				"type": "Feature",
@@ -206,7 +208,7 @@
 				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 			
 			//Obtain texture file.
-			//getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
+			getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
 			//console.log(encodeURIComponent(static_image_json));
 			//window.open("./PFCMyMesh.html", "_self");
 		}
@@ -223,9 +225,21 @@
 		else
 			long_array = ((coord.length+1)/2);
 		var coord_change = new Array(long_array);
+		var j = 0;
+		for(i = 0; i < coord.length-1; i = i + 2) {
+			coord_change[j] = new Array(2);
+			coord_change[j][0] = (coord[i][1] + coord[i+1][1])/2;
+			coord_change[j][1] = (coord[i][0] + coord[i+1][0])/2;
+			j++;
+		}
+		if ((coord.length%2) == 1) {
+			coord_change[j] = new Array(2);
+			coord_change[j][0] = (coord[i][1] + coord[i][1])/2;
+			coord_change[j][1] = (coord[i][0] + coord[i][0])/2;
+			i++
+		}
 		
-		console.log("[PFC my_cesium_rute.js]: coordinates modified:" + coord_change.length);
-		return coord;
+		return coord_change;
 	}
 	/*
 		Change layer map Mapbox.
