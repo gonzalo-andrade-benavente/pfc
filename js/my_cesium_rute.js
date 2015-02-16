@@ -169,7 +169,7 @@
 			}
 			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+reverse_line_points.length);
 			//Reduce the array without lose the route.
-			while (reverse_line_points.length > 122)
+			while (reverse_line_points.length > 120)
 				reverse_line_points = modifiedCoordinates(reverse_line_points);
 				
 			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+ reverse_line_points.length);
@@ -208,7 +208,7 @@
 				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 			
 			//Obtain texture file.
-			getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
+			//getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
 			//console.log(encodeURIComponent(static_image_json));
 			//window.open("./PFCMyMesh.html", "_self");
 		}
