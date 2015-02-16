@@ -83,7 +83,6 @@ function load(coord) {
 	tile_x = info_tiles[0].x ; tile_y = info_tiles[0].y;
 	tile_actually_x = info_tiles[0].x; tile_actually_y = info_tiles[0].y;
 	for(i = 0; i < info_tiles.length; i++) {
-		//mapbox_texture = sessionStorage.name + i + info_tiles[i].cardinality
 		aCesiumTerrainProvider.requestTileGeometry(info_tiles[i].x, info_tiles[i].y, 12, true).then(function(data){
 			createMeshCesium(data);			
 		});
@@ -107,7 +106,7 @@ function createMeshCesium(data) {
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 	
 	geometry = addBase(geometry);
-	//geometry = addFaceVertexUvs(geometry);
+	geometry = addFaceVertexUvs(geometry);
 	
 	/*
 		mult provide the factor to multiply to know the new position
@@ -148,19 +147,22 @@ function createMeshCesium(data) {
 		Change the geometry previous to compare the actually geometry.
 	*/
 	geometry_previous = geometry;
-	var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+	mapbox_texture = sessionStorage.name + index_tile + info_tiles[index_tile].cardinality;
+	var texture = THREE.ImageUtils.loadTexture( "./textures/"+ mapbox_texture + ".png" );
+	var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
+	//var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.name = "tile"+index_tile;
 	mesh_export = mesh;
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
+	scene.add(mesh);
 	/*
 		Set x,y,z equal zero to come back to center point.
 	*/
 	x = 0; y = 0; z = 0;
 	mesh.updateMatrix();
 	combined_geometry.merge(mesh.geometry, mesh.matrix);
-	//scene.add(mesh);
 	index_tile++;
 }
 /*

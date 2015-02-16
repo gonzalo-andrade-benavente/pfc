@@ -26,7 +26,6 @@ function createGUI() {
 				//console.log(combined_geometry.vertices[0]);
 				//console.log(combined_geometry.vertices[combined_geometry.vertices.length-1]);
 				//combined_mesh = geometry = addFaceVertexUvs(combined_mesh);
-				//var texture = THREE.ImageUtils.loadTexture( "./textures/"+ sessionStorage.name + "0c.png" );
 				//var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
 				var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 				scene.add(new THREE.Mesh(combined_geometry, material));
