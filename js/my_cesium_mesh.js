@@ -20,6 +20,9 @@ var mapbox_texture, index_tile = 0;
 var tile_x, tile_y;
 var tile_actually_x, tile_actually_y;
 var geometry_previous;
+
+//to handle the height scalar.
+var quotient;
 /*
 	Variable global contains maximum value of height(z) in the vertex.
 */
@@ -255,13 +258,15 @@ function escalateGeometry(geometry, geometry_pre, cardinality) {
 	
 	/*
 		Change value of vertices "z" height respect the maximum value of mesh center or another mesh.
+		Quotient control the escale.
 		########################## Escale ###########################
 	*/
-	var quotient = max_previous/max_actually;
-	//if (quotient > 1)
-		//alert("[PFC my_cesium_mesh.js]: quotient bigger, scale geometry:" + quotient);
+	if ((max_previous/max_actually) > 1)
+		if (quotient)
+			if ((max_previous/max_actually) > quotient)
+				quotient = max_previous/max_actually;
 	for (i = 0; i < geometry.vertices.length; i++)
-		geometry.vertices[i].z = geometry.vertices[i].z * quotient;	
+		geometry.vertices[i].z = geometry.vertices[i].z * (max_previous/max_actually);	
 	return geometry;
 }
 /*

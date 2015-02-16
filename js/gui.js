@@ -17,6 +17,9 @@ function createGUI() {
 		}
 		this.combined = function() {
 			if (combined_geometry) {
+				if (quotient) {
+					console.log("[PFC gui.js]: quotient to bigger " + quotient);
+				}
 				//console.log(combined_geometry.vertices[0]);
 				//console.log(combined_geometry.vertices[combined_geometry.vertices.length-1]);
 				//combined_mesh = geometry = addFaceVertexUvs(combined_mesh);
@@ -25,7 +28,7 @@ function createGUI() {
 				var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 				scene.add(new THREE.Mesh(combined_geometry, material));
 			}else {
-				console.log("[PFC gui.js]: combined_geometry doesn't exist.")
+				console.log("[PFC gui.js]: combined_geometry doesn't exist.");
 			}
 		}
 		this.clean = function () {
