@@ -122,7 +122,7 @@
 		}
 		//Draw polilyne on map.
 		var polyline = L.polyline(line_points, polyline_options).addTo(map);
-		console.log("[PFC my_cesium_rute.js]: Total coordinates "+coordinates.length);
+		//console.log("[PFC my_cesium_rute.js]: Total coordinates "+coordinates.length);
 		var static_image_json;
 		var width = 504, height = 630;
 		for(i = 0; i < info_tiles.length; i++) {
@@ -140,7 +140,6 @@
 						Coordinates in that tile. info_tile[i].index is the first coordinate 
 						in that tile.
 					*/
-					//console.log("[PFC my_cesium_rute.js]: Mesh:"+i);
 					long_array = info_tiles[i+1].index - info_tiles[i].index;
 					init = info_tiles[i].index;
 					end = info_tiles[i].index + long_array;
@@ -148,26 +147,30 @@
 				/*
 					Last tile.
 				*/
-					//console.log("[PFC my_cesium_rute.js]: Mesh:"+i);
 					long_array = coordinates.length - info_tiles[i].index;
 					init = info_tiles[i].index;
 					end = coordinates.length;
 				}			
 			} else {
-				//console.log("[PFC my_cesium_rute.js]: One mesh.");
 				long_array = line_points.length;
 				init = 0;
 				end = long_array;
 			}
 			
-			reverse_line_points = new Array(long_array);
-			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+reverse_line_points.length);
+			/*
+				Invert the position to make draw the rute.
+			*/
+			reverse_line_points = new Array(long_array);	
 			for(j = 0; j < reverse_line_points.length; j++) {
 				reverse_line_points[j] = new Array(2);
 				reverse_line_points[j][0] = line_points[init][1];
 				reverse_line_points[j][1] = line_points[init][0];
 				init++;
 			}
+			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+reverse_line_points.length);
+			//Reduce the array without lose the route.
+			if (reverse_line_points.length > 122)
+				reverse_line_points = modifiedCoordinates(reverse_line_points);
 			
 			var geo_json = {
 				"type": "Feature",
@@ -204,8 +207,25 @@
 			
 			//Obtain texture file.
 			//getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
-			window.open("./PFCMyMesh.html", "_self");
+			//console.log(encodeURIComponent(static_image_json));
+			//window.open("./PFCMyMesh.html", "_self");
 		}
+	}
+	
+	function modifiedCoordinates(coord) {
+		var long_array;
+		/*
+			If size is odd add a new position, later the for end we have to treat the last value.
+			Duplicate the last value.
+		*/
+		if ((coord.length%2) == 0)
+			long_array = (coord.length/2);
+		else
+			long_array = ((coord.length+1)/2);
+		var coord_change = new Array(long_array);
+		
+		console.log("[PFC my_cesium_rute.js]: coordinates modified:" + coord_change.length);
+		return coord;
 	}
 	/*
 		Change layer map Mapbox.
