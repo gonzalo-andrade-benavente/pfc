@@ -6,14 +6,14 @@ function checkTile(coord) {
 		var i, j,positionLonLat, positionTileXY, tile;
 		positionLonLat = Cesium.Cartographic.fromDegrees(coord[0][1], coord[0][0]);
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
-		tile = getTile(positionTileXY);
+		tile = getTile(positionTileXY.x, positionTileXY.y);
 		info_tiles.push(new InfoTile(positionTileXY.x, positionTileXY.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[0][1], coord[0][0], 0));
 		for (i = 1; i < coord.length; i ++) {
 			var positionLonLat_actual, positionTileXY_actual;
 			positionLonLat_actual = Cesium.Cartographic.fromDegrees(coord[i][1], coord[i][0]);
 			positionTileXY_actual = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat_actual,12);
 			if ((positionTileXY.x != positionTileXY_actual.x) || (positionTileXY.y != positionTileXY_actual.y)) {
-				tile = getTile(positionTileXY_actual);
+				tile = getTile(positionTileXY_actual.x, positionTileXY_actual.y);
 				if (positionTileXY.x < positionTileXY_actual.x)
 					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "w",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
 				else if (positionTileXY.x > positionTileXY_actual.x)	
@@ -233,9 +233,9 @@ function radianToDegrees(radians) {
 	FUNCTION create a Tile Cesium Rectangle with vertices in degrees[latitude and longitude].
 	sw: SouthWest, se:SouthEast, nw: NorthWest, ne:NorthEast. 
 */
-function getTile(positionTileXY) {
+function getTile(x, y) {
 	var myTile, sw, se, nw, ne;;
-	var rectangleTileXY = aCesiumTerrainProvider.tilingScheme.tileXYToRectangle(positionTileXY.x, positionTileXY.y, 12);
+	var rectangleTileXY = aCesiumTerrainProvider.tilingScheme.tileXYToRectangle(x, y, 12);
 	sw = new Coordinate(radianToDegrees(Cesium.Rectangle.southwest(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.southwest(rectangleTileXY).longitude));
 	se = new Coordinate(radianToDegrees(Cesium.Rectangle.southeast(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.southeast(rectangleTileXY).longitude));
 	nw = new Coordinate(radianToDegrees(Cesium.Rectangle.northwest(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.northwest(rectangleTileXY).longitude));

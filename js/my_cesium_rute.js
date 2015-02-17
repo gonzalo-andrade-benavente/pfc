@@ -34,6 +34,7 @@
 		Each element of the array is a InfoTile element.
 	*/
 	var info_tiles = new Array();
+	var info_tiles_rectangle = new Array();
 	/*
 		Class to save x and y Cesium and bounds Cesium to Mapbox.
 		Cardinality: c:center, w:west, e:east, n:north, s:south;
@@ -75,7 +76,40 @@
 		});
 		coordinates = coord;
 		checkTile(coordinates);
+		createRectangle();
 		loadGpx();
+	}
+	/*
+		Whit the tiles study to create a rectangle.
+	*/
+	function createRectangle() {
+		/*
+		for(i = 0; i < info_tiles.length; i++) {
+			console.log('[PFC my_cesium_rute]: x' + info_tiles[i].x + 'y' + info_tiles[i].y);
+		}
+		*/
+		var min_x = info_tiles[0].x, max_x = info_tiles[0].x, min_y = info_tiles[0].y, max_y = info_tiles[0].y;
+		for(i = 1; i < info_tiles.length; i++) {
+			if (info_tiles[i].x < min_x)
+				min_x = info_tiles[i].x;
+			else if (info_tiles[i].x > max_x)
+				max_x = info_tiles[i].x;
+			else if (info_tiles[i].y < min_y)
+				min_y = info_tiles[i].y;
+			else if (info_tiles[i].x > max_y)
+				max_y = info_tiles[i].y;
+		}		
+		/*
+			Create a rectangule.
+		*/
+		for(i = min_x; i < (max_x - min_x); i++) {
+			for (j = min_y; j < (max_y - min_y); j++) {
+				
+			
+			}
+		}
+		
+		
 	}
 	/*
 		Draw rute gpx in map.
@@ -169,7 +203,7 @@
 			}
 			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+reverse_line_points.length);
 			//Reduce the array without lose the route.
-			while (reverse_line_points.length > 134)
+			while (reverse_line_points.length > 120)
 				reverse_line_points = modifiedCoordinates(reverse_line_points);
 				
 			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+ reverse_line_points.length);
@@ -277,112 +311,3 @@
 			}
 		}
 	}
-	/*
-		Check coordinates in Tile Cesium(limits nw ne sw se).
-		Obtain all mesh from the rute gpx also we need to add more.
-		Add all tiles into info_tiles ARRAY.
-	*/
-	function checkTile(coord) {
-		//array_coordinate.push(new Coordinate(coord[0][0], coord[0][1]));
-		var i, j,positionLonLat, positionTileXY, tile;
-		positionLonLat = Cesium.Cartographic.fromDegrees(coord[0][1], coord[0][0]);
-		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
-		tile = getTile(positionTileXY);
-		info_tiles.push(new InfoTile(positionTileXY.x, positionTileXY.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[0][1], coord[0][0], 0));
-		for (i = 1; i < coord.length; i ++) {
-			var positionLonLat_actual, positionTileXY_actual;
-			positionLonLat_actual = Cesium.Cartographic.fromDegrees(coord[i][1], coord[i][0]);
-			positionTileXY_actual = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat_actual,12);
-			if ((positionTileXY.x != positionTileXY_actual.x) || (positionTileXY.y != positionTileXY_actual.y)) {
-				tile = getTile(positionTileXY_actual);
-				if (positionTileXY.x < positionTileXY_actual.x)
-					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "w",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
-				else if (positionTileXY.x > positionTileXY_actual.x)	
-					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "e",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
-				else if (positionTileXY.y < positionTileXY_actual.y)
-					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "s",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
-				else if (positionTileXY.y > positionTileXY_actual.y)
-					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "n",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
-				positionTileXY = positionTileXY_actual;
-			}
-		}
-		
-		/*
-			Remove repeat elements.
-		*/
-		
-		var info_tiles_clone = info_tiles;
-		for(i = 0; i < info_tiles_clone.length; i++) {
-			var actual = info_tiles_clone[i];
-			var pos = new Array();
-			for(j = 0; j < info_tiles.length; j++){
-				if ((actual.x == info_tiles[j].x) && (actual.y == info_tiles[j].y))
-					pos.push(j);
-			}
-			/*
-				is j=1 because the first never remove.
-			*/
-			for(j = 1; j < pos.length; j++)
-				info_tiles.splice(pos[j],1);
-		}
-		/*
-			Compare the two last.
-		*/
-		if (info_tiles.length > 1) 
-			if ((info_tiles[info_tiles.length-1].x == info_tiles[info_tiles.length-2].x) && (info_tiles[info_tiles.length-1].y == info_tiles[info_tiles.length-2].y)) {
-				info_tiles.splice(info_tiles.length-1,1);
-			}
-
-		
-		for(i = 0; i < info_tiles.length; i++) {
-			var bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
-			L.rectangle(bounds, {color: "#191414", weight: 2, fillOpacity:0 }).addTo(map);
-		}
-		
-		
-	}
-	
-	/*
-	##############################################################################################
-	##############################  CESIUM  ######################################################
-	##############################################################################################
-	*/
-	/*
-		CLASS Tile
-	*/
-	function Tile(northeast, southeast, northwest, southwest) {
-		this.northeast = northeast;
-		this.southeast = southeast;
-		this.northwest = northwest;
-		this.southwest = southwest;
-		this.distanceKm = ((northeast.latitude - southeast.latitude)/0.01)*1.1132;
-		this.distanceCoordinate = northeast.latitude - southeast.latitude;
-	}
-	/*
-		CLASS Cordinate
-	*/
-	function Coordinate(latitude, longitude) {
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
-	/*
-		FUNCTION radians to degrees.
-	*/
-	function radianToDegrees(radians) {
-		return (radians * 180)/ Math.PI;	
-	}
-	/*
-		FUNCTION create a Tile Cesium Rectangle with vertices in degrees[latitude and longitude].
-		sw: SouthWest, se:SouthEast, nw: NorthWest, ne:NorthEast. 
-	*/
-	function getTile(positionTileXY) {
-		var myTile, sw, se, nw, ne;;
-		var rectangleTileXY = aCesiumTerrainProvider.tilingScheme.tileXYToRectangle(positionTileXY.x, positionTileXY.y, 12);
-		sw = new Coordinate(radianToDegrees(Cesium.Rectangle.southwest(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.southwest(rectangleTileXY).longitude));
-		se = new Coordinate(radianToDegrees(Cesium.Rectangle.southeast(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.southeast(rectangleTileXY).longitude));
-		nw = new Coordinate(radianToDegrees(Cesium.Rectangle.northwest(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.northwest(rectangleTileXY).longitude));
-		ne = new Coordinate(radianToDegrees(Cesium.Rectangle.northeast(rectangleTileXY).latitude),radianToDegrees(Cesium.Rectangle.northeast(rectangleTileXY).longitude));
-		myTile = new Tile(ne, se, nw, sw);
-		return myTile;
-	}
-
