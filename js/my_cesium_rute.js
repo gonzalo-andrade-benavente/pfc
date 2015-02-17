@@ -102,11 +102,19 @@
 		/*
 			Create a rectangule.
 		*/
-		for(i = min_x; i < (max_x - min_x); i++) {
-			for (j = min_y; j < (max_y - min_y); j++) {
-				
-			
+		for(i = min_x; i <= max_x ; i++) {
+			for (j = min_y; j <= max_y ; j++) {
+				tile = getTile(i,j);
+				info_tiles_rectangle.push(new InfoTile(i, j, "",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, 0, 0, 0));
 			}
+		}
+		
+		var bounds = [[info_tiles_rectangle[0].bounds[0][0], info_tiles_rectangle[0].bounds[0][1]], [info_tiles_rectangle[info_tiles_rectangle.length-1].bounds[1][0], info_tiles_rectangle[info_tiles_rectangle.length-1].bounds[1][1]]];
+		L.rectangle(bounds, {color: "#DC2727", weight: 2, fillOpacity:0 }).addTo(map);
+		
+		for(i = 0; i < info_tiles.length; i++) {
+			var bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
+			L.rectangle(bounds, {color: "#143DC1", weight: 2, fillOpacity:0 }).addTo(map);
 		}
 		
 		
@@ -129,6 +137,7 @@
 			map.setZoom(14);
 			map.setMaxBounds(bounds);
 			*/
+			//var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
 			var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
 			map.setMaxBounds(bounds);
 			console.log("[PFC my_cesium_rute.js]:TileCesium in Mapbox set bounds.");
