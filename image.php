@@ -1,6 +1,4 @@
 <?php
-//$data = 'code in bytes'; // replace with an image string in bytes
-//$data = base64_decode($data); // decode an image
 $image = 'images/imagen1.png';
 $im = imagecreatefrompng($image); // php function to create image from string
 // condition check if valid conversion
