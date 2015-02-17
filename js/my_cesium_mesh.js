@@ -105,6 +105,7 @@ function createMeshCesium(data) {
 	for(var i=0; i < facesQuantized.length; i=i+3)
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 	
+	//geometry = addFaceVertexUvs(geometry);
 	geometry = addBase(geometry);
 	geometry = addFaceVertexUvs(geometry);
 	

@@ -169,7 +169,7 @@
 			}
 			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+reverse_line_points.length);
 			//Reduce the array without lose the route.
-			while (reverse_line_points.length > 120)
+			while (reverse_line_points.length > 134)
 				reverse_line_points = modifiedCoordinates(reverse_line_points);
 				
 			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+ reverse_line_points.length);
