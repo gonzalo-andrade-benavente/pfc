@@ -145,6 +145,7 @@
 					else 
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					console.log(static_image_json);
+					//getTexture(static_image_json, i, "");
 				} else {
 					//with coordinates.
 				}
@@ -277,6 +278,8 @@
 			//sessionStorage.name = file_name;
 			var url = "getTexture.php";
 			console.log(file_name);
+			if (cardinality == "")
+				cardinality = "x";
 			var contenido = "direction="+direction+"&name="+file_name + index + cardinality;
 			xhr.open("GET", url+"?"+contenido, true);
 			xhr.send();
