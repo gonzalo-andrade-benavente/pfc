@@ -5,13 +5,14 @@
 function checkTile(coord) {
 		var i, j,positionLonLat, positionTileXY, tile;
 		positionLonLat = Cesium.Cartographic.fromDegrees(coord[0][1], coord[0][0]);
-		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
+		//console.log("[PFC functions.js]: longitude " + coord[0][1] + " latitude " +  coord[0][0]);
+		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,14);
 		tile = getTile(positionTileXY.x, positionTileXY.y);
 		info_tiles.push(new InfoTile(positionTileXY.x, positionTileXY.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[0][1], coord[0][0], 0));
 		for (i = 1; i < coord.length; i ++) {
 			var positionLonLat_actual, positionTileXY_actual;
 			positionLonLat_actual = Cesium.Cartographic.fromDegrees(coord[i][1], coord[i][0]);
-			positionTileXY_actual = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat_actual,12);
+			positionTileXY_actual = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat_actual,14);
 			if ((positionTileXY.x != positionTileXY_actual.x) || (positionTileXY.y != positionTileXY_actual.y)) {
 				tile = getTile(positionTileXY_actual.x, positionTileXY_actual.y);
 				if (positionTileXY.x < positionTileXY_actual.x)
@@ -53,6 +54,7 @@ function checkTile(coord) {
 	
 		//info_tiles.splice(info_tiles.length-1, 1);
 		
+		
 		/*
 		for(i = 0; i < info_tiles.length; i++) {
 			var bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
@@ -60,6 +62,49 @@ function checkTile(coord) {
 		}
 		*/
 		
+		
+}
+/*
+	Whit the tiles study to create a rectangle.
+*/
+function createRectangle(info) {
+	/*
+	for(i = 0; i < info_tiles.length; i++) {
+		console.log('[PFC my_cesium_rute]: x' + info_tiles[i].x + 'y' + info_tiles[i].y);
+	}
+	*/
+	info_tiles_rectangle = new Array();
+	var min_x = info[0].x, max_x = info[0].x, min_y = info[0].y, max_y = info[0].y;
+	for(i = 1; i < info.length; i++) {
+		if (info[i].x < min_x)
+			min_x = info[i].x;
+		else if (info[i].x > max_x)
+			max_x = info[i].x;
+		else if (info[i].y < min_y)
+			min_y = info[i].y;
+		else if (info[i].x > max_y)
+			max_y = info[i].y;
+	}		
+	/*
+		Create a rectangule.
+	*/
+	for(i = min_x; i <= max_x ; i++) {
+		for (j = min_y; j <= max_y ; j++) {
+			tile = getTile(i,j);
+			info_tiles_rectangle.push(new InfoTile(i, j, "",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, 0, 0, 0));
+		}
+	}
+	/*
+	var bounds = [[info_tiles_rectangle[0].bounds[0][0], info_tiles_rectangle[0].bounds[0][1]], [info_tiles_rectangle[info_tiles_rectangle.length-1].bounds[1][0], info_tiles_rectangle[info_tiles_rectangle.length-1].bounds[1][1]]];
+	L.rectangle(bounds, {color: "#DC2727", weight: 2, fillOpacity:0 }).addTo(map);
+	
+	for(i = 0; i < info_tiles.length; i++) {
+		var bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
+		L.rectangle(bounds, {color: "#143DC1", weight: 2, fillOpacity:0 }).addTo(map);
+	}
+	*/
+	return info_tiles_rectangle;
+	
 }
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 /*

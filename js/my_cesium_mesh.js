@@ -8,8 +8,10 @@ var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
 });
 /*
 	Variable global to handler the asynchronous cesium terrain provider.
+	info_tiles: save the information of route mesh.
+	rectangle_tiles: save the information of route mesh with add to complete a rectangle.
 */
-var info_tiles;
+var info_tiles, rectangle_tiles;
 var mesh_export;
 var combined_geometry = new THREE.Geometry();
 //Position gemetries
@@ -80,6 +82,7 @@ function load(coord) {
 	createGUI();
 	info_tiles = new Array(); 
 	checkTile(coord);
+	rectangle_tiles = createRectangle(info_tiles);
 	tile_x = info_tiles[0].x ; tile_y = info_tiles[0].y;
 	tile_actually_x = info_tiles[0].x; tile_actually_y = info_tiles[0].y;
 	for(i = 0; i < info_tiles.length; i++) {

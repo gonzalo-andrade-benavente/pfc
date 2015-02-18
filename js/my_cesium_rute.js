@@ -34,7 +34,7 @@
 		Each element of the array is a InfoTile element.
 	*/
 	var info_tiles = new Array();
-	var info_tiles_rectangle = new Array();
+	var rectangle_tiles;
 	/*
 		Class to save x and y Cesium and bounds Cesium to Mapbox.
 		Cardinality: c:center, w:west, e:east, n:north, s:south;
@@ -76,48 +76,9 @@
 		});
 		coordinates = coord;
 		checkTile(coordinates);
-		createRectangle();
-		loadGpx();
-	}
-	/*
-		Whit the tiles study to create a rectangle.
-	*/
-	function createRectangle() {
-		/*
-		for(i = 0; i < info_tiles.length; i++) {
-			console.log('[PFC my_cesium_rute]: x' + info_tiles[i].x + 'y' + info_tiles[i].y);
-		}
-		*/
-		var min_x = info_tiles[0].x, max_x = info_tiles[0].x, min_y = info_tiles[0].y, max_y = info_tiles[0].y;
-		for(i = 1; i < info_tiles.length; i++) {
-			if (info_tiles[i].x < min_x)
-				min_x = info_tiles[i].x;
-			else if (info_tiles[i].x > max_x)
-				max_x = info_tiles[i].x;
-			else if (info_tiles[i].y < min_y)
-				min_y = info_tiles[i].y;
-			else if (info_tiles[i].x > max_y)
-				max_y = info_tiles[i].y;
-		}		
-		/*
-			Create a rectangule.
-		*/
-		for(i = min_x; i <= max_x ; i++) {
-			for (j = min_y; j <= max_y ; j++) {
-				tile = getTile(i,j);
-				info_tiles_rectangle.push(new InfoTile(i, j, "",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, 0, 0, 0));
-			}
-		}
-		
-		var bounds = [[info_tiles_rectangle[0].bounds[0][0], info_tiles_rectangle[0].bounds[0][1]], [info_tiles_rectangle[info_tiles_rectangle.length-1].bounds[1][0], info_tiles_rectangle[info_tiles_rectangle.length-1].bounds[1][1]]];
-		L.rectangle(bounds, {color: "#DC2727", weight: 2, fillOpacity:0 }).addTo(map);
-		
-		for(i = 0; i < info_tiles.length; i++) {
-			var bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
-			L.rectangle(bounds, {color: "#143DC1", weight: 2, fillOpacity:0 }).addTo(map);
-		}
-		
-		
+		rectangle_tiles = createRectangle(info_tiles);
+		//createRectangle();
+		//loadGpx();
 	}
 	/*
 		Draw rute gpx in map.
@@ -213,6 +174,9 @@
 			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+reverse_line_points.length);
 			//Reduce the array without lose the route.
 			//while (reverse_line_points.length > 120)
+			/*
+				Modified change the size of array of coordinates.
+			*/
 			while (reverse_line_points.length > 122)
 				reverse_line_points = modifiedCoordinates(reverse_line_points);
 				
@@ -252,7 +216,7 @@
 				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 			
 			//Obtain texture file.
-			//getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
+			getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
 			//console.log(encodeURIComponent(static_image_json));
 			//window.open("./PFCMyMesh.html", "_self");
 		}
