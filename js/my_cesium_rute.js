@@ -131,97 +131,101 @@
 		//console.log("[PFC my_cesium_rute.js]: Total coordinates "+coordinates.length);
 		var static_image_json;
 		var width = 504, height = 630;
-		for(i = 0; i < info_tiles.length; i++) {
-			var reverse_line_points, long_array;
-			var init, end;
-			/*
-				One or more tiles.
-			*/
-			if (info_tiles.length > 1) {
-				/*
-					All tiles minus last.
-				*/
-				if (i != info_tiles.length-1) {
-					/*
-						Coordinates in that tile. info_tile[i].index is the first coordinate 
-						in that tile.
-					*/
-					long_array = info_tiles[i+1].index - info_tiles[i].index;
-					init = info_tiles[i].index;
-					end = info_tiles[i].index + long_array;
+		if (rectangle_tiles.length > 0)
+			//for(i = 0; i < info_tiles.length; i++) {
+			for(i = 0; i < rectangle_tiles.length; i++) {
+				bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
+				map.setMaxBounds(bounds);
+				zoom = 16;
+				//if the image contain coordinate draw rute, else only with the bounds obtain image.
+				if ((rectangle_tiles[i].coordinate[0] == 0) && (rectangle_tiles[i].coordinate[1] == 0)) {
+					//without coordinates
+					if (id_map == -1) 
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+					else 
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+					console.log(static_image_json);
 				} else {
-				/*
-					Last tile.
-				*/
-					long_array = coordinates.length - info_tiles[i].index;
-					init = info_tiles[i].index;
-					end = coordinates.length;
-				}			
-			} else {
-				long_array = line_points.length;
-				init = 0;
-				end = long_array;
-			}
-			
-			/*
-				Invert the position to make draw the rute.
-			*/
-			reverse_line_points = new Array(long_array);	
-			for(j = 0; j < reverse_line_points.length; j++) {
-				reverse_line_points[j] = new Array(2);
-				reverse_line_points[j][0] = line_points[init][1];
-				reverse_line_points[j][1] = line_points[init][0];
-				init++;
-			}
-			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+reverse_line_points.length);
-			//Reduce the array without lose the route.
-			//while (reverse_line_points.length > 120)
-			/*
-				Modified change the size of array of coordinates.
-			*/
-			while (reverse_line_points.length > 122)
-				reverse_line_points = modifiedCoordinates(reverse_line_points);
-				
-			console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+ reverse_line_points.length);
-			
-			var geo_json = {
-				"type": "Feature",
-				 "properties": {
-					"stroke": "#fc4353",
-					"stroke-width": 5
-				},
-				"geometry": {
-					"type": "LineString",
-					"coordinates": reverse_line_points
+					//with coordinates.
 				}
+				/*
+				var reverse_line_points, long_array;
+				var init, end;
+				//One or more tiles.
+				if (info_tiles.length > 1) {
+					//All tiles minus last.
+					if (i != info_tiles.length-1) {
+						//Coordinates in that tile. info_tile[i].index is the first coordinate 
+						//in that tile.
+						long_array = info_tiles[i+1].index - info_tiles[i].index;
+						init = info_tiles[i].index;
+						end = info_tiles[i].index + long_array;
+					} else {
+						//Last tile.
+						long_array = coordinates.length - info_tiles[i].index;
+						init = info_tiles[i].index;
+						end = coordinates.length;
+					}			
+				} else {
+					long_array = line_points.length;
+					init = 0;
+					end = long_array;
+				}
+				
+				//Invert the position to make draw the rute.
+				reverse_line_points = new Array(long_array);	
+				for(j = 0; j < reverse_line_points.length; j++) {
+					reverse_line_points[j] = new Array(2);
+					reverse_line_points[j][0] = line_points[init][1];
+					reverse_line_points[j][1] = line_points[init][0];
+					init++;
+				}
+				console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+reverse_line_points.length);
+				//Modified change the size of array of coordinates.
+				while (reverse_line_points.length > 122)
+					reverse_line_points = modifiedCoordinates(reverse_line_points);
+					
+				console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+ reverse_line_points.length);
+				
+				var geo_json = {
+					"type": "Feature",
+					 "properties": {
+						"stroke": "#fc4353",
+						"stroke-width": 5
+					},
+					"geometry": {
+						"type": "LineString",
+						"coordinates": reverse_line_points
+					}
 
-			};
-			var width = 504, height = 630;	
-			var encode_json = JSON.stringify(geo_json);
-			var encode_json_uri = encodeURIComponent(encode_json);
-			//bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]]];
-			//map.setMaxBounds(bounds);
-			zoom = 14;
-			if (id_map == -1) 
-				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-			else 
-				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-			
-			console.log(static_image_json);
-			
-			bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
-			map.setMaxBounds(bounds);
-			zoom = 14;
-			if (id_map == -1) 
-				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-			else 
-				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-			
-			//Obtain texture file.
-			//getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
-			//console.log(encodeURIComponent(static_image_json));
-			//window.open("./PFCMyMesh.html", "_self");
-		}
+				};
+				var width = 504, height = 630;	
+				var encode_json = JSON.stringify(geo_json);
+				var encode_json_uri = encodeURIComponent(encode_json);
+				//bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]]];
+				//map.setMaxBounds(bounds);
+				zoom = 14;
+				if (id_map == -1) 
+					static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+				else 
+					static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+				
+				console.log(static_image_json);
+				
+				bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
+				map.setMaxBounds(bounds);
+				zoom = 14;
+				if (id_map == -1) 
+					static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+				else 
+					static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+				
+				//Obtain texture file.
+				//getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
+				//console.log(encodeURIComponent(static_image_json));
+				//window.open("./PFCMyMesh.html", "_self");
+			*/
+			}
 	}
 	
 	function modifiedCoordinates(coord) {

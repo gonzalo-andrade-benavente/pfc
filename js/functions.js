@@ -94,45 +94,22 @@ function createRectangle(info) {
 			info_tiles_rectangle.push(new InfoTile(i, j, "",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, 0, 0, 0));
 		}
 	}
-
+	
+	for(i = 0; i < info.length; i++){
+		for(j = 0; j < info_tiles_rectangle.length; j++){
+			if((info[i].x == info_tiles_rectangle[j].x) && (info[i].y == info_tiles_rectangle[j].y)) {
+				info_tiles_rectangle[j] = info[i];
+			}
+		}
+	}
+	
+	console.log("[PFC functions.js] Rectangle mesh ready.");
 	return info_tiles_rectangle;
 	
 }
+
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-/*
-	Create a mesh in position (x,y,z) from a tile.
-*/
-function createMesh(x, y, z, pos_x, pos_y, mapbox_texture) {
-		aCesiumTerrainProvider.requestTileGeometry(pos_x, pos_y, 12, true).then(function(data){
-			var mesh, verticesQuantized, facesQuantized, geometry;
-			verticesQuantized = data._quantizedVertices;
-			var xx = data._uValues, 
-				yy = data._vValues,
-				heights = data._heightValues;
-			facesQuantized = data._indices;
-			var geometry = new THREE.Geometry();
-			for(var i=0; i < heights.length; i++){
-				geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/1000),Math.round(yy[i]/1000),Math.round(heights[i]/1000)));
-			}
-			for(var i=0; i < facesQuantized.length; i=i+3){
-				geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
-			}
-			// Texture only in surface.
-			//geometry = addFaceVertexUvs(geometry);
-			geometry = addBase(geometry);
-			geometry = addFaceVertexUvs(geometry);
-			var texture = THREE.ImageUtils.loadTexture( "./textures/"+ mapbox_texture +".png" );
-			var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
-			//var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
-			material.needsUpdate = true;
-			geometry.buffersNeedUpdate = true;
-			geometry.uvsNeedUpdate = true;
-			mesh = new THREE.Mesh( geometry, material );
-			mesh.rotation.x =  Math.PI / 180 * (-90);
-			mesh.position.set(x, y, z);
-			scene.add(mesh);
-		});
-}
 /*
 	Function to addVertexUVs to apply texture in mesh.
 */
