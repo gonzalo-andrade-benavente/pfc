@@ -144,8 +144,7 @@
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					else 
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-					console.log(static_image_json);
-					//getTexture(static_image_json, i, "");
+					getTexture(static_image_json, i, "");
 				} else {
 					//with coordinates.
 				}
@@ -289,7 +288,7 @@
 						console.log("[PFC my_cesium_rute.js]: Texture upload ok. ");
 					else 
 						console.log("[PFC my_cesium_rute.js]: Error upload texture Ajax.");
-				window.open("./PFCMyMesh.html", "_self");
+				//window.open("./PFCMyMesh.html", "_self");
 				}
 			}
 		}
