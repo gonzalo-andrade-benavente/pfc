@@ -75,10 +75,22 @@
 			console.log(e.containerPoint.toString() + ', ' + e.latlng.toString());
 		});
 		coordinates = coord;
-		checkTile(coordinates);
+		checkTile(coordinates, 14);
 		rectangle_tiles = createRectangle(info_tiles);
+		//Draw the tiles from the rute more rectangle.
+		for(i = 0; i < rectangle_tiles.length; i++) {
+			var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
+			L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
+		}
+		/*
+		//Draw the tiles from the rute.
+		for(i = 0; i < info_tiles.length; i++) {
+			var bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
+			L.rectangle(bounds, {color: "#F70C0C", weight: 2, fillOpacity:0 }).addTo(map);
+		}
+		*/
 		//createRectangle();
-		//loadGpx();
+		loadGpx();
 	}
 	/*
 		Draw rute gpx in map.
@@ -87,20 +99,10 @@
 	//Añadimos la ruta a través del método omnivore, se podría dibujar la línea como polyline.
 		var gpxLayer = omnivore.gpx(sessionStorage.rute)
 		.on('ready', function() {
-			/*
-			var positionLonLat, positionTileXY, tile;
-			positionLonLat = Cesium.Cartographic.fromDegrees(coordinates[0][1], coordinates[0][0]);
-			positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat,12);
-			tile = getTile(positionTileXY);
-			var bounds = [[tile.northwest.latitude, tile.northwest.longitude], [tile.southeast.latitude, tile.southeast.longitude]];
-			L.rectangle(bounds, {color: "#ffffff", weight: 2, fillOpacity:0 }).addTo(map);
-			var map_bounds = [[bounds[0][0], bounds[0][1]],[final_bounds[1][0], final_bounds[1][1]]];
-			map.setZoom(14);
-			map.setMaxBounds(bounds);
-			*/
 			//var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
 			var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
-			map.setMaxBounds(bounds);
+			//map.setMaxBounds(bounds);
+			map.fitBounds(bounds);
 			console.log("[PFC my_cesium_rute.js]:TileCesium in Mapbox set bounds.");
 			
 		})
@@ -216,7 +218,7 @@
 				static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 			
 			//Obtain texture file.
-			getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
+			//getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
 			//console.log(encodeURIComponent(static_image_json));
 			//window.open("./PFCMyMesh.html", "_self");
 		}
