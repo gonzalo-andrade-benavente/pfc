@@ -144,9 +144,33 @@
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					else 
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-					getTexture(static_image_json, i, "");
+					//getTexture(static_image_json, i, "");
 				} else {
 					//with coordinates.
+					console.log(rectangle_tiles[i]);
+					L.mapbox.featureLayer({
+						// this feature is in the GeoJSON format: see geojson.org
+						// for the full specification
+						type: 'Feature',
+						geometry: {
+							type: 'Point',
+							// coordinates here are in longitude, latitude order because
+							// x, y is the standard for GeoJSON and many formats
+							coordinates: [
+							  rectangle_tiles[i].coordinate[0],
+							  rectangle_tiles[i].coordinate[1]
+							]
+						},
+						properties: {
+							title: 'Coordinate',
+							description: rectangle_tiles[i].coordinate[0] + '/' + rectangle_tiles[i].coordinate[1],
+							// one can customize markers by adding simplestyle properties
+							// https://www.mapbox.com/guides/an-open-platform/#simplestyle
+							'marker-size': 'small',
+							'marker-color': '#BE9A6B',
+							'marker-symbol': 'marker'
+						}
+					}).addTo(map);
 				}
 				/*
 				var reverse_line_points, long_array;
