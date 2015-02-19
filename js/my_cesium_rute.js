@@ -55,15 +55,10 @@
 	function createMap(coord) {
 		L.mapbox.accessToken = 'pk.eyJ1IjoiZ29uemFsaXRvIiwiYSI6IlVJTGIweFUifQ.waoF7m8PZbBM6u8Tg_rR7A';
 		map = L.mapbox.map('map', id_maps[id_map]);
-		/*
-		map.on('mouse click', function(e) {
-			console.log(e.containerPoint.toString() + ', ' + e.latlng.toString());
-		});
-		*/
-		map.touchZoom.disable();
+		map.scrollWheelZoom.disable();
 		coordinates = coord;
-		checkTile(coordinates, 15);
-		rectangle_tiles = createRectangle(info_tiles, 1);
+		checkTile(coordinates, 14);
+		rectangle_tiles = createRectangle(info_tiles, 14);
 		//Draw the tiles from the rute more rectangle.
 		for(i = 0; i < rectangle_tiles.length; i++) {
 			var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
@@ -88,9 +83,11 @@
 		.on('ready', function() {
 			//var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
 			var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
-			map.setMaxBounds(bounds);
+			map.fitBounds(bounds);
+			//map.setMaxBounds(bounds);
+			map.setZoom(14);
 			//map.setZoom(14);
-			//map.fitBounds(bounds);
+			
 			console.log("[PFC my_cesium_rute.js]:TileCesium in Mapbox set bounds.");
 			
 		})
@@ -125,7 +122,6 @@
 			for(i = 0; i < rectangle_tiles.length; i++) {
 			//for(i = 0; i < 2; i++) {
 				bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
-				console.log(bounds);
 				map.setMaxBounds(bounds);
 				zoom = 16;
 				//if the image contain coordinate draw rute, else only with the bounds obtain image.
@@ -193,6 +189,7 @@
 				}
 			}
 		}
+		window.open("./PFCMyMesh.html", "_self");
 	}
 	
 	function modifiedCoordinates(coord) {

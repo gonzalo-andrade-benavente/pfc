@@ -81,8 +81,10 @@ function load(coord) {
 	//Create Graphic User Interface with gui.js
 	createGUI();
 	info_tiles = new Array(); 
-	checkTile(coord);
-	rectangle_tiles = createRectangle(info_tiles);
+	checkTile(coord, 14);
+	rectangle_tiles = createRectangle(info_tiles, 14);
+	
+	/*
 	tile_x = info_tiles[0].x ; tile_y = info_tiles[0].y;
 	tile_actually_x = info_tiles[0].x; tile_actually_y = info_tiles[0].y;
 	for(i = 0; i < info_tiles.length; i++) {
@@ -90,6 +92,7 @@ function load(coord) {
 			createMeshCesium(data);			
 		});
 	}
+	*/
 }
 
 function createMeshCesium(data) {

@@ -103,7 +103,7 @@ function createRectangle(info, level) {
 		}
 	}
 	
-	console.log("[PFC functions.js] Rectangle mesh ready.");
+	console.log("[PFC functions.js] Rectangle mesh ready with " + info_tiles_rectangle.length + " tiles.");
 	return info_tiles_rectangle;
 	
 }
