@@ -115,9 +115,11 @@
 		//console.log("[PFC my_cesium_rute.js]: Total coordinates "+coordinates.length);
 		var static_image_json;
 		var width = 504, height = 630;
+		var json_coordinates;
 		if (rectangle_tiles.length > 0)
 			//for(i = 0; i < info_tiles.length; i++) {
 			for(i = 0; i < rectangle_tiles.length; i++) {
+			//for(i = 0; i < 2; i++) {
 				bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 				map.setMaxBounds(bounds);
 				zoom = 16;
@@ -131,61 +133,36 @@
 					//getTexture(static_image_json, i, "");
 				} else {
 					//with coordinates.
+					json_coordinates = new Array();
 					console.log(rectangle_tiles[i]);
-					L.mapbox.featureLayer({
-						// this feature is in the GeoJSON format: see geojson.org
-						// for the full specification
-						type: 'Feature',
-						geometry: {
-							type: 'Point',
-							// coordinates here are in longitude, latitude order because
-							// x, y is the standard for GeoJSON and many formats
-							coordinates: [
-							  rectangle_tiles[i].coordinate[0],
-							  rectangle_tiles[i].coordinate[1]
-							]
-						},
-						properties: {
-							title: 'Coordinate',
-							description: rectangle_tiles[i].coordinate[0] + '/' + rectangle_tiles[i].coordinate[1],
-							// one can customize markers by adding simplestyle properties
-							// https://www.mapbox.com/guides/an-open-platform/#simplestyle
-							'marker-size': 'small',
-							'marker-color': '#BE9A6B',
-							'marker-symbol': 'marker'
-						}
-					}).addTo(map);
-					
 					for(j = rectangle_tiles[i].index; j < coordinates.length; j++){
-						console.log(j);
-						console.log(coordinates[j][0] + "/" + coordinates[j][1]);
-						console.log("north-west" + rectangle_tiles[i].bounds[0][0] + "/" + rectangle_tiles[i].bounds[0][1] + "south east" + rectangle_tiles[i].bounds[1][0] + "/" + rectangle_tiles[i].bounds[1][1]);
-						break;
+						if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
+							L.mapbox.featureLayer({
+								type: 'Feature',
+								geometry: {
+									type: 'Point',
+									coordinates: [
+									  coordinates[j][1],
+									  coordinates[j][0]
+									]
+								},
+								properties: {
+									title: 'Coordinate',
+									description: coordinates[j][1] + '/' + coordinates[j][0],
+									'marker-size': 'small',
+									'marker-color': '#BE9A6B',
+									'marker-symbol': 'marker'
+								}
+							}).addTo(map);
+							json_coordinates.push(coordinates[j]);
+						} 
 					}
 				}
+				
+				var reverse_line_points = new Array(json_coordinates.length);
+				console.log(reverse_line_points);
 				/*
 				var reverse_line_points, long_array;
-				var init, end;
-				//One or more tiles.
-				if (info_tiles.length > 1) {
-					//All tiles minus last.
-					if (i != info_tiles.length-1) {
-						//Coordinates in that tile. info_tile[i].index is the first coordinate 
-						//in that tile.
-						long_array = info_tiles[i+1].index - info_tiles[i].index;
-						init = info_tiles[i].index;
-						end = info_tiles[i].index + long_array;
-					} else {
-						//Last tile.
-						long_array = coordinates.length - info_tiles[i].index;
-						init = info_tiles[i].index;
-						end = coordinates.length;
-					}			
-				} else {
-					long_array = line_points.length;
-					init = 0;
-					end = long_array;
-				}
 				
 				//Invert the position to make draw the rute.
 				reverse_line_points = new Array(long_array);	
