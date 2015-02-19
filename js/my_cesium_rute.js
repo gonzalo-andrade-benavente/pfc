@@ -55,12 +55,15 @@
 	function createMap(coord) {
 		L.mapbox.accessToken = 'pk.eyJ1IjoiZ29uemFsaXRvIiwiYSI6IlVJTGIweFUifQ.waoF7m8PZbBM6u8Tg_rR7A';
 		map = L.mapbox.map('map', id_maps[id_map]);
+		/*
 		map.on('mouse click', function(e) {
 			console.log(e.containerPoint.toString() + ', ' + e.latlng.toString());
 		});
+		*/
+		map.touchZoom.disable();
 		coordinates = coord;
-		checkTile(coordinates, 14);
-		rectangle_tiles = createRectangle(info_tiles);
+		checkTile(coordinates, 15);
+		rectangle_tiles = createRectangle(info_tiles, 1);
 		//Draw the tiles from the rute more rectangle.
 		for(i = 0; i < rectangle_tiles.length; i++) {
 			var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
@@ -85,8 +88,9 @@
 		.on('ready', function() {
 			//var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
 			var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
-			//map.setMaxBounds(bounds);
-			map.fitBounds(bounds);
+			map.setMaxBounds(bounds);
+			//map.setZoom(14);
+			//map.fitBounds(bounds);
 			console.log("[PFC my_cesium_rute.js]:TileCesium in Mapbox set bounds.");
 			
 		})
@@ -116,11 +120,12 @@
 		var static_image_json;
 		var width = 504, height = 630;
 		var json_coordinates;
-		if (rectangle_tiles.length > 0)
+		if (rectangle_tiles.length > 0) {
 			//for(i = 0; i < info_tiles.length; i++) {
 			for(i = 0; i < rectangle_tiles.length; i++) {
 			//for(i = 0; i < 2; i++) {
 				bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
+				console.log(bounds);
 				map.setMaxBounds(bounds);
 				zoom = 16;
 				//if the image contain coordinate draw rute, else only with the bounds obtain image.
@@ -130,14 +135,14 @@
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					else 
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+					//Ajax request.
 					//getTexture(static_image_json, i, "");
 				} else {
 					//with coordinates.
 					json_coordinates = new Array();
-					console.log(rectangle_tiles[i]);
 					for(j = rectangle_tiles[i].index; j < coordinates.length; j++){
 						if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
-							L.mapbox.featureLayer({
+							/*L.mapbox.featureLayer({
 								type: 'Feature',
 								geometry: {
 									type: 'Point',
@@ -154,12 +159,12 @@
 									'marker-symbol': 'marker'
 								}
 							}).addTo(map);
+							*/
 							json_coordinates.push(coordinates[j]);
 						} 
 					}
 					//var reverse_line_points = new Array(json_coordinates.length);
 					var reverse_line_points = new Array();
-					
 					for(j=0; j < json_coordinates.length; j++) {
 						reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
 					}
@@ -180,40 +185,14 @@
 					if (id_map == -1) 
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					else 
-						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-				
-					console.log(static_image_json);
-					
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
+					//Ajax request.
+					//getTexture(encodeURIComponent(static_image_json), i, rectangle_tiles[i].cardinality);
+					//getTexture(encodeURIComponent(static_image_json), i, "");
+					console.log("[PFC my_cesium_rute.js] Coordinates tile:" + reverse_line_points.length);
 				}
-				
-				/*
-				var width = 504, height = 630;	
-				var encode_json = JSON.stringify(geo_json);
-				var encode_json_uri = encodeURIComponent(encode_json);
-				//bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]]];
-				//map.setMaxBounds(bounds);
-				zoom = 14;
-				if (id_map == -1) 
-					static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-				else 
-					static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-				
-				console.log(static_image_json);
-				
-				bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
-				map.setMaxBounds(bounds);
-				zoom = 14;
-				if (id_map == -1) 
-					static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-				else 
-					static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-				
-				//Obtain texture file.
-				//getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
-				//console.log(encodeURIComponent(static_image_json));
-				//window.open("./PFCMyMesh.html", "_self");
-				*/
 			}
+		}
 	}
 	
 	function modifiedCoordinates(coord) {

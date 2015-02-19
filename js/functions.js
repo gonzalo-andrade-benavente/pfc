@@ -67,7 +67,7 @@ function checkTile(coord, level) {
 /*
 	Whit the tiles study to create a rectangle.
 */
-function createRectangle(info) {
+function createRectangle(info, level) {
 	/*
 	for(i = 0; i < info_tiles.length; i++) {
 		console.log('[PFC my_cesium_rute]: x' + info_tiles[i].x + 'y' + info_tiles[i].y);
@@ -90,7 +90,7 @@ function createRectangle(info) {
 	*/
 	for(i = min_x; i <= max_x ; i++) {
 		for (j = max_y; j >= min_y ; j--) {
-			tile = getTile(i,j,14);
+			tile = getTile(i, j, level);
 			info_tiles_rectangle.push(new InfoTile(i, j, "",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, 0, 0, 0));
 		}
 	}
