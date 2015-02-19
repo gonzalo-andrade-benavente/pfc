@@ -15,7 +15,7 @@ var info_tiles, rectangle_tiles;
 var mesh_export;
 var combined_geometry = new THREE.Geometry();
 //Position gemetries
-var x = 0, y = 0, z = 0;
+var x = -20, y = 0, z = 0;
 //index_tile to each tile in info_tile.
 var mapbox_texture, index_tile = 0;
 //to know where put the geometry.
@@ -71,6 +71,7 @@ function getRute() {
 /*
 	Function create scene and GUI with threejs.js my library.
 */
+var change_x;
 function load(coord) {
 	/*
 		info_tiles contains all information about tiles of the rute gpx.
@@ -83,6 +84,38 @@ function load(coord) {
 	info_tiles = new Array(); 
 	checkTile(coord, 14);
 	rectangle_tiles = createRectangle(info_tiles, 14);
+	var min_x = rectangle_tiles[0].x, max_x = rectangle_tiles[0].x, min_y = rectangle_tiles[0].y, max_y = rectangle_tiles[0].y;
+	for(i = 1; i < rectangle_tiles.length; i++) {
+		if (rectangle_tiles[i].x < min_x)
+			min_x = rectangle_tiles[i].x;
+		if (rectangle_tiles[i].x > max_x)
+			max_x = rectangle_tiles[i].x;
+		if (rectangle_tiles[i].y < min_y) 
+			min_y = rectangle_tiles[i].y;
+		if (rectangle_tiles[i].y > max_y)
+			max_y = rectangle_tiles[i].y;
+	}
+	//console.log('('+min_x + ',' + min_y + ')');
+	//console.log('('+max_x + ',' + max_y + ')');
+	change_x = max_y - min_y;
+	for(i = min_x; i <= max_x; i++) {
+		for(j = min_y; j <= max_y; j++) {
+			aCesiumTerrainProvider.requestTileGeometry(i, j, 14, false).then(function(data){
+				createGeometryCesium(data);
+				z = z - 33;
+				if (change_x == 0) {
+					change_x = max_y - min_y;
+					z = 0;
+					x = x + 33;
+				} else {
+					change_x--
+				}
+				
+			});
+		}
+	}
+}
+	
 	
 	/*
 	tile_x = info_tiles[0].x ; tile_y = info_tiles[0].y;
@@ -93,6 +126,30 @@ function load(coord) {
 		});
 	}
 	*/
+
+
+function createGeometryCesium(data) {
+	var mesh, facesQuantized, geometry;
+	var xx = data._uValues, 
+		yy = data._vValues,
+		heights = data._heightValues;
+	facesQuantized = data._indices;
+	var geometry = new THREE.Geometry();
+	for(var i=0; i < heights.length; i++)
+		geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/1000),Math.round(yy[i]/1000),Math.round(heights[i]/1000)));
+	
+	for(var i=0; i < facesQuantized.length; i=i+3)
+		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
+	
+	//geometry = addFaceVertexUvs(geometry);
+	//geometry = addBase(geometry);
+	//geometry = addFaceVertexUvs(geometry);
+	material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.rotation.x =  Math.PI / 180 * (-90);
+	//console.log('('+x+','+y+','+z+')');
+	mesh.position.set(x, y, z);
+	scene.add(mesh);
 }
 
 function createMeshCesium(data) {
