@@ -35,22 +35,6 @@
 	*/
 	var info_tiles = new Array();
 	var rectangle_tiles;
-	/*
-		Class to save x and y Cesium and bounds Cesium to Mapbox.
-		Cardinality: c:center, w:west, e:east, n:north, s:south;
-	*/
-	function InfoTile(x, y, cardinality, northwest_latitude, northwest_longitude, southeast_latitude, southeast_longitude, longitude, latitude, index){
-		this.x = x;
-		this.y = y;
-		this.bounds = [[northwest_latitude, northwest_longitude],[southeast_latitude, southeast_longitude]];
-		this.cardinality = cardinality;
-		/*
-			Reverse, to create correctly GeoJson.
-			Normal is [latitude, longitude];
-		*/
-		this.coordinate = [longitude, latitude];
-		this.index = index;
-	}
 	
 	function getRute() {
 		if (xhr.upload) {
@@ -171,6 +155,13 @@
 							'marker-symbol': 'marker'
 						}
 					}).addTo(map);
+					
+					for(j = rectangle_tiles[i].index; j < coordinates.length; j++){
+						console.log(j);
+						console.log(coordinates[j][0] + "/" + coordinates[j][1]);
+						console.log("north-west" + rectangle_tiles[i].bounds[0][0] + "/" + rectangle_tiles[i].bounds[0][1] + "south east" + rectangle_tiles[i].bounds[1][0] + "/" + rectangle_tiles[i].bounds[1][1]);
+						break;
+					}
 				}
 				/*
 				var reverse_line_points, long_array;
