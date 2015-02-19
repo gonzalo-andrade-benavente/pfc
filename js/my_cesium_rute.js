@@ -157,40 +157,36 @@
 							json_coordinates.push(coordinates[j]);
 						} 
 					}
-				}
-				
-				var reverse_line_points = new Array(json_coordinates.length);
-				console.log(reverse_line_points);
-				/*
-				var reverse_line_points, long_array;
-				
-				//Invert the position to make draw the rute.
-				reverse_line_points = new Array(long_array);	
-				for(j = 0; j < reverse_line_points.length; j++) {
-					reverse_line_points[j] = new Array(2);
-					reverse_line_points[j][0] = line_points[init][1];
-					reverse_line_points[j][1] = line_points[init][0];
-					init++;
-				}
-				console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+reverse_line_points.length);
-				//Modified change the size of array of coordinates.
-				while (reverse_line_points.length > 122)
-					reverse_line_points = modifiedCoordinates(reverse_line_points);
+					//var reverse_line_points = new Array(json_coordinates.length);
+					var reverse_line_points = new Array();
 					
-				console.log("[PFC my_cesium_rute.js]: Mesh "+i+" coordinates "+ reverse_line_points.length);
-				
-				var geo_json = {
-					"type": "Feature",
-					 "properties": {
-						"stroke": "#fc4353",
-						"stroke-width": 5
-					},
-					"geometry": {
-						"type": "LineString",
-						"coordinates": reverse_line_points
+					for(j=0; j < json_coordinates.length; j++) {
+						reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
 					}
+					var geo_json = {
+						"type": "Feature",
+						 "properties": {
+							"stroke": "#fc4353",
+							"stroke-width": 5
+						},
+						"geometry": {
+							"type": "LineString",
+							"coordinates": reverse_line_points
+						}
 
-				};
+					};
+					var encode_json = JSON.stringify(geo_json);
+					var encode_json_uri = encodeURIComponent(encode_json);
+					if (id_map == -1) 
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+					else 
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+				
+					console.log(static_image_json);
+					
+				}
+				
+				/*
 				var width = 504, height = 630;	
 				var encode_json = JSON.stringify(geo_json);
 				var encode_json_uri = encodeURIComponent(encode_json);
@@ -216,7 +212,7 @@
 				//getTexture(encodeURIComponent(static_image_json), i, info_tiles[i].cardinality);
 				//console.log(encodeURIComponent(static_image_json));
 				//window.open("./PFCMyMesh.html", "_self");
-			*/
+				*/
 			}
 	}
 	
