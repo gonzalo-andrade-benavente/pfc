@@ -171,6 +171,7 @@ function createGeometries() {
 
 function changeVertex(geometry, pre_geometry, east) {
 	var max_actually, max_previous, i;
+	var min_actually, min_previous;
 	/*
 	if ((!geometry) || (!pre_geometry))
 		console.log('[PFC my_cesium_mesh.js]: One or both geometries doesn\'t exist')
@@ -188,17 +189,16 @@ function changeVertex(geometry, pre_geometry, east) {
 			}
 			southVertex = sortVector(geometry, southVertex, "x");
 			max_actually = majorValue(geometry, southVertex);
-			//console.log(geometry.vertices[southVertex[0]]);
-			//console.log(geometry.vertice[southVertex[0]].y);
+			min_actually = minValue(geometry, southVertex);
 			for(i = 0; i < pre_geometry.vertices.length; i++) {
 				if ((pre_geometry.vertices[i].y === pre_geometry.boundingBox.max.y) && (pre_geometry.vertices[i].z != 0)) 
 					northVertex.push(i);			
 			}
 			northVertex = sortVector(pre_geometry, northVertex, "x");
 			max_previous = majorValue(pre_geometry, northVertex);
+			min_previous = minValue(pre_geometry, northVertex);
 			//console.log(geometry.vertices[northVertex[0]]);
 		} else {
-			/*
 			//Geometry at the east of initial.
 			var eastVertex = new Array(), westVertex = new Array();
 			for(i=0; i < geometry.vertices.length; i++) {
@@ -212,17 +212,18 @@ function changeVertex(geometry, pre_geometry, east) {
 					eastVertex.push(i);			
 			}
 			max_previous = majorValue(pre_geometry, eastVertex);
-			*/
 		}
 		
-		if ((max_previous/max_actually) > 0) {
-			for (i = 0; i < geometry.vertices.length; i++)
-				geometry.vertices[i].z = geometry.vertices[i].z * (max_previous/max_actually);
-		} else {
-			for (i = 0; i < geometry.vertices.length; i++)
-				geometry.vertices[i].z = geometry.vertices[i].z * (max_actually/max_previous);
-		}
-
+		/*
+		console.log(min_actually);
+		console.log(max_previous);
+		console.log(max_previous/min_actually);
+		console.log('----------');
+		*/
+		/*
+		for (i = 0; i < geometry.vertices.length; i++)
+			geometry.vertices[i].z = geometry.vertices[i].z * (max_previous/min_actually);
+		*/
 	/*		
 	}
 	*/
@@ -235,6 +236,17 @@ function majorValue(geometry, vertex){
 	var val = geometry.vertices[vertex[0]].z, i;
 	for(i = 1; i < vertex.length; i++) {
 		if (geometry.vertices[vertex[i]].z > val)
+			val = geometry.vertices[vertex[i]].z;
+	}
+	return val;
+}
+/*
+	Return min value of one vertex.
+*/
+function minValue(geometry, vertex){
+	var val = geometry.vertices[vertex[0]].z, i;
+	for(i = 1; i < vertex.length; i++) {
+		if (geometry.vertices[vertex[i]].z < val)
 			val = geometry.vertices[vertex[i]].z;
 	}
 	return val;
@@ -267,7 +279,7 @@ function asociateGeometry(data) {
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 	
 	//geometry = addFaceVertexUvs(geometry);
-	geometry = addBase(geometry);
+	//geometry = addBase(geometry);
 	//geometry = addFaceVertexUvs(geometry);
 	rectangle_tiles[index_tile].geometry = geometry;
 }
