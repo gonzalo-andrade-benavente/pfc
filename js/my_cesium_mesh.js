@@ -90,7 +90,8 @@ function load(coord) {
 				index_tile++;
 			});
 	}
-	createTerrain();
+	//createTerrain();
+	//createGeometries();
 }
 
 function maxMinTileXY() {
@@ -141,7 +142,7 @@ function createTerrain() {
 						var pre_geometry = getGeometry(i-1 ,j);
 						pre_geometry.computeBoundingBox();
 						var pre_south_vertex = new Array(), south_vertex = new Array();						
-						for(a=0; a < pre_geometry.vertices.length; a++) {
+						for(a = 0; a < pre_geometry.vertices.length; a++) {
 							if ((pre_geometry.vertices[a].y === pre_geometry.boundingBox.min.y) && (pre_geometry.vertices[a].z != 0)) 
 								pre_south_vertex.push(a);
 						}
@@ -149,27 +150,46 @@ function createTerrain() {
 						
 						geometry = getGeometry(i,j);
 						geometry.computeBoundingBox();
-						for(a=0; a < geometry.vertices.length; a++) {
+						for(a = 0; a < geometry.vertices.length; a++) {
 							if ((geometry.vertices[a].y === geometry.boundingBox.min.y) && (geometry.vertices[a].z != 0)) 
 								south_vertex.push(a);
 						}
 						south_vertex = sortVector(geometry, south_vertex, 'x');
-						console.log();
-						console.log();
 						b = pre_geometry.vertices[pre_south_vertex[pre_south_vertex.length-1]].z - geometry.vertices[south_vertex[0]].z;
 						y = y + b;
 						addGeometryScene(geometry, x, y, z);
 					} else {
-						/*
-						geometry = getGeometry(i,j);
+						var geometry = getGeometry(i,j), pre_geometry = getGeometry(i,j-1);
+						var max, pre_max;
+						geometry.computeBoundingBox();
+						pre_geometry.computeBoundingBox();
+						
+						var south_vertex = new Array(), north_vertex = new Array();
+						
+						for(a = 0; a < pre_geometry.vertices.length; a++) {
+							if ((pre_geometry.vertices[a].y === pre_geometry.boundingBox.max.y) && (pre_geometry.vertices[a].z != 0)) 
+							north_vertex.push(a);			
+						}
+						north_vertex = sortVector(pre_geometry, north_vertex, 'x');
+						pre_max = majorValue(pre_geometry, north_vertex);
+						
+						for(a = 0; a < geometry.vertices.length; a++) {
+							if ((geometry.vertices[a].y === geometry.boundingBox.min.y) && (geometry.vertices[a].z != 0)) 
+								south_vertex.push(a);			
+						}
+						south_vertex = sortVector(geometry, south_vertex, 'x');
+						max = majorValue(geometry, south_vertex);
+						b = max - pre_max;
+						y = y + b;
 						addGeometryScene(geometry, x, y, z);
-						*/
 					}
 					west = false;
 				}
+				y = 0;
 				z = z - 33;
 				//console.log(i + " - " + j);
 			}
+			y = 0;
 			z = 0;
 			x = x + 33;
 			west = true;
