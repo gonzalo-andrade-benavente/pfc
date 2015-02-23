@@ -86,10 +86,11 @@ function load(coord) {
 	rectangle_tiles = createRectangle(info_tiles, 14);
 	for(i = 0; i < rectangle_tiles.length; i++) {
 		aCesiumTerrainProvider.requestTileGeometry(rectangle_tiles[i].x, rectangle_tiles[i].y, 14, false).then(function(data){
-				asociateGeometry(data);
+				asociateGeometry(data, 1000);
 				index_tile++;
 			});
 	}
+	
 	createGeometries();
 	
 	/*
@@ -149,7 +150,9 @@ function createGeometries() {
 		for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
 			for(j = rectangle[0][1]; j <= rectangle[1][1]; j++) {
 				if (previous_geometry){
-					rectangle_tiles[index].geometry = changeVertex(rectangle_tiles[index].geometry, previous_geometry, east);
+					var data_geometry = changeVertex(rectangle_tiles[index].geometry, previous_geometry, east);
+					rectangle_tiles[index].geometry = data_geometry[0];
+					y = y + data_geometry[1];
 					addGeometryScene(rectangle_tiles[index].geometry, x, y, z);
 				} else {
 					addGeometryScene(rectangle_tiles[index].geometry, x, y, z);
@@ -171,7 +174,7 @@ function createGeometries() {
 
 function changeVertex(geometry, pre_geometry, east) {
 	var max_actually, max_previous, i;
-	var min_actually, min_previous;
+	var min_actually, min_previous, y;
 	/*
 	if ((!geometry) || (!pre_geometry))
 		console.log('[PFC my_cesium_mesh.js]: One or both geometries doesn\'t exist')
@@ -197,7 +200,7 @@ function changeVertex(geometry, pre_geometry, east) {
 			northVertex = sortVector(pre_geometry, northVertex, "x");
 			max_previous = majorValue(pre_geometry, northVertex);
 			min_previous = minValue(pre_geometry, northVertex);
-			//console.log(geometry.vertices[northVertex[0]]);
+			y = pre_geometry.vertices[northVertex[0]].z - geometry.vertices[southVertex[0]].z; 
 		} else {
 			//Geometry at the east of initial.
 			var eastVertex = new Array(), westVertex = new Array();
@@ -218,7 +221,6 @@ function changeVertex(geometry, pre_geometry, east) {
 		console.log(min_actually);
 		console.log(max_previous);
 		console.log(max_previous/min_actually);
-		console.log('----------');
 		*/
 		/*
 		for (i = 0; i < geometry.vertices.length; i++)
@@ -227,7 +229,7 @@ function changeVertex(geometry, pre_geometry, east) {
 	/*		
 	}
 	*/
-	return geometry;
+	return [geometry , y];
 }
 /*
 	Return major value of one vertex.
@@ -265,7 +267,7 @@ function addGeometryScene(geometry, x, y, z){
 /*
 	Recieve data from asynchronous cesium then create and store the geometry for each tile.
 */
-function asociateGeometry(data) {
+function asociateGeometry(data, scale) {
 	var mesh, facesQuantized, geometry;
 	var xx = data._uValues, 
 		yy = data._vValues,
@@ -273,7 +275,7 @@ function asociateGeometry(data) {
 	facesQuantized = data._indices;
 	var geometry = new THREE.Geometry();
 	for(var i=0; i < heights.length; i++)
-		geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/1000),Math.round(yy[i]/1000),Math.round(heights[i]/1000)));
+		geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/scale),Math.round(yy[i]/scale),Math.round(heights[i]/scale)));
 	
 	for(var i=0; i < facesQuantized.length; i=i+3)
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
@@ -282,6 +284,13 @@ function asociateGeometry(data) {
 	//geometry = addBase(geometry);
 	//geometry = addFaceVertexUvs(geometry);
 	rectangle_tiles[index_tile].geometry = geometry;
+	//rectangle_tiles[index_tile].horizonOcclusion = data._horizonOcclusionPoint;
+	//console.log(data._southSkirtHeight/scale);
+	//console.log(data._westSkirtHeight/scale);
+	//console.log(data._eastSkirtHeight/scale);
+	//console.log(data._northSkirtHeight/scale);
+	//console.log(data._horizonOcclusionPoint);
+	//console.log(data);
 }
 
 function createGeometryCesium(data) {
