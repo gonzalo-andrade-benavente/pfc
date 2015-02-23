@@ -257,3 +257,25 @@ function getTile(x, y, level) {
 	myTile = new Tile(ne, se, nw, sw);
 	return myTile;
 }
+/*
+	Return major value of one vertex.
+*/
+function majorValue(geometry, vertex){
+	var val = geometry.vertices[vertex[0]].z, i;
+	for(i = 1; i < vertex.length; i++) {
+		if (geometry.vertices[vertex[i]].z > val)
+			val = geometry.vertices[vertex[i]].z;
+	}
+	return val;
+}
+/*
+	Return min value of one vertex.
+*/
+function minValue(geometry, vertex){
+	var val = geometry.vertices[vertex[0]].z, i;
+	for(i = 1; i < vertex.length; i++) {
+		if (geometry.vertices[vertex[i]].z < val)
+			val = geometry.vertices[vertex[i]].z;
+	}
+	return val;
+}
