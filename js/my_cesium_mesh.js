@@ -90,7 +90,7 @@ function load(coord) {
 				index_tile++;
 			});
 	}
-	createGeometries();
+	createTerrain();
 }
 
 function maxMinTileXY() {
@@ -108,13 +108,110 @@ function maxMinTileXY() {
 	return [[min_x, min_y],[max_x, max_y]];
 }
 
+
+function getGeometry(x, y) {
+	var geometry;
+	for (i = 0; i < rectangle_tiles.length; i++) {
+		if ((rectangle_tiles[i].x == x) && (rectangle_tiles[i].y == y)) {
+			geometry = rectangle_tiles[i].geometry;
+			break;
+		}
+	}
+	return geometry;
+}
+
+function createTerrain() {
+	var i, j , a, b;
+	if (rectangle_tiles[0].geometry) {
+		console.log('[PFC my_cesium_mesh.js]: Geometries created in rectangle_tiles');
+		var rectangle = maxMinTileXY();
+		//Add initial geometry.
+		var x = 0, y = 0; z = 0;
+		var geometry;
+		var west = false;
+		for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
+			for(j = rectangle[0][1]; j <= rectangle[1][1]; j++) {
+				if ((i == rectangle[0][0]) && (j == rectangle[0][1])) {
+					//Add initial geometry
+					geometry = getGeometry(i,j);
+					addGeometryScene(geometry, x, y, z);
+				} else {
+					//Rest of geometries.
+					if (west) {
+						var pre_geometry = getGeometry(i-1 ,j);
+						pre_geometry.computeBoundingBox();
+						var pre_south_vertex = new Array(), south_vertex = new Array();						
+						for(a=0; a < pre_geometry.vertices.length; a++) {
+							if ((pre_geometry.vertices[a].y === pre_geometry.boundingBox.min.y) && (pre_geometry.vertices[a].z != 0)) 
+								pre_south_vertex.push(a);
+						}
+						pre_south_vertex = sortVector(pre_geometry, pre_south_vertex, 'x');
+						
+						geometry = getGeometry(i,j);
+						geometry.computeBoundingBox();
+						for(a=0; a < geometry.vertices.length; a++) {
+							if ((geometry.vertices[a].y === geometry.boundingBox.min.y) && (geometry.vertices[a].z != 0)) 
+								south_vertex.push(a);
+						}
+						south_vertex = sortVector(geometry, south_vertex, 'x');
+						console.log();
+						console.log();
+						b = pre_geometry.vertices[pre_south_vertex[pre_south_vertex.length-1]].z - geometry.vertices[south_vertex[0]].z;
+						y = y + b;
+						addGeometryScene(geometry, x, y, z);
+					} else {
+						/*
+						geometry = getGeometry(i,j);
+						addGeometryScene(geometry, x, y, z);
+						*/
+					}
+					west = false;
+				}
+				z = z - 33;
+				//console.log(i + " - " + j);
+			}
+			z = 0;
+			x = x + 33;
+			west = true;
+		}
+		
+		//var box = new THREE.BoxGeometry(2,2,2);
+		//addGeometryScene2(box, geometry.vertices[south_vertex[0]].x, geometry.vertices[0].z, 0);
+		//addGeometryScene(rectangle_tiles[0].geometry, 0, 0, 0);
+		/*
+		var south_vertex = new Array();
+		rectangle_tiles[0].geometry.computeBoundingBox();
+		for(i=0; i < rectangle_tiles[0].geometry.vertices.length; i++) {
+			if ((rectangle_tiles[0].geometry.vertices[i].y === rectangle_tiles[0].geometry.boundingBox.min.y) && (rectangle_tiles[0].geometry.vertices[i].z != 0)) 
+				south_vertex.push(i);
+		}
+		*/
+		//south_vertex = sortVector(rectangle_tiles[0].geometry, south_vertex, "x");
+		/*
+		for(i=0; i < south_vertex.length; i++){
+			var box = new THREE.BoxGeometry(1,1,1);
+			addGeometryScene2(box, rectangle_tiles[0].geometry.vertices[south_vertex[i]].x, rectangle_tiles[0].geometry.vertices[south_vertex[i]].z, 0)
+			console.log(rectangle_tiles[0].geometry.vertices[south_vertex[i]]);
+		}
+		*/
+		//var box = new THREE.BoxGeometry(1,1,1);
+		//south_vertex = sortVector(rectangle_tiles[0].geometry, south_vertex, 'y');
+		//console.log(rectangle_tiles[0].geometry.vertices[south_vertex[south_vertex.length-1]]);
+		//addGeometryScene2(box, rectangle_tiles[0].geometry.vertices[south_vertex[south_vertex.length-1]].x, rectangle_tiles[0].geometry.vertices[south_vertex[south_vertex.length-1]].z, 0)
+		
+	} else {
+		setTimeout(createTerrain, 10);
+	}
+}
+
+
 function createGeometries() {
 	if (rectangle_tiles[0].geometry) {
 		console.log('[PFC my_cesium_mesh.js]: Geometries created in rectangle_tiles');
 		rectangle = maxMinTileXY();
 		
 		var x = 0; y = 0; z = 0;
-		var index = 0, previous_geometry;
+		var index = 0, previous_geometry, west_geometry;
 		var east = false;
 		for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
 			for(j = rectangle[0][1]; j <= rectangle[1][1]; j++) {
@@ -125,6 +222,7 @@ function createGeometries() {
 					addGeometryScene(rectangle_tiles[index].geometry, x, y, z);
 				} else {
 					addGeometryScene(rectangle_tiles[index].geometry, x, y, z);
+					//west_geometry = rectangle_tiles[index].geometry;
 				}
 				z = z - 33;
 				previous_geometry = rectangle_tiles[index].geometry;
@@ -143,41 +241,41 @@ function createGeometries() {
 }
 
 function changeVertex(geometry, pre_geometry, east) {
-	var max_actually, max_previous, i;
-	var min_actually, min_previous, y;
+	var i, y;
+	var max_actually, max_previous;
 		if (pre_geometry.boundingBox == null)
 			pre_geometry.computeBoundingBox();
 		if (geometry.boundingBox == null)
 			geometry.computeBoundingBox();
+			
 		if (!east) {
 			var south_vertex = new Array(), north_vertex = new Array();
 			for(i=0; i < geometry.vertices.length; i++) {
 				if ((geometry.vertices[i].y === geometry.boundingBox.min.y) && (geometry.vertices[i].z != 0)) 
 					south_vertex.push(i);
 			}
-			south_vertex = sortVector(geometry, south_vertex, "x");
+			max_actually = majorValue(geometry, south_vertex);
 			for(i = 0; i < pre_geometry.vertices.length; i++) {
 				if ((pre_geometry.vertices[i].y === pre_geometry.boundingBox.max.y) && (pre_geometry.vertices[i].z != 0)) 
 					north_vertex.push(i);			
 			}
-			north_vertex = sortVector(pre_geometry, north_vertex, "x");
-			y = pre_geometry.vertices[north_vertex[0]].z - geometry.vertices[south_vertex[0]].z; 
+			max_previous = majorValue(pre_geometry, north_vertex);
+			y = max_previous - max_actually;
 		} else {
-			//Geometry at the east of initial.
-			var south_vertex = new Array(), pre_south_vertex = new Array();
-			for(i=0; i < geometry.vertices.length; i++) {
-				if ((geometry.vertices[i].y === geometry.boundingBox.min.y) && (geometry.vertices[i].z != 0)) 
-					south_vertex.push(i);
-			}
-			south_vertex = sortVector(geometry, south_vertex, "x");
-			for(i = 0; i < pre_geometry.vertices.length; i++) {
-				if ((pre_geometry.vertices[i].y === pre_geometry.boundingBox.max.y) && (pre_geometry.vertices[i].z != 0)) 
-					pre_south_vertex.push(i);			
-			}
-			pre_south_vertex = sortVector(pre_geometry, pre_south_vertex, "x");
-			y = geometry.vertices[south_vertex[0]].z - pre_geometry.vertices[pre_south_vertex[pre_south_vertex.length-1]].z;
+			//Geometry at the east of initial.			
 		}
+		
 	return [geometry , y];
+}
+/*
+	Add geometry to scene.
+*/
+function addGeometryScene2(geometry, x, y, z){
+	material= new THREE.MeshBasicMaterial( { color: "rgb(0,255,0)", wireframe: true ,side:THREE.DoubleSide} );
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.rotation.x =  Math.PI / 180 * (-90);
+	mesh.position.set(x, y, z);
+	scene.add(mesh);	
 }
 
 /*
