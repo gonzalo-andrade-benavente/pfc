@@ -162,6 +162,7 @@ function createGeometries() {
 				index++;
 				east = false;
 			}
+			y = 0;
 			z = 0;
 			x = x + 33;
 			east = true;
@@ -185,47 +186,39 @@ function changeVertex(geometry, pre_geometry, east) {
 		if (geometry.boundingBox == null)
 			geometry.computeBoundingBox();
 		if (!east) {
-			var southVertex = new Array(), northVertex = new Array();
+			var south_vertex = new Array(), north_vertex = new Array();
 			for(i=0; i < geometry.vertices.length; i++) {
 				if ((geometry.vertices[i].y === geometry.boundingBox.min.y) && (geometry.vertices[i].z != 0)) 
-					southVertex.push(i);
+					south_vertex.push(i);
 			}
-			southVertex = sortVector(geometry, southVertex, "x");
-			max_actually = majorValue(geometry, southVertex);
-			min_actually = minValue(geometry, southVertex);
+			south_vertex = sortVector(geometry, south_vertex, "x");
+			//max_actually = majorValue(geometry, southVertex);
+			//min_actually = minValue(geometry, southVertex);
 			for(i = 0; i < pre_geometry.vertices.length; i++) {
 				if ((pre_geometry.vertices[i].y === pre_geometry.boundingBox.max.y) && (pre_geometry.vertices[i].z != 0)) 
-					northVertex.push(i);			
+					north_vertex.push(i);			
 			}
-			northVertex = sortVector(pre_geometry, northVertex, "x");
-			max_previous = majorValue(pre_geometry, northVertex);
-			min_previous = minValue(pre_geometry, northVertex);
-			y = pre_geometry.vertices[northVertex[0]].z - geometry.vertices[southVertex[0]].z; 
+			north_vertex = sortVector(pre_geometry, north_vertex, "x");
+			//max_previous = majorValue(pre_geometry, northVertex);
+			//min_previous = minValue(pre_geometry, northVertex);
+			y = pre_geometry.vertices[north_vertex[0]].z - geometry.vertices[south_vertex[0]].z; 
 		} else {
 			//Geometry at the east of initial.
-			var eastVertex = new Array(), westVertex = new Array();
+			var south_vertex = new Array(), pre_south_vertex = new Array();
 			for(i=0; i < geometry.vertices.length; i++) {
-				if ((geometry.vertices[i].x === geometry.boundingBox.max.x) && (geometry.vertices[i].z != 0)) {
-					westVertex.push(i);
-				}
+				if ((geometry.vertices[i].y === geometry.boundingBox.min.y) && (geometry.vertices[i].z != 0)) 
+					south_vertex.push(i);
 			}
-			max_actually = majorValue(geometry, westVertex);
+			south_vertex = sortVector(geometry, south_vertex, "x");
+			//max_actually = majorValue(geometry, southVertex);
+			//min_actually = minValue(geometry, southVertex);
 			for(i = 0; i < pre_geometry.vertices.length; i++) {
-				if ((pre_geometry.vertices[i].x === pre_geometry.boundingBox.min.x) && (pre_geometry.vertices[i].z != 0)) 
-					eastVertex.push(i);			
+				if ((pre_geometry.vertices[i].y === pre_geometry.boundingBox.max.y) && (pre_geometry.vertices[i].z != 0)) 
+					pre_south_vertex.push(i);			
 			}
-			max_previous = majorValue(pre_geometry, eastVertex);
+			pre_south_vertex = sortVector(pre_geometry, pre_south_vertex, "x");
+			y = geometry.vertices[south_vertex[0]].z - pre_geometry.vertices[pre_south_vertex[pre_south_vertex.length-1]].z;
 		}
-		
-		/*
-		console.log(min_actually);
-		console.log(max_previous);
-		console.log(max_previous/min_actually);
-		*/
-		/*
-		for (i = 0; i < geometry.vertices.length; i++)
-			geometry.vertices[i].z = geometry.vertices[i].z * (max_previous/min_actually);
-		*/
 	/*		
 	}
 	*/
@@ -279,18 +272,11 @@ function asociateGeometry(data, scale) {
 	
 	for(var i=0; i < facesQuantized.length; i=i+3)
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
+	rectangle_tiles[index_tile].geometry = geometry;
 	
 	//geometry = addFaceVertexUvs(geometry);
 	//geometry = addBase(geometry);
 	//geometry = addFaceVertexUvs(geometry);
-	rectangle_tiles[index_tile].geometry = geometry;
-	//rectangle_tiles[index_tile].horizonOcclusion = data._horizonOcclusionPoint;
-	//console.log(data._southSkirtHeight/scale);
-	//console.log(data._westSkirtHeight/scale);
-	//console.log(data._eastSkirtHeight/scale);
-	//console.log(data._northSkirtHeight/scale);
-	//console.log(data._horizonOcclusionPoint);
-	//console.log(data);
 }
 
 function createGeometryCesium(data) {
