@@ -90,7 +90,7 @@ function load(coord) {
 				index_tile++;
 			});
 	}
-	//createTerrain();
+	createTerrain();
 	//createGeometries();
 }
 
@@ -131,14 +131,14 @@ function createTerrain() {
 		var geometry;
 		var west = false;
 		for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
-			for(j = rectangle[0][1]; j <= rectangle[1][1]; j++) {
-				if ((i == rectangle[0][0]) && (j == rectangle[0][1])) {
-					//Add initial geometry
+			for(j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
+				if ((i == rectangle[0][0]) && (j == rectangle[1][1])) {
 					geometry = getGeometry(i,j);
 					addGeometryScene(geometry, x, y, z);
 				} else {
 					//Rest of geometries.
 					if (west) {
+						console.log(i + " - " + j);
 						var pre_geometry = getGeometry(i-1 ,j);
 						pre_geometry.computeBoundingBox();
 						var pre_south_vertex = new Array(), south_vertex = new Array();						
@@ -159,6 +159,7 @@ function createTerrain() {
 						y = y + b;
 						addGeometryScene(geometry, x, y, z);
 					} else {
+						/*
 						var geometry = getGeometry(i,j), pre_geometry = getGeometry(i,j-1);
 						var max, pre_max;
 						geometry.computeBoundingBox();
@@ -182,12 +183,12 @@ function createTerrain() {
 						b = max - pre_max;
 						y = y + b;
 						addGeometryScene(geometry, x, y, z);
+						*/
 					}
 					west = false;
 				}
 				y = 0;
 				z = z - 33;
-				//console.log(i + " - " + j);
 			}
 			y = 0;
 			z = 0;
