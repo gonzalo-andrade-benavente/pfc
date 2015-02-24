@@ -191,8 +191,10 @@ function createTerrain() {
 						pre_vertex = getVertex(pre_geometry, 'south');						
 						geometry = getGeometry(i, j);
 						vertex = getVertex(geometry, 'south');
-						
-						y = y + (pre_geometry.vertices[pre_vertex[pre_vertex.length-1]].z - geometry.vertices[vertex[0]].z);
+						if ((pre_vertex.length > 0) && (vertex.length > 0))
+							y = y + (pre_geometry.vertices[pre_vertex[pre_vertex.length-1]].z - geometry.vertices[vertex[0]].z);
+						else
+							y = y;
 						addGeometryScene(geometry, x, y, z);
 					} else {
 						console.log("Another Tile ("+ i + "," + j + ")");
@@ -203,7 +205,10 @@ function createTerrain() {
 						pre_vertex = getVertex(pre_geometry, 'north');
 						geometry = getGeometry(i, j);
 						vertex = getVertex(geometry, 'south');
-						y = y + (pre_geometry.vertices[pre_vertex[0]].z - geometry.vertices[vertex[0]].z);
+						if ((pre_vertex.length > 0) && (vertex.length > 0))
+							y = y + (pre_geometry.vertices[pre_vertex[0]].z - geometry.vertices[vertex[0]].z);
+						else
+							y = y;
 						addGeometryScene(geometry, x, y, z);
 					}
 					west = false;
