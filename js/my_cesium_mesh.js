@@ -138,7 +138,6 @@ function createTerrain() {
 				} else {
 					//Rest of geometries.
 					if (west) {
-						console.log(i + " - " + j);
 						var pre_geometry = getGeometry(i-1 ,j);
 						pre_geometry.computeBoundingBox();
 						var pre_south_vertex = new Array(), south_vertex = new Array();						
@@ -159,8 +158,8 @@ function createTerrain() {
 						y = y + b;
 						addGeometryScene(geometry, x, y, z);
 					} else {
-						/*
-						var geometry = getGeometry(i,j), pre_geometry = getGeometry(i,j-1);
+						console.log(i + " - " + j);
+						var geometry = getGeometry(i,j), pre_geometry = getGeometry(i,j+1);
 						var max, pre_max;
 						geometry.computeBoundingBox();
 						pre_geometry.computeBoundingBox();
@@ -180,14 +179,12 @@ function createTerrain() {
 						}
 						south_vertex = sortVector(geometry, south_vertex, 'x');
 						max = majorValue(geometry, south_vertex);
-						b = max - pre_max;
+						b = pre_max - max;
 						y = y + b;
 						addGeometryScene(geometry, x, y, z);
-						*/
 					}
 					west = false;
 				}
-				y = 0;
 				z = z - 33;
 			}
 			y = 0;
