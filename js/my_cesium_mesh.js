@@ -122,7 +122,7 @@ function getGeometry(x, y) {
 }
 
 function createTerrain() {
-	var i, j , a, b;
+	var i, j , a, b=0;
 	if (rectangle_tiles[0].geometry) {
 		console.log('[PFC my_cesium_mesh.js]: Geometries created in rectangle_tiles');
 		var rectangle = maxMinTileXY();
@@ -133,11 +133,13 @@ function createTerrain() {
 		for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
 			for(j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
 				if ((i == rectangle[0][0]) && (j == rectangle[1][1])) {
+					console.log("First Tile ("+ i + "," + j + ")");
 					geometry = getGeometry(i,j);
 					addGeometryScene(geometry, x, y, z);
 				} else {
 					//Rest of geometries.
 					if (west) {
+						console.log("Base Tile ("+ i + "," + j + ")");
 						var pre_geometry = getGeometry(i-1 ,j);
 						pre_geometry.computeBoundingBox();
 						var pre_south_vertex = new Array(), south_vertex = new Array();						
@@ -158,144 +160,44 @@ function createTerrain() {
 						y = y + b;
 						addGeometryScene(geometry, x, y, z);
 					} else {
-						console.log(i + " - " + j);
+						/*
+						console.log("Another Tile ("+ i + "," + j + ")");
 						var geometry = getGeometry(i,j), pre_geometry = getGeometry(i,j+1);
 						var max, pre_max;
 						geometry.computeBoundingBox();
 						pre_geometry.computeBoundingBox();
 						
 						var south_vertex = new Array(), north_vertex = new Array();
-						
 						for(a = 0; a < pre_geometry.vertices.length; a++) {
 							if ((pre_geometry.vertices[a].y === pre_geometry.boundingBox.max.y) && (pre_geometry.vertices[a].z != 0)) 
 							north_vertex.push(a);			
 						}
 						north_vertex = sortVector(pre_geometry, north_vertex, 'x');
-						pre_max = majorValue(pre_geometry, north_vertex);
-						
 						for(a = 0; a < geometry.vertices.length; a++) {
 							if ((geometry.vertices[a].y === geometry.boundingBox.min.y) && (geometry.vertices[a].z != 0)) 
 								south_vertex.push(a);			
 						}
 						south_vertex = sortVector(geometry, south_vertex, 'x');
-						max = majorValue(geometry, south_vertex);
-						b = pre_max - max;
+						if (north_vertex.lenght > 0)
+							b = pre_geometry.vertices[north_vertex[0]].z - geometry.vertices[south_vertex[0]].z;
 						y = y + b;
 						addGeometryScene(geometry, x, y, z);
+						*/
 					}
 					west = false;
 				}
+				y = 0;
 				z = z - 33;
 			}
 			y = 0;
 			z = 0;
 			x = x + 33;
 			west = true;
-		}
-		
-		//var box = new THREE.BoxGeometry(2,2,2);
-		//addGeometryScene2(box, geometry.vertices[south_vertex[0]].x, geometry.vertices[0].z, 0);
-		//addGeometryScene(rectangle_tiles[0].geometry, 0, 0, 0);
-		/*
-		var south_vertex = new Array();
-		rectangle_tiles[0].geometry.computeBoundingBox();
-		for(i=0; i < rectangle_tiles[0].geometry.vertices.length; i++) {
-			if ((rectangle_tiles[0].geometry.vertices[i].y === rectangle_tiles[0].geometry.boundingBox.min.y) && (rectangle_tiles[0].geometry.vertices[i].z != 0)) 
-				south_vertex.push(i);
-		}
-		*/
-		//south_vertex = sortVector(rectangle_tiles[0].geometry, south_vertex, "x");
-		/*
-		for(i=0; i < south_vertex.length; i++){
-			var box = new THREE.BoxGeometry(1,1,1);
-			addGeometryScene2(box, rectangle_tiles[0].geometry.vertices[south_vertex[i]].x, rectangle_tiles[0].geometry.vertices[south_vertex[i]].z, 0)
-			console.log(rectangle_tiles[0].geometry.vertices[south_vertex[i]]);
-		}
-		*/
-		//var box = new THREE.BoxGeometry(1,1,1);
-		//south_vertex = sortVector(rectangle_tiles[0].geometry, south_vertex, 'y');
-		//console.log(rectangle_tiles[0].geometry.vertices[south_vertex[south_vertex.length-1]]);
-		//addGeometryScene2(box, rectangle_tiles[0].geometry.vertices[south_vertex[south_vertex.length-1]].x, rectangle_tiles[0].geometry.vertices[south_vertex[south_vertex.length-1]].z, 0)
-		
+		}		
 	} else {
 		setTimeout(createTerrain, 10);
 	}
 }
-
-
-function createGeometries() {
-	if (rectangle_tiles[0].geometry) {
-		console.log('[PFC my_cesium_mesh.js]: Geometries created in rectangle_tiles');
-		rectangle = maxMinTileXY();
-		
-		var x = 0; y = 0; z = 0;
-		var index = 0, previous_geometry, west_geometry;
-		var east = false;
-		for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
-			for(j = rectangle[0][1]; j <= rectangle[1][1]; j++) {
-				if (previous_geometry){
-					var data_geometry = changeVertex(rectangle_tiles[index].geometry, previous_geometry, east);
-					rectangle_tiles[index].geometry = data_geometry[0];
-					y = y + data_geometry[1];
-					addGeometryScene(rectangle_tiles[index].geometry, x, y, z);
-				} else {
-					addGeometryScene(rectangle_tiles[index].geometry, x, y, z);
-					//west_geometry = rectangle_tiles[index].geometry;
-				}
-				z = z - 33;
-				previous_geometry = rectangle_tiles[index].geometry;
-				index++;
-				east = false;
-			}
-			y = 0;
-			z = 0;
-			x = x + 33;
-			east = true;
-		}
-		
-	} else {
-		setTimeout(createGeometries, 10);
-	}
-}
-
-function changeVertex(geometry, pre_geometry, east) {
-	var i, y;
-	var max_actually, max_previous;
-		if (pre_geometry.boundingBox == null)
-			pre_geometry.computeBoundingBox();
-		if (geometry.boundingBox == null)
-			geometry.computeBoundingBox();
-			
-		if (!east) {
-			var south_vertex = new Array(), north_vertex = new Array();
-			for(i=0; i < geometry.vertices.length; i++) {
-				if ((geometry.vertices[i].y === geometry.boundingBox.min.y) && (geometry.vertices[i].z != 0)) 
-					south_vertex.push(i);
-			}
-			max_actually = majorValue(geometry, south_vertex);
-			for(i = 0; i < pre_geometry.vertices.length; i++) {
-				if ((pre_geometry.vertices[i].y === pre_geometry.boundingBox.max.y) && (pre_geometry.vertices[i].z != 0)) 
-					north_vertex.push(i);			
-			}
-			max_previous = majorValue(pre_geometry, north_vertex);
-			y = max_previous - max_actually;
-		} else {
-			//Geometry at the east of initial.			
-		}
-		
-	return [geometry , y];
-}
-/*
-	Add geometry to scene.
-*/
-function addGeometryScene2(geometry, x, y, z){
-	material= new THREE.MeshBasicMaterial( { color: "rgb(0,255,0)", wireframe: true ,side:THREE.DoubleSide} );
-	mesh = new THREE.Mesh( geometry, material );
-	mesh.rotation.x =  Math.PI / 180 * (-90);
-	mesh.position.set(x, y, z);
-	scene.add(mesh);	
-}
-
 /*
 	Add geometry to scene.
 */
