@@ -261,12 +261,14 @@ function getTile(x, y, level) {
 	Return major value of one vertex.
 */
 function majorValue(geometry, vertex){
-	var val = geometry.vertices[vertex[0]].z, i;
+	var val = geometry.vertices[vertex[0]].z, i, pos = vertex[0];
 	for(i = 1; i < vertex.length; i++) {
-		if (geometry.vertices[vertex[i]].z > val)
+		if (geometry.vertices[vertex[i]].z > val) {
 			val = geometry.vertices[vertex[i]].z;
+			pos = vertex[i];
+		}	
 	}
-	return val;
+	return pos;
 }
 /*
 	Return min value of one vertex.
