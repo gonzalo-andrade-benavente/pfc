@@ -132,7 +132,7 @@ function getVertex(geometry, cardinality) {
 					if ((geometry.vertices[i].x === geometry.boundingBox.max.x) && (geometry.vertices[i].z != 0))
 						vertex.push(i);
 				}
-				//max = majorValue(geometry, vertex);
+				vertex = sortVector(geometry, vertex, 'y');
 				break;
 			}
 			case 'west': {
@@ -140,7 +140,7 @@ function getVertex(geometry, cardinality) {
 					if ((geometry.vertices[i].x === geometry.boundingBox.min.x) && (geometry.vertices[i].z != 0))
 						vertex.push(i);
 				}
-				//max = majorValue(geometry, vertex);
+				vertex = sortVector(geometry, vertex, 'y');
 				break;
 			}
 			case 'north': {
@@ -177,6 +177,7 @@ function createTerrain() {
 		var west = false;
 		for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
 			for(j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
+
 				if ((i == rectangle[0][0]) && (j == rectangle[1][1])) {
 					console.log("First Tile ("+ i + "," + j + ")");
 					geometry = getGeometry(i,j);
@@ -184,6 +185,7 @@ function createTerrain() {
 				} else {
 					//Rest of geometries.
 					if (west) {
+						
 						var pre_geometry, geometry;
 						var pre_vertex, vertex;
 						//console.log("Base Tile ("+ i + "," + j + ")");
@@ -191,12 +193,23 @@ function createTerrain() {
 						pre_vertex = getVertex(pre_geometry, 'south');						
 						geometry = getGeometry(i, j);
 						vertex = getVertex(geometry, 'south');
+							
+						var pre_east_vertex = getVertex(pre_geometry, 'east');
+						var west_vertex = getVertex(geometry, 'west');
+						
+						var quotient = pre_geometry.vertices[majorValue(pre_geometry, pre_east_vertex)].z / geometry.vertices[majorValue(geometry, west_vertex)].z;
+						
+						for(a = 0; a < geometry.vertices.length; a++) 
+							geometry.vertices[a].z = geometry.vertices[a].z * quotient;
+						/*
 						if ((pre_vertex.length > 0) && (vertex.length > 0))
 							y = y + (pre_geometry.vertices[pre_vertex[pre_vertex.length-1]].z - geometry.vertices[vertex[0]].z);
 						else
 							y = y;
+						*/
 						addGeometryScene(geometry, x, y, z);
 					} else {
+						
 						console.log("Another Tile ("+ i + "," + j + ")");
 						var pre_geometry, geometry;
 						var pre_vertex, vertex;
@@ -205,15 +218,31 @@ function createTerrain() {
 						pre_vertex = getVertex(pre_geometry, 'north');
 						geometry = getGeometry(i, j);
 						vertex = getVertex(geometry, 'south');
+						
+						var quotient;
+						
 						if ((pre_vertex.length > 0) && (vertex.length > 0))
-							y = y + (pre_geometry.vertices[pre_vertex[0]].z - geometry.vertices[vertex[0]].z);
+							quotient = pre_geometry.vertices[majorValue(pre_geometry, pre_vertex)].z / geometry.vertices[majorValue(geometry, vertex)].z;
 						else
-							y = y;
+							quotient = 1;
+						
+						for(a = 0; a < geometry.vertices.length; a++) 
+							geometry.vertices[a].z = geometry.vertices[a].z * quotient;
+						/*
+						
+						*/
+						
 						addGeometryScene(geometry, x, y, z);
+						
 					}
 					west = false;
 				}
+				/*
+				geometry = getGeometry(i, j);
+				addGeometryScene(geometry, x, y, z);
+				*/
 				z = z - 33;
+				
 			}
 			y = 0;
 			z = 0;
@@ -260,7 +289,7 @@ function asociateGeometry(data, scale) {
 	rectangle_tiles[index_tile].geometry = geometry;
 	
 	//geometry = addFaceVertexUvs(geometry);
-	//geometry = addBase(geometry);
+	geometry = addBase(geometry);
 	//geometry = addFaceVertexUvs(geometry);
 }
 
