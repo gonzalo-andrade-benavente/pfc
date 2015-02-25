@@ -166,6 +166,13 @@
 					for(j=0; j < json_coordinates.length; j++) {
 						reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
 					}
+					
+					while (reverse_line_points.length > 120) {	
+						//reverse_line_points = modifiedCoordinates(reverse_line_points);
+						console.log(reverse_line_points.length);
+						reverse_line_points = fixCoordinates(reverse_line_points);
+					}
+					
 					var geo_json = {
 						"type": "Feature",
 						 "properties": {
@@ -187,14 +194,41 @@
 					//Ajax request.
 					//getTexture(encodeURIComponent(static_image_json), i, rectangle_tiles[i].cardinality);
 					//getTexture(encodeURIComponent(static_image_json), i, "");
-					//console.log("[PFC my_cesium_rute.js] Coordinates tile rute gpx:" + reverse_line_points.length);
+					console.log("[PFC my_cesium_rute.js] Coordinates tile rute gpx:" + reverse_line_points.length);
 				}
-				getTexture(encodeURIComponent(static_image_json), i);
+				//getTexture(encodeURIComponent(static_image_json), i);
 				var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 				rectangle_tiles[i].texture = "textures/" + name.substring(0, name.indexOf(".")) + i + ".png";
 			}
 		}
-		window.open("./PFCMyMesh.html", "_self");
+		//window.open("./PFCMyMesh.html", "_self");
+	}
+	
+	function fixCoordinates(coord) {
+		var first = [coord[0][1], coord[1][1]] , last = [coord[coord.length-1][0], coord[coord.length-1][1]];
+		//console.log(first);
+		//console.log(last);
+		
+		if ((coord.length%2) == 0)
+			long_array = ((coord.length-2)/2);
+		else
+			long_array = ((coord.length-1)/2);
+		var coord_change = new Array(long_array);
+		var j = 0;
+		coord_change[j] = new Array(2);
+		coord_change[j][0] = first[0][0];
+		coord_change[j][1] = first[0][1];
+		for(var i = 2; i < coord.length-2; i = i + 2){
+			coord_change[j] = new Array(2);
+			coord_change[j][0] = coord[i][1]; 
+			coord_change[j][1] = coord[i][0];
+			j++;
+		}
+		coord_change[j] = new Array(2);
+		coord_change[j][0] = last[0][0];
+		coord_change[j][1] = last[0][1];
+		
+		return coord_change;
 	}
 	
 	function modifiedCoordinates(coord) {
@@ -209,7 +243,13 @@
 			long_array = ((coord.length+1)/2);
 		var coord_change = new Array(long_array);
 		var j = 0;
-		for(i = 0; i < coord.length-1; i = i + 2) {
+		//First coordinate as the same.
+		coord_change[j][0] = coord[0][1];
+		coord_change[j][1] = coord[0][0];
+		j++;
+		
+		coord_change[j] = new Array(2);
+		for(i = 1; i < coord.length-2; i = i + 2) {
 			coord_change[j] = new Array(2);
 			coord_change[j][0] = (coord[i][1] + coord[i+1][1])/2;
 			coord_change[j][1] = (coord[i][0] + coord[i+1][0])/2;
@@ -221,6 +261,11 @@
 			coord_change[j][1] = (coord[i][0] + coord[i][0])/2;
 			i++
 		}
+		
+		//Last coordinate as the same.
+		coord_change[j][0] = coord[0][1];
+		coord_change[j][1] = coord[0][0];
+		
 		
 		return coord_change;
 	}
