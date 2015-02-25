@@ -91,7 +91,6 @@ function load(coord) {
 			});
 	}
 	createTerrain();
-	//createGeometries();
 }
 
 function maxMinTileXY() {
@@ -123,7 +122,10 @@ function getGeometry(x, y) {
 
 function getVertex(geometry, cardinality) {
 	geometry.computeBoundingBox();
-	if (geometry.boundingBox) {
+
+	while(!geometry.boundingBox) {
+		geometry.computeBoundingBox;
+	}
 		var i, j, vertex = new Array();
 		console.log("[PFC my_cesium_mesh]: BoundingBox Geometry ok!");
 		switch (cardinality) {
@@ -161,9 +163,6 @@ function getVertex(geometry, cardinality) {
 			}			
 		}
 		return vertex;
-	}else {
-		setTimeout(createTerrain, 10);
-	}
 }
 
 function createTerrain() {
