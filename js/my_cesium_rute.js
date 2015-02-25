@@ -60,10 +60,12 @@
 		checkTile(coordinates, 14);
 		rectangle_tiles = createRectangle(info_tiles, 14);
 		//Draw the tiles from the rute more rectangle.
+		/*
 		for(i = 0; i < rectangle_tiles.length; i++) {
 			var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 			L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 		}
+		*/
 		/*
 		//Draw the tiles from the rute.
 		for(i = 0; i < info_tiles.length; i++) {
@@ -185,8 +187,11 @@
 					//Ajax request.
 					//getTexture(encodeURIComponent(static_image_json), i, rectangle_tiles[i].cardinality);
 					//getTexture(encodeURIComponent(static_image_json), i, "");
-					console.log("[PFC my_cesium_rute.js] Coordinates tile:" + reverse_line_points.length);
+					//console.log("[PFC my_cesium_rute.js] Coordinates tile rute gpx:" + reverse_line_points.length);
 				}
+				getTexture(encodeURIComponent(static_image_json), i);
+				var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
+				rectangle_tiles[i].texture = "textures/" + name.substring(0, name.indexOf(".")) + i + ".png";
 			}
 		}
 		window.open("./PFCMyMesh.html", "_self");
@@ -234,24 +239,26 @@
 	/*
 		Ajax to create texture.
 	*/
-	function getTexture(direction, index, cardinality) {
+	function getTexture(direction, index) {
 		if (xhr1.upload) {
 			var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 			var file_name = name.substring(0, name.indexOf("."));
 			//sessionStorage.name = file_name;
 			var url = "getTexture.php";
-			console.log(file_name);
-			if (cardinality == "")
-				cardinality = "x";
-			var contenido = "direction="+direction+"&name="+file_name + index + cardinality;
+			var contenido = "direction="+direction+"&name="+file_name + index;
 			xhr.open("GET", url+"?"+contenido, true);
 			xhr.send();
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
-					if (xhr.responseText == "")
+					console.log(xhr.responseText);
+					/*
+					if (xhr.responseText == ""){
+						rectangle_tiles[0].texture = "hello";
 						console.log("[PFC my_cesium_rute.js]: Texture upload ok. ");
+					}
 					else 
 						console.log("[PFC my_cesium_rute.js]: Error upload texture Ajax.");
+					*/
 				//window.open("./PFCMyMesh.html", "_self");
 				}
 			}

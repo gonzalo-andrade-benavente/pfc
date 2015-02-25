@@ -65,11 +65,12 @@ function load(coord) {
 	loadThreeJS();
 	//Create Graphic User Interface with gui.js
 	createGUI();
+	var level = 14;
 	info_tiles = new Array(); 
-	checkTile(coord, 14);
-	rectangle_tiles = createRectangle(info_tiles, 14);
+	checkTile(coord, level);
+	rectangle_tiles = createRectangle(info_tiles, level);
 	for(i = 0; i < rectangle_tiles.length; i++) {
-		aCesiumTerrainProvider.requestTileGeometry(rectangle_tiles[i].x, rectangle_tiles[i].y, 14, false).then(function(data){
+		aCesiumTerrainProvider.requestTileGeometry(rectangle_tiles[i].x, rectangle_tiles[i].y, level, false).then(function(data){
 				asociateGeometry(data, 1000);
 				index_tile++;
 			});
@@ -158,12 +159,19 @@ function createTerrain() {
 		var geometry, pre_geometry, quo;
 		var vertex, pre_vertex;
 		var west = false;
+		//Name actually file gpx.
+		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
+		var texture, material;
 		for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
 			for(j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
+			    texture = THREE.ImageUtils.loadTexture("textures/" + name.substring(0, name.indexOf(".")) + b + ".png");
+				material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
+				//material = new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 				if ((i == rectangle[0][0]) && (j == rectangle[1][1])) {
 					//console.log("First Tile ("+ i + "," + j + ")");
 					geometry = getGeometry(i,j);
-					addGeometryScene(geometry, x, y, z);
+					//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide } );
+					addGeometryScene(geometry, x, y, z, material);
 				} else {
 					//Rest of geometries.
 					if (west) {
@@ -188,7 +196,7 @@ function createTerrain() {
 						else
 							y = y;
 						*/
-						addGeometryScene(geometry, x, y, z);
+						addGeometryScene(geometry, x, y, z, material);
 					} else {
 						//console.log("Another Tile ("+ i + "," + j + ")");
 						pre_geometry = getGeometry(i, j+1);
@@ -207,7 +215,7 @@ function createTerrain() {
 						
 						*/
 						
-						addGeometryScene(geometry, x, y, z);
+						addGeometryScene(geometry, x, y, z, material);
 						
 					}
 					west = false;
@@ -242,9 +250,12 @@ function addBoxScene(x, y, z){
 /*
 	Add geometry to scene.
 */
-function addGeometryScene(geometry, x, y, z){
-	material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
-	mesh = new THREE.Mesh( geometry, material );
+function addGeometryScene(geometry, x, y, z, material){
+	//console.log(geometry);
+	//geometry = addFaceVertexUvs(geometry);
+	//geometry.uvsNeedUpdate = true;
+	//console.log(geometry);
+	var mesh = new THREE.Mesh( geometry, material );
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
 	scene.add(mesh);	
@@ -266,7 +277,7 @@ function asociateGeometry(data, scale) {
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 	rectangle_tiles[index_tile].geometry = geometry;
 	
-	//geometry = addFaceVertexUvs(geometry);
+	geometry = addFaceVertexUvs(geometry);
 	geometry = addBase(geometry);
 	//geometry = addFaceVertexUvs(geometry);
 }

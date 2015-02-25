@@ -15,10 +15,6 @@ function createGUI() {
 		this.refresh = function() {
 			location.reload();
 		}
-		this.rectangle = function() {
-			//Global variable from: my_cesium_mesh.
-			console.log(rectangle_tiles);
-		}
 		this.combined = function() {
 			if (quotient > 0) {
 				console.log("[PFC gui.js]: quotient to bigger " + quotient);	
@@ -60,8 +56,7 @@ function createGUI() {
 	});
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
-	gui.add(controls, 'combined').name('Geo. combinada');
-	gui.add(controls, 'rectangle').name('Mesh rectangular');
+	//gui.add(controls, 'combined').name('Geo. combinada');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
 
