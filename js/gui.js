@@ -20,6 +20,11 @@ function createGUI() {
 			console.log(rectangle_tiles);
 		}
 		this.combined = function() {
+			if (quotient > 0) {
+				console.log("[PFC gui.js]: quotient to bigger " + quotient);	
+			
+			}
+			/*
 			if (combined_geometry) {
 				if (quotient) {
 					console.log("[PFC gui.js]: quotient to bigger " + quotient);
@@ -33,9 +38,11 @@ function createGUI() {
 				//var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
 				var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 				scene.add(new THREE.Mesh(combined_geometry, material));
-			}else {
+			} else if (combined_geometry.vertices.length < 1) {
+				console.log("[PFC gui.js]: combined_geometry doesn't merge.");
+			} else { 
 				console.log("[PFC gui.js]: combined_geometry doesn't exist.");
-			}
+			}*/
 		}
 
 	}

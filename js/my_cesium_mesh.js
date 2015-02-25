@@ -12,27 +12,12 @@ var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
 	rectangle_tiles: save the information of route mesh with add to complete a rectangle.
 */
 var info_tiles, rectangle_tiles;
-var mesh_export;
 var combined_geometry = new THREE.Geometry();
-//Position gemetries
-//var x = -20, y = 0, z = 0;
 //index_tile to each tile in info_tile.
-var mapbox_texture, index_tile = 0;
-//to know where put the geometry.
-var tile_x, tile_y;
-var tile_actually_x, tile_actually_y;
-var geometry_previous;
-
+var index_tile = 0;
 //to handle the height scalar.
-var quotient;
-/*
-	Variable global contains maximum value of height(z) in the vertex.
-*/
-var max_vertice;
-/*
-	To create the connection vertex.
-*/
-var geometry_before;
+var quotient = 0;
+
 /*
 	Function request data.
 */
@@ -71,7 +56,6 @@ function getRute() {
 /*
 	Function create scene and GUI with threejs.js my library.
 */
-var change_x, index_tile = 0;
 function load(coord) {
 	/*
 		info_tiles contains all information about tiles of the rute gpx.
@@ -122,12 +106,11 @@ function getGeometry(x, y) {
 
 function getVertex(geometry, cardinality) {
 	geometry.computeBoundingBox();
-
 	while(!geometry.boundingBox) {
-		geometry.computeBoundingBox;
+		geometry.computeBoundingBox();
 	}
 		var i, j, vertex = new Array();
-		console.log("[PFC my_cesium_mesh]: BoundingBox Geometry ok!");
+		//console.log("[PFC my_cesium_mesh]: BoundingBox Geometry ok!");
 		switch (cardinality) {
 			case 'east': {
 				for(i = 0; i < geometry.vertices.length; i++) {
@@ -172,34 +155,33 @@ function createTerrain() {
 		var rectangle = maxMinTileXY();
 		//Add initial geometry.
 		var x = 0, y = 0; z = 0;
-		var geometry;
+		var geometry, pre_geometry, quo;
+		var vertex, pre_vertex;
 		var west = false;
 		for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
 			for(j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
-
 				if ((i == rectangle[0][0]) && (j == rectangle[1][1])) {
-					console.log("First Tile ("+ i + "," + j + ")");
+					//console.log("First Tile ("+ i + "," + j + ")");
 					geometry = getGeometry(i,j);
 					addGeometryScene(geometry, x, y, z);
 				} else {
 					//Rest of geometries.
 					if (west) {
-						
-						var pre_geometry, geometry;
-						var pre_vertex, vertex;
 						//console.log("Base Tile ("+ i + "," + j + ")");
 						pre_geometry = getGeometry(i-1, j);
 						pre_vertex = getVertex(pre_geometry, 'south');						
 						geometry = getGeometry(i, j);
-						vertex = getVertex(geometry, 'south');
-							
+						vertex = getVertex(geometry, 'south');	
 						var pre_east_vertex = getVertex(pre_geometry, 'east');
 						var west_vertex = getVertex(geometry, 'west');
 						
-						var quotient = pre_geometry.vertices[majorValue(pre_geometry, pre_east_vertex)].z / geometry.vertices[majorValue(geometry, west_vertex)].z;
+						if ((pre_east_vertex.length > 0) && (vertex.length > 0))
+							quo = pre_geometry.vertices[majorValue(pre_geometry, pre_east_vertex)].z / geometry.vertices[majorValue(geometry, west_vertex)].z;
+						else
+							quo = 1;
 						
 						for(a = 0; a < geometry.vertices.length; a++) 
-							geometry.vertices[a].z = geometry.vertices[a].z * quotient;
+							geometry.vertices[a].z = geometry.vertices[a].z * quo;
 						/*
 						if ((pre_vertex.length > 0) && (vertex.length > 0))
 							y = y + (pre_geometry.vertices[pre_vertex[pre_vertex.length-1]].z - geometry.vertices[vertex[0]].z);
@@ -208,25 +190,19 @@ function createTerrain() {
 						*/
 						addGeometryScene(geometry, x, y, z);
 					} else {
-						
-						console.log("Another Tile ("+ i + "," + j + ")");
-						var pre_geometry, geometry;
-						var pre_vertex, vertex;
-						
+						//console.log("Another Tile ("+ i + "," + j + ")");
 						pre_geometry = getGeometry(i, j+1);
 						pre_vertex = getVertex(pre_geometry, 'north');
 						geometry = getGeometry(i, j);
 						vertex = getVertex(geometry, 'south');
 						
-						var quotient;
-						
 						if ((pre_vertex.length > 0) && (vertex.length > 0))
-							quotient = pre_geometry.vertices[majorValue(pre_geometry, pre_vertex)].z / geometry.vertices[majorValue(geometry, vertex)].z;
+							quo = pre_geometry.vertices[majorValue(pre_geometry, pre_vertex)].z / geometry.vertices[majorValue(geometry, vertex)].z;
 						else
-							quotient = 1;
+							quo = 1;
 						
 						for(a = 0; a < geometry.vertices.length; a++) 
-							geometry.vertices[a].z = geometry.vertices[a].z * quotient;
+							geometry.vertices[a].z = geometry.vertices[a].z * quo;
 						/*
 						
 						*/
@@ -240,14 +216,17 @@ function createTerrain() {
 				geometry = getGeometry(i, j);
 				addGeometryScene(geometry, x, y, z);
 				*/
+				if (quo > quotient)
+					quotient = quo;
 				z = z - 33;
-				
+				b++;
 			}
 			y = 0;
 			z = 0;
 			x = x + 33;
 			west = true;
-		}		
+		}
+		console.log("[PFC my_cesium_mesh.js]: Tiles in scene " + b);
 	} else {
 		setTimeout(createTerrain, 10);
 	}
