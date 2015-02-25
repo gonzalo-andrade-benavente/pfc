@@ -155,7 +155,7 @@ function createTerrain() {
 		console.log('[PFC my_cesium_mesh.js]: Geometries created in rectangle_tiles');
 		var rectangle = maxMinTileXY();
 		//Add initial geometry.
-		var x = 0, y = 0; z = 0;
+		var x = 0, y = -20; z = 0;
 		var geometry, pre_geometry, quo;
 		var vertex, pre_vertex;
 		var west = false;
@@ -229,7 +229,6 @@ function createTerrain() {
 				z = z - 33;
 				b++;
 			}
-			y = 0;
 			z = 0;
 			x = x + 33;
 			west = true;
@@ -243,7 +242,6 @@ function addBoxScene(x, y, z){
 	geometry = new THREE.BoxGeometry(1,1,1)
 	material= new THREE.MeshBasicMaterial( { color: "rgb(0,255,0)", wireframe: true ,side:THREE.DoubleSide} );
 	mesh = new THREE.Mesh( geometry, material );
-	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
 	scene.add(mesh);	
 }
@@ -251,13 +249,11 @@ function addBoxScene(x, y, z){
 	Add geometry to scene.
 */
 function addGeometryScene(geometry, x, y, z, material){
-	//console.log(geometry);
-	//geometry = addFaceVertexUvs(geometry);
-	//geometry.uvsNeedUpdate = true;
-	//console.log(geometry);
 	var mesh = new THREE.Mesh( geometry, material );
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
+	mesh.updateMatrix();
+	combined_geometry.merge(mesh.geometry, mesh.matrix);
 	scene.add(mesh);	
 }
 /*

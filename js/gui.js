@@ -16,29 +16,22 @@ function createGUI() {
 			location.reload();
 		}
 		this.combined = function() {
-			if (quotient > 0) {
-				console.log("[PFC gui.js]: quotient to bigger " + quotient);	
-			
-			}
-			/*
-			if (combined_geometry) {
-				if (quotient) {
+			if (combined_geometry.vertices.length > 0) {
+				if (quotient > 0) {
 					console.log("[PFC gui.js]: quotient to bigger " + quotient);
+					//combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient/2);
 					for(i = 0; i < combined_geometry.vertices.length; i++)
-						combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient/2);
-					console.log("[PFC gui.js]: Combined geometry scaling ");
+						combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient * 2) ;
 				}
-				//console.log(combined_geometry.vertices[0]);
-				//console.log(combined_geometry.vertices[combined_geometry.vertices.length-1]);
-				//combined_mesh = geometry = addFaceVertexUvs(combined_mesh);
-				//var material= new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
-				var material= new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
-				scene.add(new THREE.Mesh(combined_geometry, material));
-			} else if (combined_geometry.vertices.length < 1) {
+				console.log("[PFC gui.js]: combined_geometry exist.");
+				material= new THREE.MeshBasicMaterial( { color: "rgb(0,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+				mesh = new THREE.Mesh( combined_geometry, material );
+				mesh.position.set(-80, 0, 0);
+				scene.add(mesh);
+				
+			} else {
 				console.log("[PFC gui.js]: combined_geometry doesn't merge.");
-			} else { 
-				console.log("[PFC gui.js]: combined_geometry doesn't exist.");
-			}*/
+			}
 		}
 
 	}
@@ -56,7 +49,7 @@ function createGUI() {
 	});
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
-	//gui.add(controls, 'combined').name('Geo. combinada');
+	gui.add(controls, 'combined').name('Geo. combinada');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
 
