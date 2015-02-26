@@ -23,12 +23,11 @@
 		}
 	}
 
-	var xhr = new XMLHttpRequest(), xhr1 = new XMLHttpRequest();
+	var xhr = new XMLHttpRequest(), xhr1 = new XMLHttpRequest(), xhr2 = new XMLHttpRequest();
 	var id_maps = new Array('gonzalito.k53kcf3d', 'gonzalito.k53e4462','gonzalito.k53h65oo', 'gonzalito.78706231');
 	var map, id_map = 0;
 	var coordinates;
 	//L.mapbox.accessToken = 'pk.eyJ1IjoiZ29uemFsaXRvIiwiYSI6IlVJTGIweFUifQ.waoF7m8PZbBM6u8Tg_rR7A';
-	var final_bounds;
 	/*
 		info_tiles contains all information about tiles of the rute gpx.
 		Each element of the array is a InfoTile element.
@@ -59,6 +58,7 @@
 		coordinates = coord;
 		checkTile(coordinates, 14);
 		rectangle_tiles = createRectangle(info_tiles, 14);
+		total_images = rectangle_tiles.lenght;
 		//Draw the tiles from the rute more rectangle.
 		/*
 		for(i = 0; i < rectangle_tiles.length; i++) {
@@ -134,30 +134,12 @@
 					else 
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					//Ajax request.
-					//getTexture(static_image_json, i, "");
+					getTexture(static_image_json, i);
 				} else {
 					//with coordinates.
 					json_coordinates = new Array();
 					for(j = rectangle_tiles[i].index; j < coordinates.length; j++){
 						if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
-							/*L.mapbox.featureLayer({
-								type: 'Feature',
-								geometry: {
-									type: 'Point',
-									coordinates: [
-									  coordinates[j][1],
-									  coordinates[j][0]
-									]
-								},
-								properties: {
-									title: 'Coordinate',
-									description: coordinates[j][1] + '/' + coordinates[j][0],
-									'marker-size': 'small',
-									'marker-color': '#BE9A6B',
-									'marker-symbol': 'marker'
-								}
-							}).addTo(map);
-							*/
 							json_coordinates.push(coordinates[j]);
 						} 
 					}
@@ -167,12 +149,15 @@
 						reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
 					}
 					
+					
 					while (reverse_line_points.length > 120) {	
 						//reverse_line_points = modifiedCoordinates(reverse_line_points);
-						console.log(reverse_line_points.length);
 						reverse_line_points = fixCoordinates(reverse_line_points);
 					}
 					
+					
+					//"coordinates": reverse_line_points
+					//"coordinates": [reverse_line_points[0], reverse_line_points[reverse_line_points.length-1]]
 					var geo_json = {
 						"type": "Feature",
 						 "properties": {
@@ -194,79 +179,38 @@
 					//Ajax request.
 					//getTexture(encodeURIComponent(static_image_json), i, rectangle_tiles[i].cardinality);
 					//getTexture(encodeURIComponent(static_image_json), i, "");
-					console.log("[PFC my_cesium_rute.js] Coordinates tile rute gpx:" + reverse_line_points.length);
+					//console.log("[PFC my_cesium_rute.js] Coordinates tile rute gpx:" + reverse_line_points.length);
+					getTexture(encodeURIComponent(static_image_json), i);
 				}
+				//console.log(static_image_json);
 				//getTexture(encodeURIComponent(static_image_json), i);
-				var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
-				rectangle_tiles[i].texture = "textures/" + name.substring(0, name.indexOf(".")) + i + ".png";
+				//var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
+				//rectangle_tiles[i].texture = "textures/" + name.substring(0, name.indexOf(".")) + i + ".png";
 			}
 		}
 		//window.open("./PFCMyMesh.html", "_self");
 	}
-	
+	/*
+		Fixed coordinates if his length is bigger than 122.
+	*/
 	function fixCoordinates(coord) {
-		var first = [coord[0][1], coord[1][1]] , last = [coord[coord.length-1][0], coord[coord.length-1][1]];
-		//console.log(first);
-		//console.log(last);
-		
-		if ((coord.length%2) == 0)
-			long_array = ((coord.length-2)/2);
-		else
-			long_array = ((coord.length-1)/2);
-		var coord_change = new Array(long_array);
-		var j = 0;
-		coord_change[j] = new Array(2);
-		coord_change[j][0] = first[0][0];
-		coord_change[j][1] = first[0][1];
-		for(var i = 2; i < coord.length-2; i = i + 2){
-			coord_change[j] = new Array(2);
-			coord_change[j][0] = coord[i][1]; 
-			coord_change[j][1] = coord[i][0];
-			j++;
-		}
-		coord_change[j] = new Array(2);
-		coord_change[j][0] = last[0][0];
-		coord_change[j][1] = last[0][1];
-		
-		return coord_change;
-	}
-	
-	function modifiedCoordinates(coord) {
-		var long_array;
-		/*
-			If size is odd add a new position, later the for end we have to treat the last value.
-			Duplicate the last value.
-		*/
+		var first = coord[0], last = coord[coord.length-1];
+		var long_array = 0;
 		if ((coord.length%2) == 0)
 			long_array = (coord.length/2);
 		else
-			long_array = ((coord.length+1)/2);
+			long_array = Math.round(coord.length/2);
+		
 		var coord_change = new Array(long_array);
-		var j = 0;
-		//First coordinate as the same.
-		coord_change[j][0] = coord[0][1];
-		coord_change[j][1] = coord[0][0];
+		var j = 0, i;
+		
+		coord_change[j] = first;
 		j++;
-		
-		coord_change[j] = new Array(2);
-		for(i = 1; i < coord.length-2; i = i + 2) {
-			coord_change[j] = new Array(2);
-			coord_change[j][0] = (coord[i][1] + coord[i+1][1])/2;
-			coord_change[j][1] = (coord[i][0] + coord[i+1][0])/2;
-			j++;
+		for(i = 1; i < coord.length-1; i = i + 2) {
+			coord_change[j] = coord[i];
+			j++
 		}
-		if ((coord.length%2) == 1) {
-			coord_change[j] = new Array(2);
-			coord_change[j][0] = (coord[i][1] + coord[i][1])/2;
-			coord_change[j][1] = (coord[i][0] + coord[i][0])/2;
-			i++
-		}
-		
-		//Last coordinate as the same.
-		coord_change[j][0] = coord[0][1];
-		coord_change[j][1] = coord[0][0];
-		
-		
+		coord_change[j-1] = last;
 		return coord_change;
 	}
 	/*
@@ -295,7 +239,13 @@
 			xhr.send();
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
-					console.log(xhr.responseText);
+					//console.log(xhr.responseText + " > " + rectangle_tiles.length);
+					//console.log(parseInt(xhr.responseText));
+					if (parseInt(xhr.responseText) != rectangle_tiles.length)
+						drawRute();
+					else
+						console.log("[PFC my_cesium_rute.js]: All textures creates successfully");
+					
 					/*
 					if (xhr.responseText == ""){
 						rectangle_tiles[0].texture = "hello";
@@ -309,3 +259,29 @@
 			}
 		}
 	}
+	
+	window.onbeforeunload = function (e) {
+	
+		var url = "deleteFiles.php";
+		xhr2.open("GET", url, true);
+		xhr2.send();
+		xhr2.onreadystatechange = function () {
+			if (xhr2.readyState == 4 && xhr2.status == 200) {
+				console.log(xhr2.responseText);
+			}
+		}
+		//e = e || window.event;
+		
+		// For IE and Firefox prior to version 4
+		/*
+		if (e) {
+			e.returnValue = 'Sure?';
+		}
+
+		// For Safari
+		return 'Sure?';
+		*/
+		//return "Los datos han sido borrados, puedes abandonar la pagina.";
+	};
+
+	
