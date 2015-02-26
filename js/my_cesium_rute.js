@@ -60,12 +60,10 @@
 		rectangle_tiles = createRectangle(info_tiles, 14);
 		total_images = rectangle_tiles.lenght;
 		//Draw the tiles from the rute more rectangle.
-		/*
 		for(i = 0; i < rectangle_tiles.length; i++) {
 			var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 			L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 		}
-		*/
 		/*
 		//Draw the tiles from the rute.
 		for(i = 0; i < info_tiles.length; i++) {
@@ -121,7 +119,8 @@
 		var json_coordinates;
 		if (rectangle_tiles.length > 0) {
 			//for(i = 0; i < info_tiles.length; i++) {
-			for(i = 0; i < rectangle_tiles.length; i++) {
+			//for(i = 0; i < rectangle_tiles.length ; i++) {
+			for(i = 0; i < 2 ; i++) {
 			//for(i = 0; i < 2; i++) {
 				bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 				map.setMaxBounds(bounds);
@@ -141,7 +140,20 @@
 					for(j = rectangle_tiles[i].index; j < coordinates.length; j++){
 						if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
 							json_coordinates.push(coordinates[j]);
-						} 
+							L.mapbox.featureLayer({
+								// this feature is in the GeoJSON format: see geojson.org
+								// for the full specification
+								type: 'Feature',
+								geometry: {
+									type: 'Point',
+									// coordinates here are in longitude, latitude order because
+									// x, y is the standard for GeoJSON and many formats
+									coordinates:[coordinates[j][1], coordinates[j][0]],
+								}
+							}).addTo(map);
+						} else {
+							console.log(coordinates[j]);
+						}
 					}
 					//var reverse_line_points = new Array(json_coordinates.length);
 					var reverse_line_points = new Array();
@@ -151,6 +163,7 @@
 					
 					
 					while (reverse_line_points.length > 120) {	
+						console.log('[PFC my_cesium_rute.js]: Fix coordinates');
 						//reverse_line_points = modifiedCoordinates(reverse_line_points);
 						reverse_line_points = fixCoordinates(reverse_line_points);
 					}
@@ -239,24 +252,13 @@
 			xhr.send();
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
-					//console.log(xhr.responseText + " > " + rectangle_tiles.length);
-					//console.log(parseInt(xhr.responseText));
 					if (parseInt(xhr.responseText) != rectangle_tiles.length)
 						drawRute();
 					else {
 						console.log("[PFC my_cesium_rute.js]: All textures creates successfully");
-						window.open("./PFCMyMesh.html", "_self");
+						//window.open("./PFCMyMesh.html", "_self");
 					}
-					
-					/*
-					if (xhr.responseText == ""){
-						rectangle_tiles[0].texture = "hello";
-						console.log("[PFC my_cesium_rute.js]: Texture upload ok. ");
-					}
-					else 
-						console.log("[PFC my_cesium_rute.js]: Error upload texture Ajax.");
-					*/
-				//window.open("./PFCMyMesh.html", "_self");
+				
 				}
 			}
 		}

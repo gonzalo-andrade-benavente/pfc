@@ -275,9 +275,10 @@ function asociateGeometry(data, scale) {
 	
 	geometry = addFaceVertexUvs(geometry);
 	geometry = addBase(geometry);
-	//geometry = addFaceVertexUvs(geometry);
+	geometry = addFaceVertexUvs(geometry);
 }
 
+	/*
 	window.onbeforeunload = function (e) {
 		xhr2 = new XMLHttpRequest();
 		var url = "deleteFiles.php";
@@ -288,19 +289,8 @@ function asociateGeometry(data, scale) {
 				console.log(xhr2.responseText);
 			}
 		}
-		//e = e || window.event;
-		
-		// For IE and Firefox prior to version 4
-		/*
-		if (e) {
-			e.returnValue = 'Sure?';
-		}
-
-		// For Safari
-		return 'Sure?';
-		*/
-		//return "Los datos han sido borrados, puedes abandonar la pagina.";
 	};
+	*/
 
 	
 	
