@@ -3,10 +3,19 @@
 	//header("Content-Type: image/png");
 	$rows = (int) $_GET['rows'];
 	$columns = (int) $_GET['columns'];
+	$file = $_GET['name'];
 	//resource imagecreate ( int $width , int $height )
-	$image = @imagecreate($columns*200, $rows*200)
+	$background_image = @imagecreate($columns*200, $rows*200)
 		or die("Cannot Initialize new GD image stream");
-	$color_fondo = imagecolorallocate($image, 0, 255, 0);
-	$resp = imagepng($image,'texture/'.date('ymdhis').'.png');
-	echo 'createImage()';
+	$background_color = imagecolorallocate($background_image, 255, 255, 255);
+	$times = 0;
+	for($i = 0; $i < $columns; $i++) {
+		for($j = 0; $j < $rows; $j++) {
+			$times++;
+		}
+	}
+	
+	
+	$resp = imagepng($background_image,'texture/'.date('ymdhis').'.png');
+	echo $times;
 ?>

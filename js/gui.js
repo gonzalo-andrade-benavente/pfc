@@ -45,9 +45,11 @@ function createGUI() {
 					rows++;
 			}
 				
+			var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
+			var file_name = name.substring(0, name.indexOf("."));
 			var xhr = new XMLHttpRequest();
 			var url = "createImage.php";
-			var contenido = "rows="+rows+"&columns="+columns;
+			var contenido = "rows="+rows+"&columns="+columns+"&name="+file_name;
 			//var contenido = "direction="+direction+"&name="+file_name + index;
 			xhr.open("GET", url+"?"+contenido, true);
 			xhr.send();
