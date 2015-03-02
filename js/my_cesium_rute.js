@@ -117,11 +117,13 @@
 		var static_image_json;
 		var width = 504, height = 630;
 		var json_coordinates;
+		var coordinate_before = true;
+		var fails = 1;
 		if (rectangle_tiles.length > 0) {
-			//for(i = 0; i < info_tiles.length; i++) {
-			//for(i = 0; i < rectangle_tiles.length ; i++) {
-			for(i = 0; i < 2 ; i++) {
+			for(i = 0; i < rectangle_tiles.length ; i++) {
+			coordinate_before = true;
 			//for(i = 0; i < 2; i++) {
+				console.log("[PFC my_cesium_rute.js] Tile " + i);
 				bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 				map.setMaxBounds(bounds);
 				zoom = 16;
@@ -137,9 +139,22 @@
 				} else {
 					//with coordinates.
 					json_coordinates = new Array();
+					//if (rectangle_tiles[i].index =! 0) {
+						//console.log(coordinates[rectangle_tiles[i].index - 1]);
+					//} 
+					//json_coordinates.push(coordinates[rectangle_tiles[i].index - 1]);
 					for(j = rectangle_tiles[i].index; j < coordinates.length; j++){
 						if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
+							if (coordinate_before) {
+								//json_coordinates.push(coordinates[j-1]);
+								if (j > 0) {
+									json_coordinates.push(coordinates[j-1]);
+									coordinate_before = false;
+								}
+							}
 							json_coordinates.push(coordinates[j]);
+							/*
+							console.log(j);
 							L.mapbox.featureLayer({
 								// this feature is in the GeoJSON format: see geojson.org
 								// for the full specification
@@ -151,10 +166,18 @@
 									coordinates:[coordinates[j][1], coordinates[j][0]],
 								}
 							}).addTo(map);
+							*/
 						} else {
-							console.log(coordinates[j]);
+							if (fails > 1) {
+								//console.log("[PFC my_cesium_rute.js] Change rute");
+							} else {
+								json_coordinates.push(coordinates[j]);
+								fails++;
+							}
+							//console.log(coordinates[j]);
 						}
 					}
+										
 					//var reverse_line_points = new Array(json_coordinates.length);
 					var reverse_line_points = new Array();
 					for(j=0; j < json_coordinates.length; j++) {
@@ -252,13 +275,14 @@
 			xhr.send();
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
+					/*
 					if (parseInt(xhr.responseText) != rectangle_tiles.length)
 						drawRute();
 					else {
 						console.log("[PFC my_cesium_rute.js]: All textures creates successfully");
 						//window.open("./PFCMyMesh.html", "_self");
 					}
-				
+					*/				
 				}
 			}
 		}
