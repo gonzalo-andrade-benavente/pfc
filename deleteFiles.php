@@ -10,5 +10,5 @@
 		if(is_file($file))
 			unlink($file); // delete file
 	}
-	echo "correcto";
+	echo "[PFC deleteFiles.php]: Information cleaned correctly.";
 ?>

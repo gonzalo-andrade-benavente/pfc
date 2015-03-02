@@ -25,6 +25,31 @@ function FileDragHover(e) {
 	e.target.className = (e.type == "dragover" ? "hover" : "");
 }
 
+	/*
+	window.onbeforeunload = function (e) {
+		xhr2 = new XMLHttpRequest();
+		var url = "deleteFiles.php";
+		xhr2.open("GET", url, true);
+		xhr2.send();
+		xhr2.onreadystatechange = function () {
+			if (xhr2.readyState == 4 && xhr2.status == 200) {
+				console.log(xhr2.responseText);
+			}
+		}
+	};
+	*/
+	
+function deleteFiles() {
+xhr2 = new XMLHttpRequest();
+		var url = "deleteFiles.php";
+		xhr2.open("GET", url, true);
+		xhr2.send();
+		xhr2.onreadystatechange = function () {
+			if (xhr2.readyState == 4 && xhr2.status == 200) {
+				console.log(xhr2.responseText);
+			}
+		}	
+}
 function FileSelectHandler(e) {
 	FileDragHover(e);
 	var files = e.target.files || e.dataTransfer.files;

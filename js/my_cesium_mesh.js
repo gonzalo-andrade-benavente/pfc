@@ -275,7 +275,7 @@ function asociateGeometry(data, scale) {
 	
 	geometry = addFaceVertexUvs(geometry);
 	geometry = addBase(geometry);
-	//geometry = addFaceVertexUvs(geometry);
+	geometry = addFaceVertexUvs(geometry);
 }
 
 	/*
