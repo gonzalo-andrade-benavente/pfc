@@ -33,6 +33,31 @@ function createGUI() {
 				console.log("[PFC gui.js]: combined_geometry doesn't merge.");
 			}
 		}
+		
+		this.create = function() {
+			var rectangle = maxMinTileXY();
+			var columns = 0, rows = 0;
+			for(var i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
+				columns++;
+			}
+			
+			for(var j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
+					rows++;
+			}
+				
+			var xhr = new XMLHttpRequest();
+			var url = "createImage.php";
+			var contenido = "rows="+rows+"&columns="+columns;
+			//var contenido = "direction="+direction+"&name="+file_name + index;
+			xhr.open("GET", url+"?"+contenido, true);
+			xhr.send();
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 4 && xhr.status == 200) {
+					console.log(xhr.responseText);
+				}
+			}
+		
+		}
 
 	}
 	
@@ -50,6 +75,7 @@ function createGUI() {
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
 	gui.add(controls, 'combined').name('Geo. combinada');
+	gui.add(controls, 'create').name('Crear textura');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
 
