@@ -238,6 +238,7 @@
 					//getTexture(encodeURIComponent(static_image_json), i, rectangle_tiles[i].cardinality);
 					//getTexture(encodeURIComponent(static_image_json), i, "");
 					//console.log("[PFC my_cesium_rute.js] Coordinates tile rute gpx:" + reverse_line_points.length);
+					
 					getTexture(encodeURIComponent(static_image_json), i);
 				}
 				//console.log(static_image_json);
@@ -296,7 +297,6 @@
 			xhr.open("GET", url+"?"+contenido, true);
 			xhr.send();
 			xhr.onreadystatechange = function () {
-				/*
 				if (xhr.readyState == 4 && xhr.status == 200) {
 					if (parseInt(xhr.responseText) != rectangle_tiles.length)
 						drawRute();
@@ -305,7 +305,6 @@
 						window.open("./PFCMyMesh.html", "_self");
 					}
 				}
-				*/
 			}
 		}
 	}
