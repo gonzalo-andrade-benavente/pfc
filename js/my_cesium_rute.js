@@ -115,7 +115,7 @@
 		var polyline = L.polyline(line_points, polyline_options).addTo(map);
 		//console.log("[PFC my_cesium_rute.js]: Total coordinates "+coordinates.length);
 		var static_image_json;
-		var width = 500, height = 700;
+		var width = 510, height = 700;
 		var json_coordinates;
 		var coordinate_before = true;
 		var fails = 1;
