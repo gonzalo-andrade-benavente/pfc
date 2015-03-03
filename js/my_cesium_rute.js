@@ -157,12 +157,24 @@
 						//console.log(coordinates[rectangle_tiles[i].index - 1]);
 					//} 
 					//json_coordinates.push(coordinates[rectangle_tiles[i].index - 1]);
+					var orientatio_latitude, final_coordinate;
+					var init = rectangle_tiles[i].index;
 					for(j = rectangle_tiles[i].index; j < coordinates.length; j++){
 						if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
-			
+							if (j == init) {
+									L.mapbox.featureLayer({	type: 'Feature', geometry: {
+										type: 'Point',
+										coordinates: [ coordinates[j][1], coordinates[j][0] ]
+									},
+									properties: {
+										title: 'Init' + i,
+									}
+									}).addTo(map);
+							}
 							if (coordinate_before) {								
 								//Add last of the previous tile.
 								if (j > 0) {
+									/*
 									L.mapbox.featureLayer({	type: 'Feature', geometry: {
 										type: 'Point',
 										coordinates: [  coordinates[j-1][1], coordinates[j-1][0] ]
@@ -171,12 +183,17 @@
 										title: 'Rectangle' + i,
 									}
 									}).addTo(map);
+									*/
 									json_coordinates.push(coordinates[j-1]);
 									coordinate_before = false;
 								}
 							}
 							//Add normal.
 							json_coordinates.push(coordinates[j]);
+							if (j > 0) {
+								orientatio_latitude = coordinates[j-1][0] - coordinates[j][0];
+								final_coordinate = coordinates[j];
+							}
 						} else {
 							if (fails > 1) {
 								//console.log("[PFC my_cesium_rute.js] Change rute");
@@ -185,7 +202,25 @@
 								fails++;
 							}
 							//console.log(coordinates[j]);
-						}
+						}						
+					}
+					//Marker final coordinate.
+					L.mapbox.featureLayer({	type: 'Feature', geometry: {
+						type: 'Point',
+						coordinates: [final_coordinate[1] , final_coordinate[0]],
+					},
+					properties: {
+						title: 'final' + i,
+					}
+					}).addTo(map);
+					
+					console.log("[PFC my_cesium_rute.js] Orientation latitude " + orientatio_latitude);
+					
+					if (orientatio_latitude > 0) {
+						//Rute is go down.
+					}else {
+						//Rute up.
+					
 					}
 					//Add the first of the next tile.
 					var coordinate_after = rectangle_tiles[i].index + json_coordinates.length - 1;
@@ -293,14 +328,14 @@
 			xhr.send();
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
-					/*
+					
 					if (parseInt(xhr.responseText) != rectangle_tiles.length)
 						drawRute();
 					else {
 						console.log("[PFC my_cesium_rute.js]: All textures creates successfully");
 						window.open("./PFCMyMesh.html", "_self");
 					}
-					*/
+					
 				}
 			}
 		}
