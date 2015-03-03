@@ -1,4 +1,4 @@
-	/*  
+/*  
 		PFC my_rute.js Library: Mapbox and Ajax 
 		This library uses functions in my_cesium.js
 	*/
@@ -78,7 +78,7 @@
 		Draw rute gpx in map.
 	*/
 	function loadGpx() {
-	//AÃ±adimos la ruta a travÃ©s del mÃ©todo omnivore, se podrÃ­a dibujar la lÃ­nea como polyline.
+	//Añadimos la ruta a través del método omnivore, se podría dibujar la línea como polyline.
 		var gpxLayer = omnivore.gpx(sessionStorage.rute)
 		.on('ready', function() {
 			//var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
@@ -115,7 +115,7 @@
 		var polyline = L.polyline(line_points, polyline_options).addTo(map);
 		//console.log("[PFC my_cesium_rute.js]: Total coordinates "+coordinates.length);
 		var static_image_json;
-		var width = 510, height = 700;
+		var width = 510, height = 697;
 		var json_coordinates;
 		var coordinate_before = true;
 		var fails = 1;
@@ -308,6 +308,4 @@
 			}
 		}
 	}
-	
-
 	

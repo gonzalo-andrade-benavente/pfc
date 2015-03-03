@@ -6,7 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="css/dnd.css"/> 
 	<title> PFC Three.js  </title>
 </head>
-<body>
+<body onload="deleteFiles()">
 	<form id="upload" action="" method="POST" enctype="multipart/form-data">
 		<fieldset>
 			<legend>Subir ruta gpx <i>drag and drop</i></legend>
@@ -27,7 +27,6 @@
 		</fieldset>
 	</form>
 
-	<div id="delete" > <a href="javascript:deleteFiles()"> borrar información almacenada </a> </div>
 	<!-- <div id="messages">
 		<p><i>Mensaje de estado</i></p>
 	</div>
