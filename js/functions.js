@@ -16,13 +16,13 @@ function checkTile(coord, level) {
 			if ((positionTileXY.x != positionTileXY_actual.x) || (positionTileXY.y != positionTileXY_actual.y)) {
 				tile = getTile(positionTileXY_actual.x, positionTileXY_actual.y, level);
 				if (positionTileXY.x < positionTileXY_actual.x)
-					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "w",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
+					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "checkTile",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
 				else if (positionTileXY.x > positionTileXY_actual.x)	
-					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "e",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
+					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "checkTile",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
 				else if (positionTileXY.y < positionTileXY_actual.y)
-					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "s",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
+					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "checkTile",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
 				else if (positionTileXY.y > positionTileXY_actual.y)
-					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "n",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
+					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "checkTile",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
 				positionTileXY = positionTileXY_actual;
 			}
 		}
@@ -91,7 +91,7 @@ function createRectangle(info, level) {
 	for(i = min_x; i <= max_x ; i++) {
 		for (j = max_y; j >= min_y ; j--) {
 			tile = getTile(i, j, level);
-			info_tiles_rectangle.push(new InfoTile(i, j, "",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, 0, 0, 0));
+			info_tiles_rectangle.push(new InfoTile(i, j, "createRectangle",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, 0, 0, 0));
 		}
 	}
 	

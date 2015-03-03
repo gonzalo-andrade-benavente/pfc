@@ -121,9 +121,9 @@
 		var coordinate_before;
 		//fails, only one time can draw out.
 		var fails = 1;
-		
+		var last_coordinate;
 		if (rectangle_tiles.length > 0) {
-			//for(i = 2; i < 3; i++) {
+			//for(i = 0; i < 8; i++) {
 			for(i = 0; i < rectangle_tiles.length; i++) {
 				coordinate_before = true;
 				fails = 1;
@@ -133,6 +133,14 @@
 				
 				if ((rectangle_tiles[i].coordinate[0] == 0) && (rectangle_tiles[i].coordinate[1] == 0)) {
 					//Texture whitout rute.
+					if (i == 7) {
+						console.log(rectangle_tiles[i]);
+						for(j = 0; j < coordinates.length; j++) {
+							if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
+								console.log(coordinates[j]);
+							}
+						}
+					}
 				} else {
 					//console.log("[PFC my_cesium_rute.js]: Contains coordinates.");
 					var json_coordinates = new Array();
@@ -160,7 +168,6 @@
 					var polyline_options = { color: '#000'};
 					var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);
 					
-					
 					//Add the first of the next tile.
 					/*
 					var coordinate_after = rectangle_tiles[i].index + json_coordinates.length - 1;
@@ -171,7 +178,6 @@
 						json_coordinates.push(coordinates[coordinate_after]);
 					}
 					*/
-					
 				}
 			} 
 		}
