@@ -117,30 +117,62 @@
 		console.log("[PFC my_cesium_rute.js]: Draw advanced");
 				
 		var i, j;
+		//Coordinate after
+		var coordinate_before;
+		//fails, only one time can draw out.
+		var fails = 1;
+		
 		if (rectangle_tiles.length > 0) {
-			//for(i = 0; i < rectangle_tiles.length; i++) {
+			//for(i = 2; i < 3; i++) {
 			for(i = 0; i < rectangle_tiles.length; i++) {
+				coordinate_before = true;
+				fails = 1;
 				var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 				L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 				
 				
 				if ((rectangle_tiles[i].coordinate[0] == 0) && (rectangle_tiles[i].coordinate[1] == 0)) {
-					
+					//Texture whitout rute.
 				} else {
 					//console.log("[PFC my_cesium_rute.js]: Contains coordinates.");
 					var json_coordinates = new Array();
 					for(j = rectangle_tiles[i].index; j < coordinates.length; j++){
 						if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
-							json_coordinates.push(coordinates[j]);
+							if (coordinate_before) {
+							if (j > 0) {
+								json_coordinates.push(coordinates[j-1]);
+								coordinate_before = false;
+							}
+						}
+						json_coordinates.push(coordinates[j]);
 						} else {
+							coordinate_before = true;
+							if (fails < 2 ) {
+								json_coordinates.push(coordinates[j]);
+								fails++;
+							}
 							var polyline_options = { color: '#000'};
 							var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);
 							json_coordinates = new Array();
 						}
 					}
+					//Control if no fails to the end.
+					var polyline_options = { color: '#000'};
+					var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);
+					
+					
+					//Add the first of the next tile.
+					/*
+					var coordinate_after = rectangle_tiles[i].index + json_coordinates.length - 1;
+					if (coordinate_after < coordinates.length) {
+						//Handle strange error.
+						if (json_coordinates[json_coordinates.length-1] == coordinates[coordinate_after]) 
+							coordinate_after++;
+						json_coordinates.push(coordinates[coordinate_after]);
+					}
+					*/
+					
 				}
-		
-		
 			} 
 		}
 		
