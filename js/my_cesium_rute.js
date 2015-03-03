@@ -11,7 +11,7 @@
 	*/
 	function requestTilesWhenReady() {
 		if (aCesiumTerrainProvider.ready) {
-			console.log("[PFC my_cesium_rute.js]:Cesium Server Terrain Provider ready");
+			console.log("[PFC my_cesium_rute.js]: Cesium Server Terrain Provider ready");
 			var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 			var file_name = name.substring(0, name.indexOf("."));
 			sessionStorage.name = file_name;
@@ -55,7 +55,7 @@
 		L.mapbox.accessToken = 'pk.eyJ1IjoiZ29uemFsaXRvIiwiYSI6IlVJTGIweFUifQ.waoF7m8PZbBM6u8Tg_rR7A';
 		map = L.mapbox.map('map', id_maps[id_map]);
 		//map.scrollWheelZoom.disable();
-		console.log("[PFC my_cesium_rute.js] Total coordinates " + coord.length);
+		console.log("[PFC my_cesium_rute.js]: Total coordinates " + coord.length);
 		coordinates = coord;
 		checkTile(coordinates, 14);
 		rectangle_tiles = createRectangle(info_tiles, 14);
@@ -103,7 +103,7 @@
 			map.setZoom(14);
 			//map.setZoom(14);
 			
-			console.log("[PFC my_cesium_rute.js]:TileCesium in Mapbox set bounds.");
+			console.log("[PFC my_cesium_rute.js]: TileCesium in Mapbox set bounds.");
 			
 		})
 		.on('error', function() {
@@ -119,11 +119,29 @@
 		var i, j;
 		if (rectangle_tiles.length > 0) {
 			//for(i = 0; i < rectangle_tiles.length; i++) {
-			for(i = 0; i < 1; i++) {
+			for(i = 0; i < rectangle_tiles.length; i++) {
 				var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 				L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
+				
+				
+				if ((rectangle_tiles[i].coordinate[0] == 0) && (rectangle_tiles[i].coordinate[1] == 0)) {
+					
+				} else {
+					//console.log("[PFC my_cesium_rute.js]: Contains coordinates.");
+					var json_coordinates = new Array();
+					for(j = rectangle_tiles[i].index; j < coordinates.length; j++){
+						if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
+							json_coordinates.push(coordinates[j]);
+						} else {
+							var polyline_options = { color: '#000'};
+							var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);
+							json_coordinates = new Array();
+						}
+					}
+				}
 		
-			}
+		
+			} 
 		}
 		
 		
