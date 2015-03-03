@@ -219,8 +219,8 @@
 					var geo_json = {
 						"type": "Feature",
 						 "properties": {
-							"stroke": "#fc4353",
-							"stroke-width": 5
+							"stroke": "#ff0000",
+							"stroke-width": 12
 						},
 						"geometry": {
 							"type": "LineString",
