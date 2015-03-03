@@ -61,10 +61,14 @@
 		rectangle_tiles = createRectangle(info_tiles, 14);
 		total_images = rectangle_tiles.lenght;
 		//Draw the tiles from the rute more rectangle.
+		
+		/*
 		for(i = 0; i < rectangle_tiles.length; i++) {
 			var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 			L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 		}
+		*/
+		
 		/*
 		//Draw the tiles from the rute.
 		for(i = 0; i < info_tiles.length; i++) {
@@ -108,6 +112,24 @@
 		// or can't be parsed
 		})
 		.addTo(map);
+	}
+	function drawAdvanced() {
+		console.log("[PFC my_cesium_rute.js]: Draw advanced");
+				
+		var i, j;
+		if (rectangle_tiles.length > 0) {
+			//for(i = 0; i < rectangle_tiles.length; i++) {
+			for(i = 0; i < 1; i++) {
+				var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
+				L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
+		
+			}
+		}
+		
+		
+		
+		
+		
 	}
 	/*
 		Create rute gpx point to polygin and create static image.
