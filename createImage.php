@@ -30,5 +30,5 @@
 	
 	imagepng($background_image,'texture/'.$file.'.png');
 	imagedestroy($background_image);
-	echo '[PFC createImage.php]: Image create in texture/'.$file.'.png';
+	echo 'texture/'.$file.'.png';
 ?>

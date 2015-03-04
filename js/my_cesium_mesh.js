@@ -273,7 +273,7 @@ function asociateGeometry(data, scale) {
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 	rectangle_tiles[index_tile].geometry = geometry;
 	
-	geometry = addFaceVertexUvs(geometry);
+	//geometry = addFaceVertexUvs(geometry);
 	geometry = addBase(geometry);
 	geometry = addFaceVertexUvs(geometry);
 }
