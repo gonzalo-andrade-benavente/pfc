@@ -1,14 +1,20 @@
 <?php	
-	$files = glob('textures/*'); // get all file names
-	foreach($files as $file){ // iterate files
+	$files = glob('textures/*'); 
+	foreach($files as $file){ 
 		if(is_file($file))
-			unlink($file); // delete file
+			unlink($file); 
 	}
 	
-	$files = glob('uploads/*'); // get all file names
-	foreach($files as $file){ // iterate files
+	$files = glob('uploads/*'); 
+	foreach($files as $file){ 
 		if(is_file($file))
-			unlink($file); // delete file
+			unlink($file); 
+	}
+	
+	$files = glob('texture/*'); 
+	foreach($files as $file){ 
+		if(is_file($file))
+			unlink($file); 
 	}
 	echo "[PFC deleteFiles.php]: Information cleaned correctly.";
 ?>
