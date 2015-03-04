@@ -126,7 +126,7 @@
 		var width = 510, height = 697;
 		var zoom_map = 16;
 		if (rectangle_tiles.length > 0) {
-			for(i = 1; i < 2; i++) {
+			for(i = 13; i < 14; i++) {
 			//for(i = 0; i < rectangle_tiles.length; i++) {
 				json_coordinates = new Array();
 				reverse_line_points = new Array();
@@ -175,7 +175,7 @@
 							//If one point out from the mesh.
 							coordinate_before = true;
 							//Only one mistake.
-							if (fails < 3 ) {
+							if (fails < 200 ) {
 								json_coordinates.push(coordinates[j]);
 								for(a=0; a < json_coordinates.length; a++) 
 									reverse_line_points.push([json_coordinates[a][1], json_coordinates[a][0]]);	
@@ -197,8 +197,8 @@
 							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
 						console.log("[PFC my_cesium_rute.js]: Mesh " + i + " total coordinates " + reverse_line_points.length);
 						
-						//if (reverse_line_points.length < 120) {
-						//}
+						while (reverse_line_points.length > 120) 
+							reverse_line_points = fixCoordinates(reverse_line_points);
 						
 						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 12},
 															 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
@@ -213,8 +213,10 @@
 						console.log(static_image_json);
 					} else {
 						console.log("[PFC my_cesium_rute.js]: Mesh fails " + i + " total coordinates " + reverse_line_points.length);
-						//if (reverse_line_points.length < 120) {
-						//}
+						
+						while (reverse_line_points.length > 120) 
+							reverse_line_points = fixCoordinates(reverse_line_points);
+						console.log("[PFC my_cesium_rute.js]: Mesh fails " + i + " (change )total coordinates " + reverse_line_points.length);
 						
 						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 12},
 															 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
