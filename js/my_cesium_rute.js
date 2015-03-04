@@ -114,9 +114,8 @@
 		.addTo(map);
 	}
 	function drawAdvanced() {
-		console.log("[PFC my_cesium_rute.js]: Draw advanced");
-				
-		var i, j;
+		console.log("[PFC my_cesium_rute.js]: Draw advanced");	
+		var i, j, a, b;
 		//Coordinate after
 		var coordinate_before;
 		//fails, only one time can draw out.
@@ -125,14 +124,17 @@
 		var reverse_line_points = new Array();
 		var encode_json, encode_json_uri, static_image_json;
 		var width = 510, height = 697;
+		var zoom_map = 16;
 		if (rectangle_tiles.length > 0) {
-			//for(i = 3; i < 4; i++) {
-			for(i = 0; i < rectangle_tiles.length; i++) {
+			for(i = 1; i < 2; i++) {
+			//for(i = 0; i < rectangle_tiles.length; i++) {
 				json_coordinates = new Array();
+				reverse_line_points = new Array();
 				coordinate_before = true;
 				fails = 1;
 				var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 				L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
+				map.setMaxBounds(bounds);
 				
 				//If no coordinate, some mesh have route.
 				if ((rectangle_tiles[i].coordinate[0] == 0) && (rectangle_tiles[i].coordinate[1] == 0)) {
@@ -149,12 +151,13 @@
 						json_coordinates = new Array();
 					} else {
 						if (id_map == -1) 
-							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ map.getZoom() +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 						else 
-							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ map.getZoom() +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					}
 					console.log("[PFC my_cesium_rute.js]: Tile of filled");
 					console.log(static_image_json);
+					
 				} else {
 					//console.log("[PFC my_cesium_rute.js]: Contains coordinates.");
 					for(j = rectangle_tiles[i].index; j < coordinates.length; j++){
@@ -172,17 +175,20 @@
 							//If one point out from the mesh.
 							coordinate_before = true;
 							//Only one mistake.
-							if (fails < 2 ) {
-								//console.log("hi");
+							if (fails < 3 ) {
 								json_coordinates.push(coordinates[j]);
+								for(a=0; a < json_coordinates.length; a++) 
+									reverse_line_points.push([json_coordinates[a][1], json_coordinates[a][0]]);	
 								fails++;
-							}
+							} 
 							var polyline_options = { color: 'green'};
 							var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);
 							json_coordinates = new Array();
 						}
 					}
-					//Control if no fails to the end.
+
+					//Union with the next tile.
+					
 					if(json_coordinates.length > 0) {	
 						var polyline_options = { color: 'green'};
 						var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);
@@ -201,19 +207,32 @@
 						encode_json = JSON.stringify(geo_json);
 						encode_json_uri = encodeURIComponent(encode_json);
 						if (id_map == -1) 
-							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ map.getZoom() +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 						else 
-							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ map.getZoom() +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
+							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
+						console.log(static_image_json);
+					} else {
+						console.log("[PFC my_cesium_rute.js]: Mesh fails " + i + " total coordinates " + reverse_line_points.length);
+						//if (reverse_line_points.length < 120) {
+						//}
+						
+						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 12},
+															 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
+						};
+						
+						encode_json = JSON.stringify(geo_json);
+						encode_json_uri = encodeURIComponent(encode_json);
+						if (id_map == -1) 
+							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+						else 
+							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
 						console.log(static_image_json);
 					}
+					
 				}
 				
 			}
 		}
-		
-		
-		
-		
 		
 	}
 	/*
