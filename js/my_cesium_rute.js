@@ -130,17 +130,21 @@
 				var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 				L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 				
-				
+				//If no coordinate, some mesh have route.
 				if ((rectangle_tiles[i].coordinate[0] == 0) && (rectangle_tiles[i].coordinate[1] == 0)) {
+					var json_coordinates = new Array();
 					//Texture whitout rute.
-					if (i == 7) {
-						console.log(rectangle_tiles[i]);
-						for(j = 0; j < coordinates.length; j++) {
-							if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
-								console.log(coordinates[j]);
-							}
+					for(j = 0; j < coordinates.length; j++) {
+						if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
+							json_coordinates.push(coordinates[j]);
 						}
 					}
+					if (json_coordinates.length > 0) {
+						var polyline_options = { color: '#000'};
+						var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);
+					}
+					
+					
 				} else {
 					//console.log("[PFC my_cesium_rute.js]: Contains coordinates.");
 					var json_coordinates = new Array();
