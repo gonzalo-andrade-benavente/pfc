@@ -143,6 +143,20 @@
 					if (json_coordinates.length > 0) {
 						var polyline_options = { color: 'green'};
 						var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);			
+						for(j=0; j < json_coordinates.length; j++) 
+							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
+						while (reverse_line_points.length > 120) 
+							reverse_line_points = fixCoordinates(reverse_line_points);
+						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 12},
+															 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
+						};
+						encode_json = JSON.stringify(geo_json);
+						encode_json_uri = encodeURIComponent(encode_json);
+						if (id_map == -1) 
+							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+						else 
+							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
+						url.push(new Request(static_image_json, file_name+i));
 						json_coordinates = new Array();
 					} else {
 						if (id_map == -1) 
