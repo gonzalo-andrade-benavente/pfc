@@ -129,8 +129,8 @@
 				coordinate_before = true;
 				fails = 1;
 				var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
-				L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 				map.setMaxBounds(bounds);
+				//L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 				
 				//If no coordinate, some mesh have route.
 				if ((rectangle_tiles[i].coordinate[0] == 0) && (rectangle_tiles[i].coordinate[1] == 0)) {
@@ -233,18 +233,29 @@
 			}
 		}
 		
+		//Only one call with all the information in array.
 		var formData = new FormData();
 		formData.append('information',JSON.stringify(url));
-		var xhr = new XMLHttpRequest();
-			xhr.open("POST", 'getTexture.php', true);
-			xhr.send(formData);
-			xhr.onreadystatechange = function () {
-				if (xhr.readyState == 4 && xhr.status == 200) {
-					console.log(xhr.responseText);
-					window.open("./PFCMyMesh.html", "_self");
+		formData.append('information',JSON.stringify(url));
+		var xhr2 = new XMLHttpRequest();
+			xhr2.open("POST", 'getTexture.php', true);
+			xhr2.upload.onprogress = function (evt) {
+				$( "#dialog-message" ).dialog( "open" );
+			}
+			xhr2.onload = function () {
+				$( "#dialog-message" ).dialog( "close" );
+				window.open("./PFCMyMesh.html", "_self");
+			}
+			xhr2.send(formData);
+			xhr2.onreadystatechange = function () {
+				if (xhr2.readyState == 4 && xhr2.status == 200) {
+					console.log(xhr2.responseText);
+					//window.open("./PFCMyMesh.html", "_self");
 				}
 			}
 	}
+	
+
 	
 	function showTiles(){
 		//Draw the tiles from the rute more rectangle

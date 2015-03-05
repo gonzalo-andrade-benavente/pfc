@@ -18,15 +18,23 @@
 	<script type="text/javascript" src="js/functions.js"> 	//My library.	</script>
 	<script type="text/javascript" src="js/classes.js"> 	//My library.	</script>
 	<script type="text/javascript" src="js/my_cesium_rute.js"> 	//My library.	</script>
+	
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+	<script type="text/javascript" src="js/my_jquery.js"> 	//My library.	</script>
+	
 	<style>
 		body { margin:0; padding:0; }
 		<!-- #map { position:absolute; margin-top:3%; margin-left:35%; width:30%; height:73%} -->
 		#map { position:absolute; margin-top:3%; margin-left:35%; width:30%; height:70%}
 		#buttons {position:absolute; margin-top:3%; margin-left:5%; width:30%;}
 		#file {position:relative; float:right;}
+		.ui-dialog-titlebar-close {
+			visibility: hidden;
+		}
 	</style>
 	<title> PFC Three.js  </title>
-	
 </head>
 
 <body onload="requestTilesWhenReady()">
@@ -38,6 +46,13 @@
 		<a class='icon layers button' onclick="changeMap()">Cambiar Mapa</a>
 		<a class='icon pencil button' onclick="showTiles()">Mostrar Tiles</a> 
 		<a class='icon pencil button' onclick="drawAdvanced()">Modelar 3D Avanzado</a>
+	</div>
+	
+	<div id="dialog-message" style="width=50%" title="Subida de ficheros">
+		<!-- <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span> -->
+		Creando texturas en el servidor <br> <br> 
+		<div id="progressbar"></div>
+	  <!-- <p> Currently using <b>36% of your storage space</b>. </p> -->
 	</div>
 </body>
 
