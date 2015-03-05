@@ -15,6 +15,17 @@ function createGUI() {
 		this.refresh = function() {
 			location.reload();
 		}
+		this.scalar = function() {
+			if (quotient > 0) {
+				for(var i = 0; i < scene.children.length; i++) {
+					geometry = scene.children[i].geometry;
+					geometry.verticesNeedUpdate = true;
+					for(var j = 0; j < geometry.vertices.length; j++) {
+						geometry.vertices[j].z = geometry.vertices[j].z  / (quotient * 3);
+					}
+				}	
+			}
+		}
 		this.combined = function() {
 			var rectangle = maxMinTileXY();
 			var columns = 0, rows = 0;
@@ -44,7 +55,11 @@ function createGUI() {
 							for(i = 0; i < combined_geometry.vertices.length; i++)
 								combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient * 2) ;
 						}
+						
+						combined_geometry.uvsNeedUpdate = true;
+						combined_geometry.buffersNeedUpdate = true;
 						combined_geometry = addFaceVertexUvs(combined_geometry);
+						
 						console.log("[PFC gui.js]: combined_geometry exist.");
 						texture = THREE.ImageUtils.loadTexture(xhr.responseText);
 						material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
@@ -56,8 +71,11 @@ function createGUI() {
 						geometry = new THREE.BoxGeometry(10,10,10);
 						texture = THREE.ImageUtils.loadTexture(xhr.responseText);
 						material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
+						
+						material.needsUpdate = true;
+						
 						mesh = new THREE.Mesh( geometry, material );
-						mesh.position.set(0, 0, 0);
+						mesh.position.set(-20, 0, 10);
 						scene.add(mesh);
 						
 					} else {
@@ -83,6 +101,7 @@ function createGUI() {
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
 	gui.add(controls, 'combined').name('Geo. combinada');
+	gui.add(controls, 'scalar').name('scalar');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
 
