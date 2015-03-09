@@ -150,8 +150,8 @@ function getVertex(geometry, cardinality) {
 		}
 		return vertex;
 	} else {
-		console.log("[PFC my_cesium_mesh.js]: Error cesium bounding box geometry.");
-		//$( "#dialog-message" ).dialog( "open" );
+		//console.log("[PFC my_cesium_mesh.js]: Error cesium bounding box geometry.");
+		$( "#dialog-message" ).dialog( "open" );
 	}
 }
 
