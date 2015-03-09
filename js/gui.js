@@ -68,15 +68,16 @@ function createGUI() {
 						mesh.position.set(-80, 0, 0);
 						scene.add(mesh);
 						
+						/*
 						geometry = new THREE.BoxGeometry(10,10,10);
-						texture = THREE.ImageUtils.loadTexture(xhr.responseText);
 						material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
 						
 						material.needsUpdate = true;
 						
 						mesh = new THREE.Mesh( geometry, material );
-						mesh.position.set(-20, 0, 10);
+						mesh.position.set(0, 0, 10);
 						scene.add(mesh);
+						*/
 						
 					} else {
 						console.log("[PFC gui.js]: combined_geometry doesn't merge.");

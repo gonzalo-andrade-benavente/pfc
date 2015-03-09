@@ -242,6 +242,17 @@ function createTerrain() {
 			x = x + 33;
 			west = true;
 		}
+		
+		console.log("[PFC my_cesium_mesh]: Quotient scalar " + quotient);
+		if (quotient > 0) {
+			for(var i = 0; i < scene.children.length; i++) {
+				geometry = scene.children[i].geometry;
+				geometry.verticesNeedUpdate = true;
+				for(var j = 0; j < geometry.vertices.length; j++) {
+					geometry.vertices[j].z = geometry.vertices[j].z  / (quotient * 2);
+				}
+			}
+		}
 		console.log("[PFC my_cesium_mesh.js]: Tiles in scene " + b);
 	} else {
 		setTimeout(createTerrain, 10);
