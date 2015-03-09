@@ -13,10 +13,13 @@ var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
 */
 var info_tiles, rectangle_tiles;
 var combined_geometry = new THREE.Geometry();
+var combined = new THREE.Geometry();
 //index_tile to each tile in info_tile.
 var index_tile = 0;
 //to handle the height scalar.
 var quotient = 0;
+//To combined geometry
+var materials = new Array(), index_material = 0;
 
 /*
 	Function request data.
@@ -171,7 +174,7 @@ function createTerrain() {
 		for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
 			for(j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
 			    texture = THREE.ImageUtils.loadTexture("textures/" + name.substring(0, name.indexOf(".")) + b + ".png");
-				material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
+				material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide } );
 				//material = new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 				if ((i == rectangle[0][0]) && (j == rectangle[1][1])) {
 					//console.log("First Tile ("+ i + "," + j + ")");
@@ -260,7 +263,7 @@ function createTerrain() {
 }
 function addBoxScene(x, y, z){
 	geometry = new THREE.BoxGeometry(1,1,1)
-	material= new THREE.MeshBasicMaterial( { color: "rgb(0,255,0)", wireframe: true ,side:THREE.DoubleSide} );
+	material= new THREE.MeshBasicMaterial( { color: "rgb(0,255,0)", wireframe: false ,side:THREE.DoubleSide} );
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.position.set(x, y, z);
 	scene.add(mesh);	
@@ -269,6 +272,18 @@ function addBoxScene(x, y, z){
 	Add geometry to scene.
 */
 function addGeometryScene(geometry, x, y, z, material){
+	materials.push(material);
+	var copy_geometry = geometry.clone();
+	for(var i = 0; i < copy_geometry.faces.length; i++) {
+		copy_geometry.faces[i].materialIndex = 0;
+	}
+	var tile = new THREE.Mesh(geometry);
+	tile.rotation.x =  Math.PI / 180 * (-90);
+	tile.position.set(x, y, z);
+	tile.updateMatrix();
+	combined.merge(tile.geometry, tile.matrix, index_material);
+	index_material++;
+	
 	var mesh = new THREE.Mesh( geometry, material );
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
