@@ -62,7 +62,7 @@ function createGUI() {
 						
 						console.log("[PFC gui.js]: combined_geometry exist.");
 						texture = THREE.ImageUtils.loadTexture(xhr.responseText);
-						material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
+						material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true } );
 						//material= new THREE.MeshBasicMaterial( { color: "rgb(0,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 						mesh = new THREE.Mesh( combined_geometry, material );
 						mesh.position.set(-80, 0, 0);
