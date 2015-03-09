@@ -106,7 +106,9 @@ function getGeometry(x, y) {
 }
 
 function getVertex(geometry, cardinality) {
-	geometry.computeBoundingBox();
+
+	if (geometry) {
+		//geometry.computeBoundingBox();
 	while(!geometry.boundingBox) {
 		geometry.computeBoundingBox();
 	}
@@ -147,6 +149,10 @@ function getVertex(geometry, cardinality) {
 			}			
 		}
 		return vertex;
+	} else {
+		console.log("[PFC my_cesium_mesh.js]: Error cesium bounding box geometry.");
+		//$( "#dialog-message" ).dialog( "open" );
+	}
 }
 
 function createTerrain() {
@@ -178,8 +184,10 @@ function createTerrain() {
 						//console.log("Base Tile ("+ i + "," + j + ")");
 						pre_geometry = getGeometry(i-1, j);
 						pre_vertex = getVertex(pre_geometry, 'south');						
+						
 						geometry = getGeometry(i, j);
-						vertex = getVertex(geometry, 'south');	
+						vertex = getVertex(geometry, 'south');
+						
 						var pre_east_vertex = getVertex(pre_geometry, 'east');
 						var west_vertex = getVertex(geometry, 'west');
 						
@@ -201,6 +209,7 @@ function createTerrain() {
 						//console.log("Another Tile ("+ i + "," + j + ")");
 						pre_geometry = getGeometry(i, j+1);
 						pre_vertex = getVertex(pre_geometry, 'north');
+						
 						geometry = getGeometry(i, j);
 						vertex = getVertex(geometry, 'south');
 						

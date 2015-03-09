@@ -21,7 +21,7 @@ function createGUI() {
 					geometry = scene.children[i].geometry;
 					geometry.verticesNeedUpdate = true;
 					for(var j = 0; j < geometry.vertices.length; j++) {
-						geometry.vertices[j].z = geometry.vertices[j].z  / (quotient * 3);
+						geometry.vertices[j].z = geometry.vertices[j].z  / (quotient * 2);
 					}
 				}	
 			}
