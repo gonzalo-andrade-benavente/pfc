@@ -274,7 +274,7 @@ function addGeometryScene(geometry, x, y, z, material){
 	mesh.position.set(x, y, z);
 	mesh.updateMatrix();
 	combined_geometry.merge(mesh.geometry, mesh.matrix);
-	scene.add(mesh);	
+	//scene.add(mesh);	
 }
 /*
 	Recieve data from asynchronous cesium then create and store the geometry for each tile.

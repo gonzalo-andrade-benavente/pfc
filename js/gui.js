@@ -86,6 +86,73 @@ function createGUI() {
 			}
 		
 		}
+		this.merge = function () {
+			/*
+			var geometry, material, material2, combined = new THREE.Geometry();
+			
+			
+			var materials = new Array();
+			materials.push(new THREE.MeshBasicMaterial({color: 0x00ff00}));
+			
+			geometry = new THREE.BoxGeometry(50,0.5,50);
+			for(var i = 0; i < geometry.faces.length; i++) {
+				geometry.faces[i].materialIndex = 0;
+			}
+			
+			var cube = new THREE.Mesh(geometry);
+			cube.position.set(-50,0,0);
+			combined.merge(cube.geometry, cube.matrix, 0);
+			
+			
+			material = new THREE.MeshFaceMaterial(materials);
+			mesh = new THREE.Mesh(geometry, materials);
+			scene.add(mesh);
+			//scene.add(mesh);
+			*/
+			
+			var materials = new Array();
+			texture = THREE.ImageUtils.loadTexture('images/europa.jpg');
+			materials.push(new THREE.MeshBasicMaterial({map:texture}));
+			materials.push(new THREE.MeshBasicMaterial({map:texture}));
+			
+			
+			
+			/*
+			var texture = THREE.ImageUtils.loadTexture('images/europa.jpg');
+			var texture2 = THREE.ImageUtils.loadTexture('images/europa2.jpg');
+			
+			var materials = [
+			new THREE.MeshBasicMaterial({
+				map:texture
+			}),
+			new THREE.MeshBasicMaterial({
+				map:texture2
+			}),];
+			*/
+
+			var combined = new THREE.Geometry();
+
+			var geometry = new THREE.BoxGeometry(50, 0.5, 50);
+			
+			for(var i = 0; i < geometry.faces.length; i++) {
+				geometry.faces[i].materialIndex = 0;
+			}
+			
+			var cube1 = new THREE.Mesh(geometry);
+			cube1.position.set(-50,0,0);
+			cube1.updateMatrix();
+			combined.merge(cube1.geometry, cube1.matrix, 0);
+
+			var cube2 = new THREE.Mesh(geometry);
+			cube2.position.set(0,0,0);
+			cube2.updateMatrix();
+			combined.merge(cube2.geometry, cube2.matrix, 1);
+
+			var material = new THREE.MeshFaceMaterial(materials);
+			var mesh = new THREE.Mesh(combined, material);
+			scene.add(mesh);
+			
+		}
 	}
 	
 	gui = new dat.GUI();
@@ -103,6 +170,7 @@ function createGUI() {
 	gui.add(controls, 'home').name('Inicio');
 	gui.add(controls, 'combined').name('Geo. combinada');
 	gui.add(controls, 'scalar').name('scalar');
+	gui.add(controls, 'merge').name('Funcion merge');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
 

@@ -71,10 +71,10 @@
 				var wireMat = new THREE.MeshBasicMaterial({color:0xaaaaaa,wireframe:true,transparent:true});
 				var multiMat = [faceMat ,wireMat];
 
-				var floor= THREE.SceneUtils.createMultiMaterialObject(new THREE.PlaneGeometry(1000, 1000, 10, 10),multiMat);
+				//var floor= THREE.SceneUtils.createMultiMaterialObject(new THREE.PlaneGeometry(1000, 1000, 10, 10),multiMat);
 	
-				floor.rotation.x = Math.PI / 2;
-				scene.add( floor );
+				//floor.rotation.x = Math.PI / 2;
+				//scene.add( floor );
 
 				projector = new THREE.Projector();
 
@@ -105,10 +105,10 @@
 				----------------------GEOMETRIAS ---------------------------------
 				------------------------------------------------------------------*/
 				var shape1 = new THREE.Mesh( new THREE.BoxGeometry(100,100,100,5,5,5));
-				var shape2 = new THREE.Mesh( new THREE.BoxGeometry(100,100,100,5,5,5));
+				var shape2 = new THREE.Mesh( new THREE.BoxGeometry(200,200,200,5,5,5));
 				shape1.position.x=60;
 				shape1.position.x=-60;
-				shape2.position.x=30;
+				shape2.position.x = 80;
 				shape2.rotation.z = Math.PI / 3;
 				shape2.rotation.y = Math.PI / 4;
 				shape2.rotation.x = Math.PI / 5;
