@@ -245,7 +245,11 @@ function createTerrain() {
 			x = x + 33;
 			west = true;
 		}
-		
+		/*	--------------------------------------------------------------------------------------------------------
+			Show the combined geometry.
+		*/
+		showCombinedGeometry();
+		/*
 		console.log("[PFC my_cesium_mesh]: Quotient scalar " + quotient);
 		if (quotient > 0) {
 			for(var i = 0; i < scene.children.length; i++) {
@@ -256,22 +260,29 @@ function createTerrain() {
 				}
 			}
 		}
+		*/
 		console.log("[PFC my_cesium_mesh.js]: Tiles in scene " + b);
 	} else {
 		setTimeout(createTerrain, 10);
 	}
 }
-function addBoxScene(x, y, z){
-	geometry = new THREE.BoxGeometry(1,1,1)
-	material= new THREE.MeshBasicMaterial( { color: "rgb(0,255,0)", wireframe: false ,side:THREE.DoubleSide} );
-	mesh = new THREE.Mesh( geometry, material );
-	mesh.position.set(x, y, z);
-	scene.add(mesh);	
+
+function showCombinedGeometry() {
+	if (quotient > 0) {
+		console.log("[PFC my_cesium_mesh.js]: quotient to bigger " + quotient);
+		//combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient/2);
+		for(i = 0; i < combined.vertices.length; i++)
+			combined.vertices[i].y = combined.vertices[i].y / (quotient * 4) ;
+	}		
+	var material = new THREE.MeshFaceMaterial(materials);
+	var mesh = new THREE.Mesh(combined, material);
+	scene.add(mesh);
+
 }
 /*
 	Add geometry to scene.
 */
-function addGeometryScene(geometry, x, y, z, material){
+function addGeometryScene(geometry, x, y, z, material) {
 	materials.push(material);
 	var copy_geometry = geometry.clone();
 	for(var i = 0; i < copy_geometry.faces.length; i++) {
@@ -284,12 +295,14 @@ function addGeometryScene(geometry, x, y, z, material){
 	combined.merge(tile.geometry, tile.matrix, index_material);
 	index_material++;
 	
+	/*
 	var mesh = new THREE.Mesh( geometry, material );
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
 	mesh.updateMatrix();
 	combined_geometry.merge(mesh.geometry, mesh.matrix);
-	//scene.add(mesh);	
+	scene.add(mesh);	
+	*/
 }
 /*
 	Recieve data from asynchronous cesium then create and store the geometry for each tile.

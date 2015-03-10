@@ -102,23 +102,38 @@ function createGUI() {
 			scene.add(mesh);
 			
 		}
+		this.export = function () {
+			var a, exporter;
+			console.log("[PFC gui.js]: Export with THREE.X3dExporter.");
+			exporter = new THREE.X3DExporter();
+			if (combined) {
+				var material = new THREE.MeshFaceMaterial(materials);
+				var mesh = new THREE.Mesh(combined, material);
+				a = exporter.parse(mesh);
+			}
+			//console.log(a);
+		}
 	}
 	
 	gui = new dat.GUI();
 	
+	/*
 	gui.add(controls, 'visible').name('Visible').onChange(function (e) {
 		for (var i = 0; i < scene.children.length; i++ )
 			scene.children[i].material.visible = e;
 	});
-	
+	*/
+	/*
 	gui.add(controls, 'wireframe').name('Marcos de malla').onChange(function (e) {
 		for (var i = 0; i < scene.children.length; i++ )
 			scene.children[i].material.wireframe = e;
 	});
+	*/
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
 	gui.add(controls, 'texture').name('Crear textura');
-	gui.add(controls, 'merge').name('Funcion merge');
+	gui.add(controls, 'export').name('Exportar Shape');
+	//gui.add(controls, 'merge').name('Funcion merge');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
 
