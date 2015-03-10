@@ -273,7 +273,8 @@ function showCombinedGeometry() {
 		//combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient/2);
 		for(i = 0; i < combined.vertices.length; i++)
 			combined.vertices[i].y = combined.vertices[i].y / (quotient * 4) ;
-	}		
+	}
+	//combined = addFaceVertexUvs(combined);
 	var material = new THREE.MeshFaceMaterial(materials);
 	var mesh = new THREE.Mesh(combined, material);
 	scene.add(mesh);
