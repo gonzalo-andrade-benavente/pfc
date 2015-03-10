@@ -15,18 +15,7 @@ function createGUI() {
 		this.refresh = function() {
 			location.reload();
 		}
-		this.scalar = function() {
-			if (quotient > 0) {
-				for(var i = 0; i < scene.children.length; i++) {
-					geometry = scene.children[i].geometry;
-					geometry.verticesNeedUpdate = true;
-					for(var j = 0; j < geometry.vertices.length; j++) {
-						geometry.vertices[j].z = geometry.vertices[j].z  / (quotient * 2);
-					}
-				}	
-			}
-		}
-		this.combined = function() {
+		this.texture = function() {
 			var rectangle = maxMinTileXY();
 			var columns = 0, rows = 0;
 			for(var i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
@@ -48,6 +37,7 @@ function createGUI() {
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
 					console.log(xhr.responseText);
+					/*
 					if (combined_geometry.vertices.length > 0) {
 						if (quotient > 0) {
 							console.log("[PFC gui.js]: quotient to bigger " + quotient);
@@ -66,22 +56,11 @@ function createGUI() {
 						//material= new THREE.MeshBasicMaterial( { color: "rgb(0,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 						mesh = new THREE.Mesh( combined_geometry, material );
 						mesh.position.set(-80, 0, 0);
-						scene.add(mesh);
-						
-						/*
-						geometry = new THREE.BoxGeometry(10,10,10);
-						material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
-						
-						material.needsUpdate = true;
-						
-						mesh = new THREE.Mesh( geometry, material );
-						mesh.position.set(0, 0, 10);
-						scene.add(mesh);
-						*/
-						
+						scene.add(mesh);						
 					} else {
 						console.log("[PFC gui.js]: combined_geometry doesn't merge.");
 					}
+					*/
 				}
 			}
 		
@@ -115,7 +94,7 @@ function createGUI() {
 				console.log("[PFC gui.js]: quotient to bigger " + quotient);
 				//combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient/2);
 				for(i = 0; i < combined.vertices.length; i++)
-					combined.vertices[i].y = combined.vertices[i].y / (quotient * 2) ;
+					combined.vertices[i].y = combined.vertices[i].y / (quotient * 4) ;
 			}
 			
 			var material = new THREE.MeshFaceMaterial(materials);
@@ -138,8 +117,7 @@ function createGUI() {
 	});
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
-	gui.add(controls, 'combined').name('Geo. combinada');
-	gui.add(controls, 'scalar').name('scalar');
+	gui.add(controls, 'texture').name('Crear textura');
 	gui.add(controls, 'merge').name('Funcion merge');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
