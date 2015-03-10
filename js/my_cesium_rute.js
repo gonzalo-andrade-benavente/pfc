@@ -235,7 +235,7 @@
 		
 		//Only one call with all the information in array.
 		var formData = new FormData();
-		formData.append('information',JSON.stringify(url));
+		//formData.append('information',JSON.stringify(url));
 		formData.append('information',JSON.stringify(url));
 		var xhr2 = new XMLHttpRequest();
 			xhr2.open("POST", 'getTexture.php', true);

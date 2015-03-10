@@ -110,6 +110,23 @@ function createGUI() {
 				var material = new THREE.MeshFaceMaterial(materials);
 				var mesh = new THREE.Mesh(combined, material);
 				a = exporter.parse(mesh);
+				
+				var formData = new FormData();
+				var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
+				var file_name = name.substring(0, name.indexOf("."));
+				
+				formData.append('file_name', file_name);
+				formData.append('indexed_face_set', a);
+				var xhr2 = new XMLHttpRequest();
+					xhr2.open("POST", 'createX3D.php', true);
+					xhr2.send(formData);
+					xhr2.onreadystatechange = function () {
+						if (xhr2.readyState == 4 && xhr2.status == 200) {
+							console.log(xhr2.responseText);
+						}
+					}
+				
+				
 			}
 			//console.log(a);
 		}
