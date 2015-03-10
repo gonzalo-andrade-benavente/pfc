@@ -41,12 +41,25 @@
 					fwrite($xml, "<ImageTexture url='\"".$_POST['file_name'].".png\"' />");
 					fwrite($xml, "<Material diffuseColor='0 0 1' ambientIntensity='1.0' />");
 				fwrite($xml, "</Appearance>");
-				fwrite($xml, "");
+				fwrite($xml, $_POST['indexed_face_set']);
 			fwrite($xml, "</Shape>");
 		fwrite($xml, "</Transform>");
 	fwrite($xml, "</Scene>");
 	fwrite($xml, "</X3D>");
 	fclose($xml);
 	
-	echo "[PFC createX3D.php]: Create X3D complete.";
+	$zip = new ZipArchive();
+	$filename = "export/".$_POST['file_name'].".zip";
+
+	if ($zip->open($filename, ZipArchive::CREATE)!==TRUE) {
+		echo("cannot open <$filename>\n");
+	} else {
+		echo "[PFC createX3D.php]: Create X3D complete.";
+	}
+	$zip->addFile("export/".$_POST['file_name'].".png", $_POST['file_name'].".png");
+	$zip->addFile("export/".$_POST['file_name'].".x3d", $_POST['file_name'].".x3d");
+	$zip->close();
+	
+	
+	
 ?>
