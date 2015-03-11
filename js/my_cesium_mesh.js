@@ -249,18 +249,6 @@ function createTerrain() {
 			Show the combined geometry.
 		*/
 		showCombinedGeometry();
-		/*
-		console.log("[PFC my_cesium_mesh]: Quotient scalar " + quotient);
-		if (quotient > 0) {
-			for(var i = 0; i < scene.children.length; i++) {
-				geometry = scene.children[i].geometry;
-				geometry.verticesNeedUpdate = true;
-				for(var j = 0; j < geometry.vertices.length; j++) {
-					geometry.vertices[j].z = geometry.vertices[j].z  / (quotient * 2);
-				}
-			}
-		}
-		*/
 		console.log("[PFC my_cesium_mesh.js]: Tiles in scene " + b);
 	} else {
 		setTimeout(createTerrain, 10);
@@ -268,18 +256,8 @@ function createTerrain() {
 }
 
 function showCombinedGeometry() {
-	/*
-	if (quotient > 0) {
-		console.log("[PFC my_cesium_mesh.js]: quotient to bigger " + quotient);
-		//combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient/2);
-		for(i = 0; i < combined.vertices.length; i++)
-			combined.vertices[i].y = combined.vertices[i].y / (quotient * 4) ;
-	}
-	//combined = addFaceVertexUvs(combined);
-	var material = new THREE.MeshFaceMaterial(materials);
-	var mesh = new THREE.Mesh(combined, material);
-	scene.add(mesh);
-	*/
+
+	$( "#dialog-geometry" ).dialog( "open" );
 	if (quotient > 0) {
 		console.log("[PFC my_cesium_mesh.js]: quotient to bigger " + quotient);
 		//combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient/2);
@@ -287,14 +265,43 @@ function showCombinedGeometry() {
 			combined_geometry.vertices[i].z = combined_geometry.vertices[i].z / (quotient * 4) ;
 	}
 	
-	var texture, material, mesh;
-	texture = THREE.ImageUtils.loadTexture('images/europa.jpg');
-	combined_geometry = addFaceVertexUvs(combined_geometry);
-	material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide} );
-	mesh = new THREE.Mesh(combined_geometry, material);
-	mesh.rotation.x =  Math.PI / 180 * (-90);
-	scene.add(mesh);
-
+	
+	var rectangle = maxMinTileXY();
+	var columns = 0, rows = 0;
+	for(var i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
+		columns++;
+	}
+	
+	for(var j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
+			rows++;
+	}
+		
+	var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
+	var file_name = name.substring(0, name.indexOf("."));
+	var xhr = new XMLHttpRequest();
+	var url = "createImage.php";
+	var contenido = "rows="+rows+"&columns="+columns+"&name="+file_name;
+	//var contenido = "direction="+direction+"&name="+file_name + index;
+	xhr.open("GET", url+"?"+contenido, true);
+	xhr.send();
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			console.log(xhr.responseText);
+			var texture, material, mesh;
+			texture = THREE.ImageUtils.loadTexture(xhr.responseText);
+			combined_geometry = addFaceVertexUvs(combined_geometry);
+			material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide} );
+			mesh = new THREE.Mesh(combined_geometry, material);
+			mesh.rotation.x =  Math.PI / 180 * (-90);
+			scene.add(mesh);
+			$( "#dialog-geometry" ).dialog( "close" );
+		}
+	}
+	
+	/*
+	
+	*/
+	
 }
 /*
 	Add geometry to scene.
@@ -341,7 +348,7 @@ function asociateGeometry(data, scale) {
 	rectangle_tiles[index_tile].geometry = geometry;
 	
 	//geometry = addFaceVertexUvs(geometry);
-	//geometry = addBase(geometry);
+	geometry = addBase(geometry);
 	//geometry = addFaceVertexUvs(geometry);
 }
 

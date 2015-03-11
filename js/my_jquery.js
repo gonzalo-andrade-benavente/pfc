@@ -11,6 +11,11 @@ console.log("[PFC my_jquery.js]: My jQuery.");
 			width: 400,
 			autoOpen: false,
 		});
+		$( "#dialog-geometry" ).dialog({
+			modal: true,
+			width: 400,
+			autoOpen: false,
+		});
 		$( "#progressbar" ).progressbar({
 			value: false
 		}); 

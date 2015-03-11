@@ -107,11 +107,14 @@ function createGUI() {
 			var mesh, material;
 			console.log("[PFC gui.js]: Export with THREE.X3dExporter.");
 			exporter = new THREE.X3DExporter();
-			if (combined) {
-				var material = new THREE.MeshFaceMaterial(materials);
-				var mesh = new THREE.Mesh(combined, material);
+			if (combined_geometry) {
+				console.log(combined_geometry);
+				//combined_geometry = addFaceVertexUvs(combined_geometry);
+				//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide} );
+				mesh = new THREE.Mesh(combined_geometry);
 				//material= new THREE.MeshBasicMaterial( { color: "rgb(0,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 				//mesh = new THREE.Mesh(combined_geometry, material);
+				
 				a = exporter.parse(mesh);
 				
 				var formData = new FormData();
@@ -126,10 +129,9 @@ function createGUI() {
 					xhr2.onreadystatechange = function () {
 						if (xhr2.readyState == 4 && xhr2.status == 200) {
 							console.log(xhr2.responseText);
+							window.open('./downloadShapeways.php?file_name='+file_name,  "_self");
 						}
 					}
-				
-				
 			}
 			//console.log(a);
 		}
@@ -185,35 +187,7 @@ function createGUI() {
 				}
 			}
 		}
-		this.study = function () {
-			console.clear();
-			var geometry, material, texture, mesh;
-			var combine = new THREE.Geometry();
-			var x = 0, y = 0, z = 0;
-			texture = THREE.ImageUtils.loadTexture('images/europa.jpg');
-			
-			for(var i = 0; i < 3; i++) {
-				geometry = new THREE.PlaneGeometry(10,10,10);
-				//material = new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
-				material = new THREE.MeshBasicMaterial( { map: texture, side:THREE.DoubleSide} );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.rotation.x =  Math.PI / 180 * (-90);
-				mesh.position.set(x,y,z);
-				scene.add(mesh);
-				x = x - 10;
-				mesh.updateMatrix();
-				combine.merge(mesh.geometry, mesh.matrix);
-			}
-			z = z + 20;
-			x = 0;
-			//material = new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
-			combine = addFaceVertexUvs(combine);
-			material = new THREE.MeshBasicMaterial( { map: texture, side:THREE.DoubleSide} );
-			mesh = new THREE.Mesh(combine, material);
-			mesh.position.set(x,y,z);
-			scene.add(mesh);
-			
-		}
+
 	}
 	
 	gui = new dat.GUI( {width: 300});
@@ -232,8 +206,7 @@ function createGUI() {
 	*/
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
-	//gui.add(controls, 'download').name('Descargar Shape');
-	gui.add(controls, 'study').name('Texturas');
+	gui.add(controls, 'export').name('Exportar Shape');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
 

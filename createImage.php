@@ -30,5 +30,5 @@
 	
 	imagepng($background_image,'export/'.$file.'.png');
 	imagedestroy($background_image);
-	echo 'texture/'.$file.'.png';
+	echo 'export/'.$file.'.png';
 ?>
