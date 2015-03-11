@@ -268,6 +268,7 @@ function createTerrain() {
 }
 
 function showCombinedGeometry() {
+	/*
 	if (quotient > 0) {
 		console.log("[PFC my_cesium_mesh.js]: quotient to bigger " + quotient);
 		//combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient/2);
@@ -278,12 +279,21 @@ function showCombinedGeometry() {
 	var material = new THREE.MeshFaceMaterial(materials);
 	var mesh = new THREE.Mesh(combined, material);
 	scene.add(mesh);
+	*/
+	var texture, material, mesh;
+	texture = THREE.ImageUtils.loadTexture('images/europa.jpg');
+	combined_geometry = addFaceVertexUvs(combined_geometry);
+	material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide} );
+	mesh = new THREE.Mesh(combined_geometry, material);
+	//mesh.rotation.x =  Math.PI / 180 * (-90);
+	//scene.add(mesh);
 
 }
 /*
 	Add geometry to scene.
 */
 function addGeometryScene(geometry, x, y, z, material) {
+	/*
 	materials.push(material);
 	var copy_geometry = geometry.clone();
 	for(var i = 0; i < copy_geometry.faces.length; i++) {
@@ -295,14 +305,15 @@ function addGeometryScene(geometry, x, y, z, material) {
 	tile.updateMatrix();
 	combined.merge(tile.geometry, tile.matrix, index_material);
 	index_material++;
-	
-	
+	*/
+	geometry = addFaceVertexUvs(geometry)
 	var mesh = new THREE.Mesh( geometry, material );
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
+	
 	mesh.updateMatrix();
 	combined_geometry.merge(mesh.geometry, mesh.matrix);
-	//scene.add(mesh);	
+	scene.add(mesh);	
 	
 }
 /*
@@ -324,7 +335,7 @@ function asociateGeometry(data, scale) {
 	
 	//geometry = addFaceVertexUvs(geometry);
 	geometry = addBase(geometry);
-	geometry = addFaceVertexUvs(geometry);
+	//geometry = addFaceVertexUvs(geometry);
 }
 
 	/*
