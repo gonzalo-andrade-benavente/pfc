@@ -164,7 +164,7 @@ function createTerrain() {
 		console.log('[PFC my_cesium_mesh.js]: Geometries created in rectangle_tiles');
 		var rectangle = maxMinTileXY();
 		//Add initial geometry.
-		var x = 0, y = -20; z = 0;
+		var x = 0, y = 0; z = 0;
 		var geometry, pre_geometry, quo;
 		var vertex, pre_vertex;
 		var west = false;
@@ -174,8 +174,8 @@ function createTerrain() {
 		for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
 			for(j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
 			    texture = THREE.ImageUtils.loadTexture("textures/" + name.substring(0, name.indexOf(".")) + b + ".png");
-				material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide } );
-				//material = new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+				//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide } );
+				material = new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 				if ((i == rectangle[0][0]) && (j == rectangle[1][1])) {
 					//console.log("First Tile ("+ i + "," + j + ")");
 					geometry = getGeometry(i,j);
@@ -238,10 +238,10 @@ function createTerrain() {
 				*/
 				if (quo > quotient)
 					quotient = quo;
-				z = z - 33;
+				y = y - 33;
 				b++;
 			}
-			z = 0;
+			y = 0;
 			x = x + 33;
 			west = true;
 		}
@@ -280,13 +280,20 @@ function showCombinedGeometry() {
 	var mesh = new THREE.Mesh(combined, material);
 	scene.add(mesh);
 	*/
+	if (quotient > 0) {
+		console.log("[PFC my_cesium_mesh.js]: quotient to bigger " + quotient);
+		//combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient/2);
+		for(i = 0; i < combined_geometry.vertices.length; i++)
+			combined_geometry.vertices[i].z = combined_geometry.vertices[i].z / (quotient * 4) ;
+	}
+	
 	var texture, material, mesh;
 	texture = THREE.ImageUtils.loadTexture('images/europa.jpg');
 	combined_geometry = addFaceVertexUvs(combined_geometry);
 	material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide} );
 	mesh = new THREE.Mesh(combined_geometry, material);
-	//mesh.rotation.x =  Math.PI / 180 * (-90);
-	//scene.add(mesh);
+	mesh.rotation.x =  Math.PI / 180 * (-90);
+	scene.add(mesh);
 
 }
 /*
@@ -306,14 +313,14 @@ function addGeometryScene(geometry, x, y, z, material) {
 	combined.merge(tile.geometry, tile.matrix, index_material);
 	index_material++;
 	*/
-	geometry = addFaceVertexUvs(geometry)
+	//geometry = addFaceVertexUvs(geometry)
 	var mesh = new THREE.Mesh( geometry, material );
-	mesh.rotation.x =  Math.PI / 180 * (-90);
+	//mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
 	
 	mesh.updateMatrix();
 	combined_geometry.merge(mesh.geometry, mesh.matrix);
-	scene.add(mesh);	
+	//scene.add(mesh);	
 	
 }
 /*
@@ -334,7 +341,7 @@ function asociateGeometry(data, scale) {
 	rectangle_tiles[index_tile].geometry = geometry;
 	
 	//geometry = addFaceVertexUvs(geometry);
-	geometry = addBase(geometry);
+	//geometry = addBase(geometry);
 	//geometry = addFaceVertexUvs(geometry);
 }
 
