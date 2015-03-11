@@ -296,14 +296,14 @@ function addGeometryScene(geometry, x, y, z, material) {
 	combined.merge(tile.geometry, tile.matrix, index_material);
 	index_material++;
 	
-	/*
+	
 	var mesh = new THREE.Mesh( geometry, material );
 	mesh.rotation.x =  Math.PI / 180 * (-90);
 	mesh.position.set(x, y, z);
 	mesh.updateMatrix();
 	combined_geometry.merge(mesh.geometry, mesh.matrix);
-	scene.add(mesh);	
-	*/
+	//scene.add(mesh);	
+	
 }
 /*
 	Recieve data from asynchronous cesium then create and store the geometry for each tile.

@@ -104,11 +104,14 @@ function createGUI() {
 		}
 		this.export = function () {
 			var a, exporter;
+			var mesh, material;
 			console.log("[PFC gui.js]: Export with THREE.X3dExporter.");
 			exporter = new THREE.X3DExporter();
 			if (combined) {
 				var material = new THREE.MeshFaceMaterial(materials);
 				var mesh = new THREE.Mesh(combined, material);
+				//material= new THREE.MeshBasicMaterial( { color: "rgb(0,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+				//mesh = new THREE.Mesh(combined_geometry, material);
 				a = exporter.parse(mesh);
 				
 				var formData = new FormData();
@@ -130,6 +133,58 @@ function createGUI() {
 			}
 			//console.log(a);
 		}
+		this.download = function () {
+			var rectangle = maxMinTileXY();
+			var columns = 0, rows = 0;
+			for(var i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
+				columns++;
+			}
+			
+			for(var j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
+					rows++;
+			}
+				
+			var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
+			var file_name = name.substring(0, name.indexOf("."));
+			var xhr = new XMLHttpRequest();
+			var url = "createImage.php";
+			var contenido = "rows="+rows+"&columns="+columns+"&name="+file_name;
+			//var contenido = "direction="+direction+"&name="+file_name + index;
+			xhr.open("GET", url+"?"+contenido, true);
+			xhr.send();
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 4 && xhr.status == 200) {
+					console.log(xhr.responseText);
+					var a, exporter;
+					var mesh, material;
+					console.log("[PFC gui.js]: Export with THREE.X3dExporter.");
+					exporter = new THREE.X3DExporter();
+					if (combined) {
+						material = new THREE.MeshFaceMaterial(materials);
+						mesh = new THREE.Mesh(combined, material);
+						//material= new THREE.MeshBasicMaterial( { color: "rgb(0,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+						//mesh = new THREE.Mesh(combined_geometry, material);
+						a = exporter.parse(mesh);
+						
+						var formData = new FormData();
+						var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
+						var file_name = name.substring(0, name.indexOf("."));
+						
+						formData.append('file_name', file_name);
+						formData.append('indexed_face_set', a);
+						var xhr2 = new XMLHttpRequest();
+							xhr2.open("POST", 'createX3D.php', true);
+							xhr2.send(formData);
+							xhr2.onreadystatechange = function () {
+								if (xhr2.readyState == 4 && xhr2.status == 200) {
+									console.log(xhr2.responseText);
+									window.open('./downloadShapeways.php?file_name='+file_name,  "_self");
+								}
+							}
+					}
+				}
+			}
+		}
 	}
 	
 	gui = new dat.GUI();
@@ -148,8 +203,9 @@ function createGUI() {
 	*/
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
-	gui.add(controls, 'texture').name('Crear textura');
-	gui.add(controls, 'export').name('Exportar Shape');
+	//gui.add(controls, 'texture').name('Crear textura');
+	//gui.add(controls, 'export').name('Exportar Shape');
+	gui.add(controls, 'download').name('Descargar Shape');
 	//gui.add(controls, 'merge').name('Funcion merge');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }
