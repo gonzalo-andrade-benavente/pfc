@@ -24,8 +24,8 @@ function createGUI() {
 				console.log(combined_geometry);
 				//combined_geometry = addFaceVertexUvs(combined_geometry);
 				//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide} );
-				//material= new THREE.MeshBasicMaterial( { color: "rgb(0,0,0)", wireframe: true ,side:THREE.DoubleSide} );
-				mesh = new THREE.Mesh(combined_geometry);				
+				material= new THREE.MeshBasicMaterial( { side:THREE.DoubleSide} );
+				mesh = new THREE.Mesh(combined_geometry, material);				
 				a = exporter.parse(mesh);		
 				var formData = new FormData();
 				var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);

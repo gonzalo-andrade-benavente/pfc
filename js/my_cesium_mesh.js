@@ -238,7 +238,7 @@ function createTerrain() {
 				*/
 				if (quo > quotient)
 					quotient = quo;
-				y = y - 33;
+				y = y + 33;
 				b++;
 			}
 			y = 0;
@@ -257,25 +257,23 @@ function createTerrain() {
 
 function showCombinedGeometry() {
 
+
+	
 	$( "#dialog-geometry" ).dialog( "open" );
 	if (quotient > 0) {
 		console.log("[PFC my_cesium_mesh.js]: quotient to bigger " + quotient);
 		//combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient/2);
 		for(i = 0; i < combined_geometry.vertices.length; i++)
-			combined_geometry.vertices[i].z = combined_geometry.vertices[i].z / (quotient * 4) ;
+			combined_geometry.vertices[i].z = combined_geometry.vertices[i].z / (quotient * 2) ;
 	}
-	
-	
 	var rectangle = maxMinTileXY();
 	var columns = 0, rows = 0;
 	for(var i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
 		columns++;
 	}
-	
 	for(var j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
 			rows++;
 	}
-		
 	var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 	var file_name = name.substring(0, name.indexOf("."));
 	var xhr = new XMLHttpRequest();
@@ -287,6 +285,12 @@ function showCombinedGeometry() {
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState == 4 && xhr.status == 200) {
 			console.log(xhr.responseText);
+			/*
+			var material = new THREE.MeshFaceMaterial(materials);
+			var mesh = new THREE.Mesh(combined, material);
+			scene.add(mesh);
+			*/
+			
 			var texture, material, mesh;
 			texture = THREE.ImageUtils.loadTexture(xhr.responseText);
 			combined_geometry = addFaceVertexUvs(combined_geometry);
@@ -294,9 +298,11 @@ function showCombinedGeometry() {
 			mesh = new THREE.Mesh(combined_geometry, material);
 			mesh.rotation.x =  Math.PI / 180 * (-90);
 			scene.add(mesh);
+			
 			$( "#dialog-geometry" ).dialog( "close" );
 		}
 	}
+	
 	
 	/*
 	
@@ -307,19 +313,21 @@ function showCombinedGeometry() {
 	Add geometry to scene.
 */
 function addGeometryScene(geometry, x, y, z, material) {
-	/*
+	
 	materials.push(material);
 	var copy_geometry = geometry.clone();
 	for(var i = 0; i < copy_geometry.faces.length; i++) {
 		copy_geometry.faces[i].materialIndex = 0;
 	}
 	var tile = new THREE.Mesh(geometry);
-	tile.rotation.x =  Math.PI / 180 * (-90);
+	//tile.rotation.x =  Math.PI / 180 * (-90);
 	tile.position.set(x, y, z);
 	tile.updateMatrix();
 	combined.merge(tile.geometry, tile.matrix, index_material);
 	index_material++;
-	*/
+	
+	
+	
 	//geometry = addFaceVertexUvs(geometry)
 	var mesh = new THREE.Mesh( geometry, material );
 	//mesh.rotation.x =  Math.PI / 180 * (-90);
@@ -352,19 +360,6 @@ function asociateGeometry(data, scale) {
 	//geometry = addFaceVertexUvs(geometry);
 }
 
-	/*
-	window.onbeforeunload = function (e) {
-		xhr2 = new XMLHttpRequest();
-		var url = "deleteFiles.php";
-		xhr2.open("GET", url, true);
-		xhr2.send();
-		xhr2.onreadystatechange = function () {
-			if (xhr2.readyState == 4 && xhr2.status == 200) {
-				console.log(xhr2.responseText);
-			}
-		}
-	};
-	*/
 
 	
 	
