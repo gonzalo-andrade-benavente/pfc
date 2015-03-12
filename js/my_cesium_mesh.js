@@ -256,9 +256,6 @@ function createTerrain() {
 }
 
 function showCombinedGeometry() {
-
-
-	
 	$( "#dialog-geometry" ).dialog( "open" );
 	if (quotient > 0) {
 		console.log("[PFC my_cesium_mesh.js]: quotient to bigger " + quotient);
@@ -348,8 +345,13 @@ function asociateGeometry(data, scale) {
 		heights = data._heightValues;
 	facesQuantized = data._indices;
 	var geometry = new THREE.Geometry();
-	for(var i=0; i < heights.length; i++)
-		geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/scale),Math.round(yy[i]/scale),Math.round(heights[i]/scale)));
+	for(var i=0; i < heights.length; i++) {
+		//if ((heights[i]/scale) < 0) {
+		//	geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/scale),Math.round(yy[i]/scale),1));
+		//} else {
+			geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/scale),Math.round(yy[i]/scale),Math.round(heights[i]/scale)));
+		//}
+	}
 	
 	for(var i=0; i < facesQuantized.length; i=i+3)
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
@@ -357,7 +359,7 @@ function asociateGeometry(data, scale) {
 	
 	//geometry = addFaceVertexUvs(geometry);
 	geometry = addBase(geometry);
-	//geometry = addFaceVertexUvs(geometry);
+	geometry = addFaceVertexUvs(geometry);
 }
 
 
