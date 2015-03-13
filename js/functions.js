@@ -174,6 +174,21 @@ function addRelieve(geometry, vertices, displace) {
 		geometry.faces.push(new THREE.Face3(vertices[i+1], vertices[i], vertices[i+1]+displace));
 	}
 }
+
+function addBase2(geometry, x, y) {
+	var geometry2 = geometry.clone();
+	for(var i = 0; i < geometry2.vertices.length; i++) {
+		//geometry.vertices.push(new THREE.Vector3(geometry2.vertices[i].x, geometry2.vertices[i].y, -1));
+		//geometry.vertices.push(new THREE.Vector3(geometry2.vertices[i].x, geometry2.vertices[i].y, 0));
+		//console.log(scene);
+		boxgeo = new THREE.BoxGeometry(0.3, 0.3, 0.3);
+		boxmesh = new THREE.Mesh(boxgeo);
+		boxmesh.position.set(geometry2.vertices[i].x + x, geometry2.vertices[i].y + y, -10);
+		scene.add(boxmesh);
+	}
+	return geometry;
+}
+
 /*
 	Add base to geometry.
 */
@@ -184,6 +199,7 @@ function addBase(geometry){
 	//In geometry2 have the old data of geometry.
 	var geometry2 = geometry.clone();
 	for(var i = 0; i < geometry2.vertices.length; i++) {
+		//geometry.vertices.push(new THREE.Vector3(geometry2.vertices[i].x, geometry2.vertices[i].y, -3));
 		geometry.vertices.push(new THREE.Vector3(geometry2.vertices[i].x, geometry2.vertices[i].y, 0));
 	}
 	var southVertices = new Array(), northVertices = new Array(), eastVertices = new Array(), westVertices = new Array(), i;
