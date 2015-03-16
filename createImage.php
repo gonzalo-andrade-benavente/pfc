@@ -14,9 +14,13 @@
 	$file = $_GET['name'];
 	$width = 510;
 	$heigth = 697;
-	$background_image = @imagecreate($width * $columns, $heigth * $rows)
-		or die("Cannot Initialize new GD image stream");
-	$background_color = imagecolorallocate($background_image, 0, 0, 0);
+	//$background_image = @imagecreate($width * $columns, $heigth * $rows)
+	//	or die("Cannot Initialize new GD image stream");
+		
+	$background_image = imagecreatetruecolor( $width * $columns, $heigth * $rows);   
+	imagealphablending( $background_image, false );
+	imagesavealpha( $background_image, true );
+	//$background_color = imagecolorallocate($background_image, 0, 0, 0);
 	//imagealphablending($background_color, false);
 	//imagesavealpha($background_color, true);
 	$times = 0;
@@ -32,7 +36,8 @@
 				$image = imagecreatefromjpeg($source_image);
 			}
 			$size = getimagesize($source_image);
-			imagecopymerge($background_image, $image, $x, $y, 0, 0, $size[0], $size[1], 100);
+			//imagecopymerge($background_image, $image, $x, $y, 0, 0, $size[0], $size[1], 100);
+			imagecopy($background_image, $image, $x, $y, 0, 0, $size[0], $size[1]);
 			imagedestroy($image);
 			$y = $y - $heigth;
 			$times++;

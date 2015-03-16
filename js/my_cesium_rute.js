@@ -147,7 +147,7 @@
 							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
 						while (reverse_line_points.length > 120) 
 							reverse_line_points = fixCoordinates(reverse_line_points);
-						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 12},
+						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
 															 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
 						};
 						encode_json = JSON.stringify(geo_json);
@@ -202,7 +202,7 @@
 							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
 						while (reverse_line_points.length > 120) 
 							reverse_line_points = fixCoordinates(reverse_line_points);
-						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 12},
+						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
 															 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
 						};
 						encode_json = JSON.stringify(geo_json);
@@ -216,7 +216,7 @@
 					} else {
 						while (reverse_line_points.length > 120) 
 							reverse_line_points = fixCoordinates(reverse_line_points);						
-						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 12},
+						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
 															 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
 						};
 						encode_json = JSON.stringify(geo_json);
