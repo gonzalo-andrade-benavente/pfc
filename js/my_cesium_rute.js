@@ -183,7 +183,7 @@
 							//If one point out from the mesh.
 							coordinate_before = true;
 							//Only one mistake.
-							if (fails < 500 ) {
+							if (fails < 10000 ) {
 								json_coordinates.push(coordinates[j]);
 								for(a=0; a < json_coordinates.length; a++) 
 									reverse_line_points.push([json_coordinates[a][1], json_coordinates[a][0]]);	
@@ -233,7 +233,7 @@
 			}
 		}
 		
-		/*
+		
 		//Only one call with all the information in array.
 		var formData = new FormData();
 		//formData.append('information',JSON.stringify(url));
@@ -254,7 +254,7 @@
 					//window.open("./PFCMyMesh.html", "_self");
 				}
 			}
-		*/
+		
 	}
 	
 
