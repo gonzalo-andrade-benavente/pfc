@@ -12,6 +12,7 @@
 	$rows = (int) $_GET['rows'];
 	$columns = (int) $_GET['columns'];
 	$file = $_GET['name'];
+	//510 - 697
 	$width = 510;
 	$heigth = 697;
 	//$background_image = @imagecreate($width * $columns, $heigth * $rows)
