@@ -60,8 +60,8 @@ function createGUI() {
 			scene.children[i].material.wireframe = e;
 	});
 	*/
-	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'home').name('Inicio');
+	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'export').name('Exportar Shape');
 	gui.add(controls, 'refresh').name('Actualizar (F5)');
 }

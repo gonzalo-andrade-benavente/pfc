@@ -200,7 +200,6 @@ function addBase(geometry){
 	
 	var geometry2 = geometry.clone();
 	geometry2.computeBoundingBox();
-	console.log(geometry.boundingBox);
 	for(var i = 0; i < geometry2.vertices.length; i++) {
 		//geometry.vertices.push(new THREE.Vector3(geometry2.vertices[i].x, geometry2.vertices[i].y, -3));
 		geometry.vertices.push(new THREE.Vector3(geometry2.vertices[i].x, geometry2.vertices[i].y, geometry2.boundingBox.min.z));

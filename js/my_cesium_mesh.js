@@ -174,7 +174,7 @@ function createTerrain() {
 			    //texture = THREE.ImageUtils.loadTexture("textures/" + name.substring(0, name.indexOf(".")) + b + ".png");
 				//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide } );
 				material = new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
-				console.log("Tile ("+ i + "," + j + ")");
+				//console.log("Tile ("+ i + "," + j + ")");
 				geometry = getGeometry(i,j);
 				addGeometryScene(geometry, x, y, z, material);
 				y = y + 33;
@@ -289,9 +289,7 @@ function asociateGeometry(data, scale) {
 			//geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/scale),Math.round(yy[i]/scale),Math.round(heights[i]/scale)));
 			new_height = (((data._maximumHeight - data._minimumHeight) * heights[i]) / 32767) + data._minimumHeight;
 			geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/scale),Math.round(yy[i]/scale), new_height/30));
-	}
-	console.log(new_height/scale);
-	
+	}	
 	for(var i=0; i < facesQuantized.length; i=i+3)
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 	rectangle_tiles[index_tile].geometry = geometry;
