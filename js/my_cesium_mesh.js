@@ -159,15 +159,13 @@ function getVertex(geometry, cardinality) {
 }
 
 function createTerrain() {
-	var i, j , a, b=0;
+	var i, j;
 	if (rectangle_tiles[0].geometry) {
 		console.log('[PFC my_cesium_mesh.js]: Geometries created in rectangle_tiles');
 		var rectangle = maxMinTileXY();
 		//Add initial geometry.
 		var x = 0, y = 0; z = 0;
-		var geometry, pre_geometry, quo;
-		var vertex, pre_vertex;
-		var west = false;
+		var geometry;
 		//Name actually file gpx.
 		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 		var texture, material;
@@ -179,61 +177,6 @@ function createTerrain() {
 				console.log("Tile ("+ i + "," + j + ")");
 				geometry = getGeometry(i,j);
 				addGeometryScene(geometry, x, y, z, material);
-				/*
-				if ((i == rectangle[0][0]) && (j == rectangle[1][1])) {
-					//console.log("First Tile ("+ i + "," + j + ")");
-					geometry = getGeometry(i,j);
-					//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide } );
-					addGeometryScene(geometry, x, y, z, material);
-				} else {
-					//Rest of geometries.
-					if (west) {
-						//console.log("Base Tile ("+ i + "," + j + ")");
-						pre_geometry = getGeometry(i-1, j);
-						pre_vertex = getVertex(pre_geometry, 'south');						
-						
-						geometry = getGeometry(i, j);
-						vertex = getVertex(geometry, 'south');
-						
-						var pre_east_vertex = getVertex(pre_geometry, 'east');
-						var west_vertex = getVertex(geometry, 'west');
-						
-						if ((pre_east_vertex.length > 0) && (vertex.length > 0)) {
-							quo = pre_geometry.vertices[majorValue(pre_geometry, pre_east_vertex)].z / geometry.vertices[majorValue(geometry, west_vertex)].z;
-						} else
-							quo = 1;
-						
-						for(a = 0; a < geometry.vertices.length; a++) 
-							geometry.vertices[a].z = geometry.vertices[a].z * quo;
-
-						addGeometryScene(geometry, x, y, z, material);
-					} else {
-						//console.log("Another Tile ("+ i + "," + j + ")");
-						pre_geometry = getGeometry(i, j+1);
-						pre_vertex = getVertex(pre_geometry, 'north');
-						
-						geometry = getGeometry(i, j);
-						vertex = getVertex(geometry, 'south');
-						
-						if ((pre_vertex.length > 0) && (vertex.length > 0)) {
-							quo = pre_geometry.vertices[majorValue(pre_geometry, pre_vertex)].z / geometry.vertices[majorValue(geometry, vertex)].z;
-						} else
-							quo = 1;
-						
-						for(a = 0; a < geometry.vertices.length; a++) 
-							geometry.vertices[a].z = geometry.vertices[a].z * quo;
-						
-						addGeometryScene(geometry, x, y, z, material);
-						
-					}
-					west = false;
-				}
-
-				if (quo > quotient)
-					quotient = quo;
-				y = y + 33;
-				b++;
-				*/
 				y = y + 33;
 			}
 			y = 0;
@@ -244,7 +187,6 @@ function createTerrain() {
 			Show the combined geometry.
 		*/
 		showCombinedGeometry();
-		console.log("[PFC my_cesium_mesh.js]: Tiles in scene " + b);
 	} else {
 		setTimeout(createTerrain, 10);
 	}
@@ -252,15 +194,14 @@ function createTerrain() {
 
 function showCombinedGeometry() {
 	$( "#dialog-geometry" ).dialog( "open" );
+	/*
 	if (quotient > 0) {
 		console.log("[PFC my_cesium_mesh.js]: quotient to bigger " + quotient);
-		//combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (quotient/2);
 		for(i = 0; i < combined_geometry.vertices.length; i++) {
 			combined_geometry.vertices[i].z = combined_geometry.vertices[i].z / (quotient * 1000) ;
-			//combined_geometry.vertices[i].x = combined_geometry.vertices[i].x / (400) ;
-			//combined_geometry.vertices[i].y = combined_geometry.vertices[i].y / (400) ;
 		}
 	}
+	*/
 	var rectangle = maxMinTileXY();
 	var columns = 0, rows = 0;
 	for(var i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
@@ -288,8 +229,8 @@ function showCombinedGeometry() {
 			
 			var texture, material, mesh;
 			texture = THREE.ImageUtils.loadTexture(xhr.responseText);
-			combined_geometry = addBase(combined_geometry);
 			combined_geometry = addFaceVertexUvs(combined_geometry);
+			combined_geometry = addBase(combined_geometry);
 			material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide} );
 			mesh = new THREE.Mesh(combined_geometry, material);
 			mesh.rotation.x =  Math.PI / 180 * (-90);
@@ -310,6 +251,9 @@ function showCombinedGeometry() {
 */
 function addGeometryScene(geometry, x, y, z, material) {
 	materials.push(material);
+	if (!geometry) {
+		$( "#dialog-cesium" ).dialog( "open" );
+	}
 	var copy_geometry = geometry.clone();
 	for(var i = 0; i < copy_geometry.faces.length; i++) {
 		copy_geometry.faces[i].materialIndex = 0;
@@ -334,7 +278,6 @@ function addGeometryScene(geometry, x, y, z, material) {
 	Recieve data from asynchronous cesium then create and store the geometry for each tile.
 */
 function asociateGeometry(data, scale) {
-	console.log(data);
 	var mesh, facesQuantized, geometry;
 	var xx = data._uValues, 
 		yy = data._vValues,
