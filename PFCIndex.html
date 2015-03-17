@@ -3,11 +3,13 @@
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 	<!-- css -->
 	<script type="text/javascript" src="js/dnd.js"> //Libreria mía. </script>
-	<link rel="stylesheet" type="text/css" href="css/dnd.css"/> 
+	<link rel="stylesheet" type="text/css" href="css/dnd.css"> </link> 
 	<title> PFC Three.js  </title>
+	
 </head>
 <body onload="deleteFiles()">
-	<form id="upload" action="" method="POST" enctype="multipart/form-data">
+	<div id="upload">
+	<form action="" method="POST" enctype="multipart/form-data">
 		<fieldset>
 			<legend>Subir ruta gpx <i>drag and drop</i></legend>
 			<input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
@@ -27,9 +29,9 @@
 		</fieldset>
 	</form>
 
-	<!-- <div id="messages">
+	<div id="messages">
 		<p><i>Mensaje de estado</i></p>
 	</div>
-	-->
+	</div>
 </body>
 </html>

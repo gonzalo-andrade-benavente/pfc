@@ -1,16 +1,21 @@
 /* Drag and drop css*/
 #filedrag {
+	border: 2px dashed #555;
+	font-weight: bold;
+	text-align: center;
+	height:10em; 
+	/*
 	display: none;
 	font-weight: bold;
 	text-align: center;
 	padding: 1em 0;
-	/* margin: 1em 0;*/
 	height: 30%;
 	color: #555;
-	border: 2px dashed #555;
 	border-radius: 7px;
 	cursor: default;
+	*/
 }
+
 
 #filedrag.hover {
 	color: #f00;
@@ -19,9 +24,11 @@
 	box-shadow: inset 0 3px 4px #888;
 }
 
+
 #upload {
 	margin-top:15%;
 	width:70%;
+	height: 40%;
 	margin-left:15%;
 }
 
@@ -29,3 +36,4 @@
 	float:right;
 	margin-right:15%;
 }
+

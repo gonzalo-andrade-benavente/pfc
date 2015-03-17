@@ -1,8 +1,10 @@
 /* dnd.js */
 var xhr = new XMLHttpRequest();
-window.onload=function() {
+
+function loadPage() {
 	sessionStorage.clear();
 	if (window.File && window.FileList && window.FileReader) {
+		document.getElementById("messages").innerHTML = "<i>Mensaje de estado:</i> Navegador soporta File-FileList-FileReader";
 		var fileselect = document.getElementById("fileselect"),
 			filedrag = document.getElementById("filedrag"),
 			submitbutton = document.getElementById("submitbutton");
@@ -15,29 +17,15 @@ window.onload=function() {
 		}	
 	
 	}else{
-		document.getElementById("messages").innerHTML = "Navegador no soporta File-FileList-FileReader";
+		document.getElementById("messages").innerHTML = "<i>Mensaje de estado:</i> Navegador no soporta File-FileList-FileReader";
 	}
-};
+}
 
 function FileDragHover(e) {
 	e.stopPropagation();
 	e.preventDefault();
 	e.target.className = (e.type == "dragover" ? "hover" : "");
 }
-
-	/*
-	window.onbeforeunload = function (e) {
-		xhr2 = new XMLHttpRequest();
-		var url = "deleteFiles.php";
-		xhr2.open("GET", url, true);
-		xhr2.send();
-		xhr2.onreadystatechange = function () {
-			if (xhr2.readyState == 4 && xhr2.status == 200) {
-				console.log(xhr2.responseText);
-			}
-		}
-	};
-	*/
 	
 function deleteFiles() {
 xhr2 = new XMLHttpRequest();
@@ -47,6 +35,7 @@ xhr2 = new XMLHttpRequest();
 		xhr2.onreadystatechange = function () {
 			if (xhr2.readyState == 4 && xhr2.status == 200) {
 				console.log(xhr2.responseText);
+				loadPage();
 			}
 		}	
 }
