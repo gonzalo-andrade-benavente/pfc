@@ -1,0 +1,21 @@
+<html  xml:lang="es" lang="es">
+<html>
+<head>
+	<!-- <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' /> -->
+	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
+	<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+	<style>
+	  body { margin:0; padding:0; }
+	  #map { position:absolute; top:0; bottom:0; width:100%; }
+	</style>
+	
+	<title>Mapa Simple</title>
+</head>
+<body>
+	<div id='map'></div>
+	<script>
+		L.mapbox.accessToken = 'pk.eyJ1IjoiZ29uemFsaXRvIiwiYSI6IlVJTGIweFUifQ.waoF7m8PZbBM6u8Tg_rR7A';
+		var map = L.mapbox.map('map', 'examples.map-i86nkdio').setView([40, -74.50], 9);
+	</script>
+</body>
+</html>
