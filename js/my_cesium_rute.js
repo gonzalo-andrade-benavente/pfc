@@ -245,7 +245,7 @@
 			}
 			xhr2.onload = function () {
 				$( "#dialog-message" ).dialog( "close" );
-				window.open("./PFCMyMesh.html", "_self");
+				//window.open("./PFCMyMesh.html", "_self");
 			}
 			xhr2.send(formData);
 			xhr2.onreadystatechange = function () {
