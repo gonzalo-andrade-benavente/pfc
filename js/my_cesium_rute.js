@@ -241,11 +241,11 @@
 		var xhr2 = new XMLHttpRequest();
 			xhr2.open("POST", 'getTexture.php', true);
 			xhr2.upload.onprogress = function (evt) {
-				$( "#dialog-message" ).dialog( "open" );
+				$( "#dialog-message" ).dialog("open");
 			}
 			xhr2.onload = function () {
 				$( "#dialog-message" ).dialog( "close" );
-				//window.open("./PFCMyMesh.html", "_self");
+				window.open("./PFCMyMesh.html", "_self");
 			}
 			xhr2.send(formData);
 			xhr2.onreadystatechange = function () {

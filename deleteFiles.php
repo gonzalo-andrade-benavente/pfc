@@ -16,5 +16,11 @@
 		if(is_file($file))
 			unlink($file); 
 	}
+	
+	$files = glob('export/*'); 
+	foreach($files as $file){ 
+		if(is_file($file))
+			unlink($file); 
+	}
 	echo "[PFC deleteFiles.php]: Information cleaned correctly.";
 ?>

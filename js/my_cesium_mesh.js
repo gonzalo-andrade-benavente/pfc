@@ -155,6 +155,7 @@ function getVertex(geometry, cardinality) {
 	} else {
 		//console.log("[PFC my_cesium_mesh.js]: Error cesium bounding box geometry.");
 		$( "#dialog-cesium" ).dialog( "open" );
+		//createTerrain();
 		//window.open("./PFCMyMesh.html", "_self");
 	}
 }
@@ -254,6 +255,7 @@ function addGeometryScene(geometry, x, y, z, material) {
 	materials.push(material);
 	if (!geometry) {
 		$( "#dialog-cesium" ).dialog( "open" );
+		//createTerrain();
 		//window.open("./PFCMyMesh.html", "_self");
 	}
 	var copy_geometry = geometry.clone();

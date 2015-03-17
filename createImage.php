@@ -1,4 +1,5 @@
 <?php
+	ini_set('memory_limit', '128M');
 	$type;
 	$finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
 	foreach ( glob('textures/*') as $filename) {
