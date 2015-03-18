@@ -14,5 +14,17 @@ function requestTilesWhenReady() {
 
 function showData(lat, lon, level) {
 	document.write("[PFC my_cesium.js]: Show data");
+	var positionLonLat, positionTileXY, requestPromise, tilePromise, promise = [];
+	positionLonLat = Cesium.Cartographic.fromDegrees(lon, lat);
+	positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat, level);
+	requestPromise = aCesiumTerrainProvider.requestTileGeometry(positionTileXY.x, positionTileXY.y, level, false).then(function(data){
+		console.log(data);
+	});
+	tilePromise = Cesium.when(requestPromise);
+	promise.push(tilePromise);
 	
+	Cesium.when.all(promise, function() {
+		console.log("[PFC my_cesium.js]: All request asynchronous complete.");
+    });
+
 }
