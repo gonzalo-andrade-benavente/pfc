@@ -72,13 +72,22 @@ function load(coord) {
 	info_tiles = new Array(); 
 	checkTile(coord, level);
 	rectangle_tiles = createRectangle(info_tiles, level);
-	for(i = 0; i < rectangle_tiles.length; i++) {
-		aCesiumTerrainProvider.requestTileGeometry(rectangle_tiles[i].x, rectangle_tiles[i].y, level, false).then(function(data){
+	var promise = [];
+	for(i = 0; i < rectangle_tiles.length; i++) {		
+		requestPromise = aCesiumTerrainProvider.requestTileGeometry(rectangle_tiles[i].x, rectangle_tiles[i].y, level, false).then(function(data){
 				asociateGeometry(data, 1000);
 				index_tile++;
-			});
+		});
+		var tilePromise = Cesium.when(requestPromise);
+        promise.push(tilePromise);
+		
+		
 	}
-	createTerrain();
+	Cesium.when.all(promise, function() {
+		createTerrain();
+    });
+	
+	
 }
 
 function maxMinTileXY() {
@@ -105,6 +114,10 @@ function getGeometry(x, y) {
 			break;
 		}
 	}
+	console.log(geometry);
+	if (!geometry)
+		console.log('NO GEOMETRY');
+	
 	return geometry;
 }
 
@@ -176,7 +189,7 @@ function createTerrain() {
 			    //texture = THREE.ImageUtils.loadTexture("textures/" + name.substring(0, name.indexOf(".")) + b + ".png");
 				//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide } );
 				material = new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
-				//console.log("Tile ("+ i + "," + j + ")");
+				console.log("Tile ("+ i + "," + j + ")");
 				geometry = getGeometry(i,j);
 				addGeometryScene(geometry, x, y, z, material);
 				y = y + 33;
@@ -241,12 +254,6 @@ function showCombinedGeometry() {
 			$( "#dialog-geometry" ).dialog( "close" );
 		}
 	}
-	
-	
-	/*
-	
-	*/
-	
 }
 /*
 	Add geometry to scene.
