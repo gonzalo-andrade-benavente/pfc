@@ -114,13 +114,10 @@ function getGeometry(x, y) {
 			break;
 		}
 	}
-	console.log(geometry);
-	if (!geometry)
-		console.log('NO GEOMETRY');
-	
 	return geometry;
 }
 
+/*
 function getVertex(geometry, cardinality) {
 
 	if (geometry) {
@@ -172,6 +169,7 @@ function getVertex(geometry, cardinality) {
 		//window.open("./PFCMyMesh.html", "_self");
 	}
 }
+*/
 
 function createTerrain() {
 	var i, j;
@@ -189,7 +187,7 @@ function createTerrain() {
 			    //texture = THREE.ImageUtils.loadTexture("textures/" + name.substring(0, name.indexOf(".")) + b + ".png");
 				//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide } );
 				material = new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
-				console.log("Tile ("+ i + "," + j + ")");
+				//console.log("Tile ("+ i + "," + j + ")");
 				geometry = getGeometry(i,j);
 				addGeometryScene(geometry, x, y, z, material);
 				y = y + 33;

@@ -118,7 +118,8 @@
 		var json_coordinates = new Array();
 		var reverse_line_points = new Array();
 		var encode_json, encode_json_uri, static_image_json;
-		var width = 510, height = 697;
+		//var width = 510, height = 697;
+		var width = 510, height = 700;
 		var zoom_map = 16;
 		var url = new Array();
 		if (rectangle_tiles.length > 0) {
