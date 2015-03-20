@@ -97,7 +97,7 @@
 			//map.setZoom(14);
 			
 			console.log("[PFC my_cesium_rute.js]: TileCesium in Mapbox set bounds.");
-			
+			//drawAdvanced();
 		})
 		.on('error', function() {
 			alert('[PFC my_cesium_rute.js]: Error loaded omnivore file gpx');
@@ -119,7 +119,7 @@
 		var reverse_line_points = new Array();
 		var encode_json, encode_json_uri, static_image_json;
 		//var width = 510, height = 697;
-		var width = 510, height = 700;
+		var width = 510, height = 697;
 		var zoom_map = 16;
 		var url = new Array();
 		if (rectangle_tiles.length > 0) {

@@ -27,5 +27,8 @@ function showData(lat, lon, level) {
 		console.log("[PFC my_cesium.js]: All request asynchronous complete.");
 		console.log(cesium_data);
     });
-
 }
+
+
+
+

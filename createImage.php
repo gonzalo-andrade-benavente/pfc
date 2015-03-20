@@ -39,6 +39,7 @@
 			}
 			$size = getimagesize($source_image);
 			//imagecopymerge($background_image, $image, $x, $y, 0, 0, $size[0], $size[1], 100);
+			//imagecopy($background_image, $image, $x, $y, 0, 0, $size[0]-10, $size[1]-10);
 			imagecopy($background_image, $image, $x, $y, 0, 0, $size[0], $size[1]);
 			imagedestroy($image);
 			$y = $y - $heigth;
