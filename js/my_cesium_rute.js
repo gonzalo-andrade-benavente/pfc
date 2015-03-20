@@ -97,6 +97,7 @@
 			//map.setZoom(14);
 			
 			console.log("[PFC my_cesium_rute.js]: TileCesium in Mapbox set bounds.");
+			drawRute();
 			//drawAdvanced();
 		})
 		.on('error', function() {
@@ -106,6 +107,20 @@
 		})
 		.addTo(map);
 	}
+	
+	function drawRute(){
+		reverse_line_points = [];
+		for(j=0; j < coordinates.length; j++) 
+			reverse_line_points.push([coordinates[j][0], coordinates[j][1]]);
+						
+		while (reverse_line_points.length >= 120) 
+			reverse_line_points = fixCoordinates(reverse_line_points);
+			
+		console.log(reverse_line_points.length);
+		var polyline_options = { color: 'green'};
+		var polyline = L.polyline(reverse_line_points, polyline_options).addTo(map);
+	}
+	
 	function drawAdvanced() {
 		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 		var file_name = name.substring(0, name.indexOf("."));
@@ -123,7 +138,6 @@
 		var zoom_map = 16;
 		var url = new Array();
 		if (rectangle_tiles.length > 0) {
-			//for(i = 13; i < 14; i++) {
 			for(i = 0; i < rectangle_tiles.length; i++) {
 				json_coordinates = new Array();
 				reverse_line_points = new Array();
@@ -142,7 +156,7 @@
 						}
 					}
 					if (json_coordinates.length > 0) {
-						var polyline_options = { color: 'green'};
+						var polyline_options = { color: 'red'};
 						var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);			
 						for(j=0; j < json_coordinates.length; j++) 
 							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
@@ -190,14 +204,14 @@
 									reverse_line_points.push([json_coordinates[a][1], json_coordinates[a][0]]);	
 								fails++;
 							} 
-							var polyline_options = { color: 'green'};
+							var polyline_options = { color: 'red'};
 							var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);
 							json_coordinates = new Array();
 						}
 					}
 					//Union with the next tile.
 					if(json_coordinates.length > 0) {	
-						var polyline_options = { color: 'green'};
+						var polyline_options = { color: 'red'};
 						var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);
 						for(j=0; j < json_coordinates.length; j++) 
 							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
@@ -246,7 +260,7 @@
 			}
 			xhr2.onload = function () {
 				$( "#dialog-message" ).dialog( "close" );
-				window.open("./PFCMyMesh.html", "_self");
+				//window.open("./PFCMyMesh.html", "_self");
 			}
 			xhr2.send(formData);
 			xhr2.onreadystatechange = function () {
@@ -254,8 +268,7 @@
 					console.log(xhr2.responseText);
 					//window.open("./PFCMyMesh.html", "_self");
 				}
-			}
-		
+			}	
 	}
 	
 
