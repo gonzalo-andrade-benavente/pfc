@@ -134,7 +134,7 @@
 		var reverse_line_points = new Array();
 		var encode_json, encode_json_uri, static_image_json;
 		//var width = 510, height = 697;
-		var width = 510, height = 697;
+		var width = 509, height = 702;
 		var zoom_map = 16;
 		var url = new Array();
 		if (rectangle_tiles.length > 0) {
@@ -260,7 +260,7 @@
 			}
 			xhr2.onload = function () {
 				$( "#dialog-message" ).dialog( "close" );
-				//window.open("./PFCMyMesh.html", "_self");
+				window.open("./PFCMyMesh.html", "_self");
 			}
 			xhr2.send(formData);
 			xhr2.onreadystatechange = function () {
@@ -275,10 +275,18 @@
 	
 	function showTiles(){
 		//Draw the tiles from the rute more rectangle
+		/*
 		for(i = 0; i < rectangle_tiles.length; i++) {
 			var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 			L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 		}
+		*/
+		var bounds = [[rectangle_tiles[0].bounds[0][0], rectangle_tiles[0].bounds[0][1]], [rectangle_tiles[0].bounds[1][0], rectangle_tiles[0].bounds[1][1]]];
+		L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
+		var width = 513, height = 695, zoom_map = 16;
+		map.setMaxBounds(bounds);
+		static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[0]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+		console.log(static_image_json);
 	}
 	/*
 		Fixed coordinates if his length is bigger than 122.

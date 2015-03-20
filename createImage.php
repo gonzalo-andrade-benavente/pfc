@@ -14,8 +14,8 @@
 	$columns = (int) $_GET['columns'];
 	$file = $_GET['name'];
 	//510 - 697
-	$width = 510;
-	$heigth = 697;
+	$width = 509;
+	$heigth = 702;
 	//$background_image = @imagecreate($width * $columns, $heigth * $rows)
 	//	or die("Cannot Initialize new GD image stream");
 		
