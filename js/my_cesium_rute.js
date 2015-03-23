@@ -97,7 +97,7 @@
 			//map.setZoom(14);
 			
 			console.log("[PFC my_cesium_rute.js]: TileCesium in Mapbox set bounds.");
-			drawRute();
+			//drawRute();
 			//drawAdvanced();
 		})
 		.on('error', function() {
@@ -109,6 +109,108 @@
 	}
 	
 	function drawRute(){
+		console.clear();
+		var i, j, bounds, out_bounds, static_image_json;
+		var json_coordinates = new Array();
+		var url = new Array();
+		var polyline;
+		var width = 509, height = 702;
+		var zoom_map = 16;
+		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
+		var file_name = name.substring(0, name.indexOf("."));
+		var coordinate_after, coordinate_before;
+		
+		for (i = 0; i < rectangle_tiles.length; i++) {
+		json_coordinates = new Array();
+		out_bounds = 0;
+			if ( (rectangle_tiles[i].coordinate[0] != 0) && (rectangle_tiles[i].coordinate[1] != 0) ) {
+				//Mesh with coordinates.
+				
+				if (rectangle_tiles[i].index != 0) {
+					coordinate_after = coordinates[rectangle_tiles[i].index-1];
+					json_coordinates.push(coordinate_after);
+				}		
+				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
+					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
+						json_coordinates.push(coordinates[j]);
+					}
+				}
+				if (json_coordinates.length > 0) {
+					bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
+					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
+					map.setMaxBounds(bounds);
+					//Draw rute
+					//If a coordinate before.
+						
+					if ((rectangle_tiles[i].index + json_coordinates.length) < coordinates.length)
+						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
+
+					
+
+					
+					coordinate_after = 0;
+					coordinate_before = 0;
+					
+					/*
+					polyline = L.polyline(json_coordinates,{ color: 'red'}).addTo(map);
+					*/
+					if (id_map == -1) 
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+					else 
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+					url.push(new Request(static_image_json, file_name+i));
+				}
+				
+			} else {
+				//Some tile have rute.
+				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
+					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
+						json_coordinates.push(coordinates[j]);
+					}
+				}
+				if (json_coordinates.length > 0) {
+					//With coordinates
+					bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
+					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
+					map.setMaxBounds(bounds);
+					
+					if (rectangle_tiles[i].index != 0)
+						coordinate_after = coordinates[rectangle_tiles[i].index-1];
+						
+					if ((rectangle_tiles[i].index + json_coordinates.length) < coordinates.length)
+						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
+
+					
+					coordinate_after = 0;
+					coordinate_before = 0;
+					
+					/*
+					polyline = L.polyline(json_coordinates,{ color: 'red'}).addTo(map);
+					*/
+					
+					if (id_map == -1) 
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+					else 
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+					url.push(new Request(static_image_json, file_name+i));
+				} else {
+					//Without coordinates
+					bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
+					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
+					map.setMaxBounds(bounds);
+					/*
+					polyline = L.polyline(json_coordinates,{ color: 'red'}).addTo(map);
+					*/
+					
+					if (id_map == -1) 
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+					else 
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+					url.push(new Request(static_image_json, file_name+i));
+				}
+			}
+		}
+		/*
 		reverse_line_points = [];
 		for(j=0; j < coordinates.length; j++) 
 			reverse_line_points.push([coordinates[j][0], coordinates[j][1]]);
@@ -119,6 +221,30 @@
 		console.log(reverse_line_points.length);
 		var polyline_options = { color: 'green'};
 		var polyline = L.polyline(reverse_line_points, polyline_options).addTo(map);
+		*/
+		
+		/*
+		//Only one call with all the information in array.
+		var formData = new FormData();
+		//formData.append('information',JSON.stringify(url));
+		formData.append('information',JSON.stringify(url));
+		var xhr2 = new XMLHttpRequest();
+			xhr2.open("POST", 'getTexture.php', true);
+			xhr2.upload.onprogress = function (evt) {
+				$( "#dialog-message" ).dialog("open");
+			}
+			xhr2.onload = function () {
+				$( "#dialog-message" ).dialog( "close" );
+				//window.open("./PFCMyMesh.html", "_self");
+			}
+			xhr2.send(formData);
+			xhr2.onreadystatechange = function () {
+				if (xhr2.readyState == 4 && xhr2.status == 200) {
+					console.log(xhr2.responseText);
+					//window.open("./PFCMyMesh.html", "_self");
+				}
+			}
+		*/
 	}
 	
 	function drawAdvanced() {
@@ -198,7 +324,7 @@
 							//If one point out from the mesh.
 							coordinate_before = true;
 							//Only one mistake.
-							if (fails < 10000 ) {
+							if (fails < coordinates.length ) {
 								json_coordinates.push(coordinates[j]);
 								for(a=0; a < json_coordinates.length; a++) 
 									reverse_line_points.push([json_coordinates[a][1], json_coordinates[a][0]]);	
@@ -206,15 +332,32 @@
 							} 
 							var polyline_options = { color: 'red'};
 							var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);
+							/*
+							while (reverse_line_points.length > 120) 
+								reverse_line_points = fixCoordinates(reverse_line_points);
+								
+							var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
+																 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
+							};
+							encode_json = JSON.stringify(geo_json);
+							encode_json_uri = encodeURIComponent(encode_json);
+							if (id_map == -1) 
+								static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+							else 
+								static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
+							url.push(new Request(static_image_json, file_name+i));
+							*/
 							json_coordinates = new Array();
 						}
 					}
 					//Union with the next tile.
-					if(json_coordinates.length > 0) {	
+					
+					if(json_coordinates.length > 0) {					
 						var polyline_options = { color: 'red'};
 						var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);
 						for(j=0; j < json_coordinates.length; j++) 
 							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
+						console.log(json_coordinates.length);
 						while (reverse_line_points.length > 120) 
 							reverse_line_points = fixCoordinates(reverse_line_points);
 						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
@@ -228,7 +371,7 @@
 							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
 						url.push(new Request(static_image_json, file_name+i));
 						//getTexture(static_image_json, i);
-					} else {
+					}  else {
 						while (reverse_line_points.length > 120) 
 							reverse_line_points = fixCoordinates(reverse_line_points);						
 						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
@@ -268,25 +411,38 @@
 					console.log(xhr2.responseText);
 					//window.open("./PFCMyMesh.html", "_self");
 				}
-			}	
+			}
 	}
 	
 
 	
-	function showTiles(){
-		//Draw the tiles from the rute more rectangle
-		/*
-		for(i = 0; i < rectangle_tiles.length; i++) {
-			var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
-			L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
-		}
-		*/
-		var bounds = [[rectangle_tiles[0].bounds[0][0], rectangle_tiles[0].bounds[0][1]], [rectangle_tiles[0].bounds[1][0], rectangle_tiles[0].bounds[1][1]]];
+	function showTiles(tile){
+		var bounds = [[rectangle_tiles[tile].bounds[0][0], rectangle_tiles[tile].bounds[0][1]], [rectangle_tiles[tile].bounds[1][0], rectangle_tiles[tile].bounds[1][1]]];
 		L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
-		var width = 513, height = 695, zoom_map = 16;
+		var width = 513, height = 695, zoom_map = 16, i;
 		map.setMaxBounds(bounds);
-		static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[0]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+		var reverse_line_points = [];
+		if ((tile+1) == rectangle_tiles.length) {
+			for (i = rectangle_tiles[tile].index ; i < coordinates.length; i++) {
+				reverse_line_points.push([coordinates[i][1], coordinates[i][0]]);
+			}
+			
+		} else {
+			for (i = rectangle_tiles[tile].index ; i < rectangle_tiles[tile+1].index; i++) {
+				reverse_line_points.push([coordinates[i][1], coordinates[i][0]]);
+			}
+		}
+		
+		var geo_json = { 	"type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
+							"geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
+		};
+
+		encode_json = JSON.stringify(geo_json);
+		encode_json_uri = encodeURIComponent(encode_json);
+		//static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[0]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
+		static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[0]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 		console.log(static_image_json);
+		
 	}
 	/*
 		Fixed coordinates if his length is bigger than 122.
