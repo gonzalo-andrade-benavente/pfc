@@ -110,8 +110,9 @@
 	
 	function drawRute(){
 		console.clear();
-		var i, j, bounds, out_bounds, static_image_json;
-		var json_coordinates = new Array();
+		var i, j, bounds, out_bounds = 0, static_image_json;
+		var coordinate_out;
+		var json_coordinates = new Array(), reverse_line_points = new Array();
 		var url = new Array();
 		var polyline;
 		var width = 509, height = 702;
@@ -119,79 +120,135 @@
 		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 		var file_name = name.substring(0, name.indexOf("."));
 		var coordinate_after, coordinate_before;
+		var fails;
 		
-		for (i = 0; i < rectangle_tiles.length; i++) {
+		for (i = 3; i < 4; i++) {
+		//for (i = 0; i < rectangle_tiles.length; i++) {
 		json_coordinates = new Array();
-		out_bounds = 0;
+		reverse_line_points = new Array();
+		out_bounds = 1;
+		fails = 0;
 			if ( (rectangle_tiles[i].coordinate[0] != 0) && (rectangle_tiles[i].coordinate[1] != 0) ) {
 				//Mesh with coordinates.
 				
 				if (rectangle_tiles[i].index != 0) {
 					coordinate_after = coordinates[rectangle_tiles[i].index-1];
 					json_coordinates.push(coordinate_after);
-				}		
+				}
+				
+								
 				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
 					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
+						out_bounds = 0;
 						json_coordinates.push(coordinates[j]);
+					} else {
+						//in - out
+						if (out_bounds == 0) {
+							console.log("hi");
+							if (fails < coordinates.length) {
+								json_coordinates.push(coordinates[j]);
+								fails++;
+							}
+						}
 					}
 				}
 				if (json_coordinates.length > 0) {
 					bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 					map.setMaxBounds(bounds);
+					
 					//Draw rute
 					//If a coordinate before.
-						
+					
+
 					if ((rectangle_tiles[i].index + json_coordinates.length) < coordinates.length)
 						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
 
 					
-
+					var polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);
 					
+					for(j=0; j < json_coordinates.length; j++) 
+							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
+							
+					while (reverse_line_points.length > 120) 
+							reverse_line_points = fixCoordinates(reverse_line_points);	
+											
 					coordinate_after = 0;
 					coordinate_before = 0;
-					
-					/*
-					polyline = L.polyline(json_coordinates,{ color: 'red'}).addTo(map);
-					*/
+
+					var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
+														 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
+					};
+					encode_json = JSON.stringify(geo_json);
+					encode_json_uri = encodeURIComponent(encode_json);
 					if (id_map == -1) 
-						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					else 
-						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
+					console.log(i + " - " + static_image_json);
 					url.push(new Request(static_image_json, file_name+i));
 				}
 				
 			} else {
+	
+				if (rectangle_tiles[i].index != 0) {
+					coordinate_after = coordinates[rectangle_tiles[i].index-1];
+					json_coordinates.push(coordinate_after);
+				}
+
+				
 				//Some tile have rute.
 				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
 					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
+						out_bounds = 0;
 						json_coordinates.push(coordinates[j]);
+					} else {
+						//in - out
+						if (out_bounds == 0) {
+							if (fails < coordinates.length) {
+								json_coordinates.push(coordinates[j]);
+								fails++;
+							}
+						}
 					}
 				}
 				if (json_coordinates.length > 0) {
-					//With coordinates
 					bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 					map.setMaxBounds(bounds);
 					
-					if (rectangle_tiles[i].index != 0)
-						coordinate_after = coordinates[rectangle_tiles[i].index-1];
-						
+					//Draw rute
+					//If a coordinate before.
+					
+
 					if ((rectangle_tiles[i].index + json_coordinates.length) < coordinates.length)
 						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
 
 					
+					var polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);
+					
+					for(j=0; j < json_coordinates.length; j++) 
+							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
+							
+					while (reverse_line_points.length > 120) 
+							reverse_line_points = fixCoordinates(reverse_line_points);	
+										
 					coordinate_after = 0;
 					coordinate_before = 0;
 					
 					/*
 					polyline = L.polyline(json_coordinates,{ color: 'red'}).addTo(map);
 					*/
-					
+					var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
+														 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
+					};
+					encode_json = JSON.stringify(geo_json);
+					encode_json_uri = encodeURIComponent(encode_json);
 					if (id_map == -1) 
-						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					else 
-						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
+					
 					url.push(new Request(static_image_json, file_name+i));
 				} else {
 					//Without coordinates
@@ -210,18 +267,6 @@
 				}
 			}
 		}
-		/*
-		reverse_line_points = [];
-		for(j=0; j < coordinates.length; j++) 
-			reverse_line_points.push([coordinates[j][0], coordinates[j][1]]);
-						
-		while (reverse_line_points.length >= 120) 
-			reverse_line_points = fixCoordinates(reverse_line_points);
-			
-		console.log(reverse_line_points.length);
-		var polyline_options = { color: 'green'};
-		var polyline = L.polyline(reverse_line_points, polyline_options).addTo(map);
-		*/
 		
 		/*
 		//Only one call with all the information in array.
@@ -235,7 +280,7 @@
 			}
 			xhr2.onload = function () {
 				$( "#dialog-message" ).dialog( "close" );
-				//window.open("./PFCMyMesh.html", "_self");
+				window.open("./PFCMyMesh.html", "_self");
 			}
 			xhr2.send(formData);
 			xhr2.onreadystatechange = function () {
