@@ -195,7 +195,6 @@
 					json_coordinates.push(coordinate_after);
 				}
 
-				
 				//Some tile have rute.
 				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
 					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
@@ -216,12 +215,8 @@
 					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 					map.setMaxBounds(bounds);
 					
-					//Draw rute
-					//If a coordinate before.
-					
-
 					if ((rectangle_tiles[i].index + json_coordinates.length) < coordinates.length)
-						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
+						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length + 1];
 
 					
 					var polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);

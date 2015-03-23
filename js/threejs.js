@@ -12,6 +12,7 @@ function loadThreeJS() {
 	if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 	else {
 		init();
+		render();
 	}
 }
 
@@ -45,11 +46,12 @@ function init() {
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.shadowMapEnabled = true; //Sombra en el renderizado
 	//------------------ posición y punto de la cámara para centrar la escena 
-	camera.position.z = 100;
-	camera.lookAt(scene.position);
-	controlCamera = new THREE.OrbitControls(camera,renderer.domElement); 
+	camera.position.z = 50;
+	//camera.lookAt(scene.position);
+	controlCamera = new THREE.OrbitControls(camera);
+	//controlCamera.damping = 0.2;
+	//controlCamera.addEventListener( 'change', render );
 	container.appendChild(renderer.domElement);
-	render();
 }
 
 

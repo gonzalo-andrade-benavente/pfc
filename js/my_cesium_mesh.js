@@ -21,6 +21,7 @@ var quotient = 0;
 //To combined geometry
 var materials = new Array(), index_material = 0;
 
+var mesh;
 /*
 	Function request data.
 */
@@ -240,12 +241,13 @@ function showCombinedGeometry() {
 			scene.add(mesh);
 			*/
 			
-			var texture, material, mesh;
+			var texture, material;
 			texture = THREE.ImageUtils.loadTexture(xhr.responseText);
 			combined_geometry = addFaceVertexUvs(combined_geometry);
 			combined_geometry = addBase(combined_geometry);
 			material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide} );
 			mesh = new THREE.Mesh(combined_geometry, material);
+			mesh.position.set(-20,-20,0);
 			mesh.rotation.x =  Math.PI / 180 * (-90);
 			scene.add(mesh);
 			
