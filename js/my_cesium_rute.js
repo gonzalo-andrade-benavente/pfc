@@ -122,8 +122,8 @@
 		var coordinate_after, coordinate_before;
 		var fails;
 		
-		for (i = 3; i < 4; i++) {
-		//for (i = 0; i < rectangle_tiles.length; i++) {
+		//for (i = 3; i < 4; i++) {
+		for (i = 0; i < rectangle_tiles.length; i++) {
 		json_coordinates = new Array();
 		reverse_line_points = new Array();
 		out_bounds = 1;
@@ -135,7 +135,6 @@
 					coordinate_after = coordinates[rectangle_tiles[i].index-1];
 					json_coordinates.push(coordinate_after);
 				}
-				
 								
 				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
 					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
@@ -145,7 +144,7 @@
 						//in - out
 						if (out_bounds == 0) {
 							console.log("hi");
-							if (fails < coordinates.length) {
+							if (fails < 100) {
 								json_coordinates.push(coordinates[j]);
 								fails++;
 							}
@@ -268,7 +267,7 @@
 			}
 		}
 		
-		/*
+		
 		//Only one call with all the information in array.
 		var formData = new FormData();
 		//formData.append('information',JSON.stringify(url));
@@ -289,7 +288,7 @@
 					//window.open("./PFCMyMesh.html", "_self");
 				}
 			}
-		*/
+		
 	}
 	
 	function drawAdvanced() {
