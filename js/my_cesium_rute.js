@@ -120,9 +120,15 @@
 		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 		var file_name = name.substring(0, name.indexOf("."));
 		var coordinate_after, coordinate_before;
-		var fails;
+		var fails, fails_total;
+		
+		if (coordinates.length < 1000)
+			fails_total = 1000;
+		else
+			fails_total = 100;
 		 
 		for (i = 0; i < rectangle_tiles.length; i++) {
+		//for (i = 3; i < 4; i++) {
 		json_coordinates = new Array();
 		reverse_line_points = new Array();
 		out_bounds = 1;
@@ -133,7 +139,11 @@
 				if (rectangle_tiles[i].index != 0) {
 					coordinate_after = coordinates[rectangle_tiles[i].index-1];
 					json_coordinates.push(coordinate_after);
-				}			
+				}
+				L.mapbox.featureLayer({
+					type: 'Feature',
+					geometry: {	type: 'Point',	coordinates: [  coordinates[rectangle_tiles[i].index][1],  coordinates[rectangle_tiles[i].index][0] ]	}	
+				}).addTo(map);
 				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
 					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
 						out_bounds = 0;
@@ -141,7 +151,7 @@
 					} else {
 						//in - out
 						if (out_bounds == 0) {
-							if (fails < 100) {
+							if (fails < fails_total) {
 								json_coordinates.push(coordinates[j]);
 								fails++;
 							}
@@ -188,7 +198,7 @@
 					} else {
 						//in - out
 						if (out_bounds == 0) { 
-							if (fails < 100) {
+							if (fails < fails_total) {
 								json_coordinates.push(coordinates[j]);
 								fails++;
 							}
@@ -258,7 +268,6 @@
 					//window.open("./PFCMyMesh.html", "_self");
 				}
 			}
-		
 	}
 	
 	function drawAdvanced() {
@@ -338,7 +347,7 @@
 							//If one point out from the mesh.
 							coordinate_before = true;
 							//Only one mistake.
-							if (fails < coordinates.length ) {
+							if (fails < 100 ) {
 								json_coordinates.push(coordinates[j]);
 								for(a=0; a < json_coordinates.length; a++) 
 									reverse_line_points.push([json_coordinates[a][1], json_coordinates[a][0]]);	
