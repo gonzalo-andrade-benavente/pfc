@@ -111,7 +111,7 @@
 	function drawRute(){
 		console.clear();
 		var i, j, bounds, out_bounds = 0, static_image_json;
-		var coordinate_out;
+		var coordinate_out, polyline;
 		var json_coordinates = new Array(), reverse_line_points = new Array();
 		var url = new Array();
 		var polyline;
@@ -121,21 +121,19 @@
 		var file_name = name.substring(0, name.indexOf("."));
 		var coordinate_after, coordinate_before;
 		var fails;
-		
-		//for (i = 3; i < 4; i++) {
+		 
 		for (i = 0; i < rectangle_tiles.length; i++) {
 		json_coordinates = new Array();
 		reverse_line_points = new Array();
 		out_bounds = 1;
 		fails = 0;
+			//Mesh with coordinates.
 			if ( (rectangle_tiles[i].coordinate[0] != 0) && (rectangle_tiles[i].coordinate[1] != 0) ) {
-				//Mesh with coordinates.
-				
+				//Add coordinate of previous tile.
 				if (rectangle_tiles[i].index != 0) {
 					coordinate_after = coordinates[rectangle_tiles[i].index-1];
 					json_coordinates.push(coordinate_after);
-				}
-								
+				}			
 				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
 					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
 						out_bounds = 0;
@@ -143,7 +141,6 @@
 					} else {
 						//in - out
 						if (out_bounds == 0) {
-							console.log("hi");
 							if (fails < 100) {
 								json_coordinates.push(coordinates[j]);
 								fails++;
@@ -155,26 +152,16 @@
 					bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 					map.setMaxBounds(bounds);
-					
-					//Draw rute
 					//If a coordinate before.
-					
-
 					if ((rectangle_tiles[i].index + json_coordinates.length) < coordinates.length)
 						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
-
-					
-					var polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);
-					
+					polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);
 					for(j=0; j < json_coordinates.length; j++) 
-							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
-							
+							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);		
 					while (reverse_line_points.length > 120) 
-							reverse_line_points = fixCoordinates(reverse_line_points);	
-											
+							reverse_line_points = fixCoordinates(reverse_line_points);							
 					coordinate_after = 0;
 					coordinate_before = 0;
-
 					var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
 														 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
 					};
@@ -189,21 +176,19 @@
 				}
 				
 			} else {
-	
+				//Some tile have rute.
 				if (rectangle_tiles[i].index != 0) {
 					coordinate_after = coordinates[rectangle_tiles[i].index-1];
 					json_coordinates.push(coordinate_after);
 				}
-
-				//Some tile have rute.
 				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
 					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
 						out_bounds = 0;
 						json_coordinates.push(coordinates[j]);
 					} else {
 						//in - out
-						if (out_bounds == 0) {
-							if (fails < coordinates.length) {
+						if (out_bounds == 0) { 
+							if (fails < 100) {
 								json_coordinates.push(coordinates[j]);
 								fails++;
 							}
@@ -214,25 +199,15 @@
 					bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 					map.setMaxBounds(bounds);
-					
 					if ((rectangle_tiles[i].index + json_coordinates.length) < coordinates.length)
 						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length + 1];
-
-					
-					var polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);
-					
+					polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);
 					for(j=0; j < json_coordinates.length; j++) 
-							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
-							
+							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);		
 					while (reverse_line_points.length > 120) 
-							reverse_line_points = fixCoordinates(reverse_line_points);	
-										
+							reverse_line_points = fixCoordinates(reverse_line_points);						
 					coordinate_after = 0;
 					coordinate_before = 0;
-					
-					/*
-					polyline = L.polyline(json_coordinates,{ color: 'red'}).addTo(map);
-					*/
 					var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
 														 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
 					};

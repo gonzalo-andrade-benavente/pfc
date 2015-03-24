@@ -46,11 +46,10 @@ function init() {
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.shadowMapEnabled = true; //Sombra en el renderizado
 	//------------------ posición y punto de la cámara para centrar la escena 
-	camera.position.z = 50;
+	camera.position.set(0,100,200);
 	//camera.lookAt(scene.position);
 	controlCamera = new THREE.OrbitControls(camera);
-	//controlCamera.damping = 0.2;
-	//controlCamera.addEventListener( 'change', render );
+	controlCamera.noPan = true;
 	container.appendChild(renderer.domElement);
 }
 

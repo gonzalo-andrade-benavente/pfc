@@ -28,6 +28,12 @@ var mesh;
 function requestTilesWhenReady() {
 	if (aCesiumTerrainProvider.ready) {
 		console.log("[PFC my_cesium_mesh.js]: Cesium Server Terrain Provider ready");
+		/*
+		document.oncontextmenu = function (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+		*/
 		getRute();
 	} else {
 		//console.log("[PFC]:Waiting a Terrain Provider is ready");
@@ -247,7 +253,8 @@ function showCombinedGeometry() {
 			combined_geometry = addBase(combined_geometry);
 			material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide} );
 			mesh = new THREE.Mesh(combined_geometry, material);
-			mesh.position.set(-20,-20,0);
+			//mesh.position.set(-115 , 0, 50);
+			mesh.position.set(-combined_geometry.boundingBox.max.x + (combined_geometry.boundingBox.max.x/2), 0, 50);
 			mesh.rotation.x =  Math.PI / 180 * (-90);
 			scene.add(mesh);
 			
