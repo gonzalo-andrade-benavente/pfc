@@ -251,7 +251,8 @@ function showCombinedGeometry() {
 			texture = THREE.ImageUtils.loadTexture(xhr.responseText);
 			combined_geometry = addFaceVertexUvs(combined_geometry);
 			combined_geometry = addBase(combined_geometry);
-			material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide} );
+			//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide} );
+			material = new THREE.MeshBasicMaterial( { wireframe: true, color: 'rgb(255, 0, 0)'} );
 			mesh = new THREE.Mesh(combined_geometry, material);
 			//mesh.position.set(-115 , 0, 50);
 			mesh.position.set(-combined_geometry.boundingBox.max.x + (combined_geometry.boundingBox.max.x/2), 0, 50);
