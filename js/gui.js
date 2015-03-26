@@ -54,12 +54,12 @@ function createGUI() {
 			scene.children[i].material.visible = e;
 	});
 	*/
-	/*
+	
 	gui.add(controls, 'wireframe').name('Marcos de malla').onChange(function (e) {
 		for (var i = 0; i < scene.children.length; i++ )
 			scene.children[i].material.wireframe = e;
 	});
-	*/
+	
 	gui.add(controls, 'home').name('Inicio');
 	gui.add(controls, 'map').name('Mapa');
 	gui.add(controls, 'export').name('Exportar Shape');

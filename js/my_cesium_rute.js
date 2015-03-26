@@ -2,7 +2,6 @@
 		PFC my_rute.js Library: Mapbox and Ajax 
 		This library uses functions in my_cesium.js
 	*/
-	//variable to access to data in Cesium.
 	var aCesiumTerrainProvider = new Cesium.CesiumTerrainProvider({
 		url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
 	});
@@ -18,7 +17,6 @@
 			document.getElementById('file').innerHTML = "Trabajando con el fichero <i>gps</i> " + sessionStorage.name + ".gpx <a href='PFCIndex.html'>cambiar</a>";
 			getRute();
 		} else {
-			//console.log("[PFC]:Waiting a Terrain Provider is ready");
 			setTimeout(requestTilesWhenReady, 10);
 		}
 	}
@@ -27,10 +25,9 @@
 	var id_maps = new Array('gonzalito.lfk6po14', 'gonzalito.k53kcf3d', 'gonzalito.k53e4462','gonzalito.k53h65oo', 'gonzalito.78706231');
 	var map, id_map = 0;
 	var coordinates;
-	//L.mapbox.accessToken = 'pk.eyJ1IjoiZ29uemFsaXRvIiwiYSI6IlVJTGIweFUifQ.waoF7m8PZbBM6u8Tg_rR7A';
 	/*
-		info_tiles contains all information about tiles of the rute gpx.
-		Each element of the array is a InfoTile element.
+		info_tiles contains all information about tiles of the rute gpx. Each element of the array is a InfoTile element.
+		rectangle_tiles contains all info_tiles adding tile to complete a rectangular shape.
 	*/
 	var info_tiles = new Array();
 	var rectangle_tiles;
@@ -52,13 +49,13 @@
 	}
 	
 	function createMap(coord) {
+		level = 14;
 		L.mapbox.accessToken = 'pk.eyJ1IjoiZ29uemFsaXRvIiwiYSI6IlVJTGIweFUifQ.waoF7m8PZbBM6u8Tg_rR7A';
 		map = L.mapbox.map('map', id_maps[id_map]);
-		//map.scrollWheelZoom.disable();
 		console.log("[PFC my_cesium_rute.js]: Total coordinates " + coord.length);
 		coordinates = coord;
-		checkTile(coordinates, 14);
-		rectangle_tiles = createRectangle(info_tiles, 14);
+		checkTile(coordinates, level);
+		rectangle_tiles = createRectangle(info_tiles, level);
 		loadGpx();
 	}
 	/*
@@ -105,13 +102,12 @@
 		
 		if (coordinates.length < 1000)
 			fails_total = 1000;
-		else if (coordinates > 2000)
-			fails_total = 2000;
+		else if (coordinates > 1400)
+			fails_total = coordinates.length;
 		else
 			fails_total = 100;
 		 
 		for (i = 0; i < rectangle_tiles.length; i++) {
-		//for (i = 3; i < 4; i++) {
 		json_coordinates = new Array();
 		reverse_line_points = new Array();
 		out_bounds = 1;
@@ -155,7 +151,7 @@
 							reverse_line_points = fixCoordinates(reverse_line_points);							
 					coordinate_after = 0;
 					coordinate_before = 0;
-					var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
+					var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 10},
 														 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
 					};
 					encode_json = JSON.stringify(geo_json);
@@ -201,7 +197,7 @@
 							reverse_line_points = fixCoordinates(reverse_line_points);						
 					coordinate_after = 0;
 					coordinate_before = 0;
-					var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
+					var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 10},
 														 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
 					};
 					encode_json = JSON.stringify(geo_json);
@@ -229,7 +225,7 @@
 		
 		//window.open("./PFCMyMesh.html", "_self");
 		
-		/*
+		
 		//Only one call with all the information in array.
 		var formData = new FormData();
 		//formData.append('information',JSON.stringify(url));
@@ -250,7 +246,7 @@
 					//window.open("./PFCMyMesh.html", "_self");
 				}
 			}
-		*/
+		
 	}	
 	
 	function drawAdvanced() {

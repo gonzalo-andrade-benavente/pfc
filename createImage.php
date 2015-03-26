@@ -20,8 +20,9 @@
 	//	or die("Cannot Initialize new GD image stream");
 		
 	$background_image = imagecreatetruecolor( $width * $columns, $heigth * $rows);   
-	imagealphablending( $background_image, false );
-	imagesavealpha( $background_image, true );
+	//imagealphablending( $background_image, false );
+	//imagesavealpha( $background_image, true );
+	
 	//$background_color = imagecolorallocate($background_image, 0, 0, 0);
 	//imagealphablending($background_color, false);
 	//imagesavealpha($background_color, true);
@@ -51,6 +52,19 @@
 	//imagejpeg($background_image,'export/'.$file.'.jpeg');
 	imagepng($background_image,'export/'.$file.'.png');
 	imagedestroy($background_image);
+	
+	$change_image = 'export/'.$file.'.png';
+	$new_size = getimagesize($change_image);
+	$nuevo_ancho = $new_size[0] * 0.5;
+	$nuevo_alto = $new_size[1] * 0.5;
+	
+	$new_image = imagecreatetruecolor($nuevo_ancho, $nuevo_alto);
+	$image = imagecreatefrompng($change_image);
+	imagecopyresized($new_image, $image, 0, 0, 0, 0, $nuevo_ancho, $nuevo_alto, $new_size[0], $new_size[1]);
+	imagepng($new_image,'export/'.$file.'.png');
+	imagedestroy($new_image);
+	imagedestroy($image);
+	
 	echo 'export/'.$file.'.png';
 	
 ?>

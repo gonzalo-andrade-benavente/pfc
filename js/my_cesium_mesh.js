@@ -192,7 +192,7 @@ function createTerrain() {
 		for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
 			for(j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
 			    //texture = THREE.ImageUtils.loadTexture("textures/" + name.substring(0, name.indexOf(".")) + b + ".png");
-				//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide } );
+				//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
 				material = new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
 				//console.log("Tile ("+ i + "," + j + ")");
 				geometry = getGeometry(i,j);
@@ -251,8 +251,8 @@ function showCombinedGeometry() {
 			texture = THREE.ImageUtils.loadTexture(xhr.responseText);
 			combined_geometry = addFaceVertexUvs(combined_geometry);
 			combined_geometry = addBase(combined_geometry);
-			//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide} );
-			material = new THREE.MeshBasicMaterial( { wireframe: true, color: 'rgb(255, 0, 0)'} );
+			material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide} );
+			//material = new THREE.MeshBasicMaterial( { wireframe: true, color: 'rgb(255, 0, 0)'} );
 			mesh = new THREE.Mesh(combined_geometry, material);
 			//mesh.position.set(-115 , 0, 50);
 			mesh.position.set(-combined_geometry.boundingBox.max.x + (combined_geometry.boundingBox.max.x/2), 0, 50);
