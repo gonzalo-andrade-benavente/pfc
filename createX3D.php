@@ -38,7 +38,7 @@
 		fwrite($xml, "<Transform scale='0.38463 0.38463 0.38463'>");
 			fwrite($xml, "<Shape>");
 				fwrite($xml, "<Appearance>");
-					fwrite($xml, "<ImageTexture url='\"".$_POST['file_name'].".png\"' />");
+					fwrite($xml, "<ImageTexture url='\"".$_POST['file_name'].".jpeg\"' />");
 					fwrite($xml, "<Material diffuseColor='0 0 1' ambientIntensity='1.0' />");
 				fwrite($xml, "</Appearance>");
 				fwrite($xml, $_POST['indexed_face_set']);
@@ -56,7 +56,7 @@
 	} else {
 		echo "[PFC createX3D.php]: Create X3D complete.";
 	}
-	$zip->addFile("export/".$_POST['file_name'].".png", $_POST['file_name'].".png");
+	$zip->addFile("export/".$_POST['file_name'].".jpeg", $_POST['file_name'].".jpeg");
 	$zip->addFile("export/".$_POST['file_name'].".x3d", $_POST['file_name'].".x3d");
 	$zip->close();
 	

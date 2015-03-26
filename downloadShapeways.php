@@ -14,6 +14,6 @@
 
 	unlink($path.$_GET['file_name'].".zip");
 	unlink($path.$_GET['file_name'].".x3d");
-	unlink($path.$_GET['file_name'].".png");
+	unlink($path.$_GET['file_name'].".jpeg");
 
 ?>

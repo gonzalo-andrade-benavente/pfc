@@ -30,7 +30,6 @@ function createGUI() {
 				var formData = new FormData();
 				var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 				var file_name = name.substring(0, name.indexOf("."));
-				
 				formData.append('file_name', file_name);
 				formData.append('indexed_face_set', a);
 				var xhr2 = new XMLHttpRequest();
@@ -42,6 +41,7 @@ function createGUI() {
 							window.open('./downloadShapeways.php?file_name='+file_name,  "_self");
 						}
 					}
+				
 			}
 		}
 	}
