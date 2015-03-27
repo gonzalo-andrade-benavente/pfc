@@ -49,7 +49,7 @@ function init() {
 	camera.position.set(0,100,200);
 	//camera.lookAt(scene.position);
 	controlCamera = new THREE.OrbitControls(camera);
-	controlCamera.noPan = true;
+	//controlCamera.noPan = true;
 	container.appendChild(renderer.domElement);
 }
 

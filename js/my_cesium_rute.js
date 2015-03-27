@@ -93,7 +93,8 @@
 		var json_coordinates = new Array(), reverse_line_points = new Array();
 		var url = new Array();
 		var polyline;
-		var width = 509, height = 702;
+		//var width = 509, height = 702;
+		var width = 509, height = 750;
 		var zoom_map = 16;
 		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 		var file_name = name.substring(0, name.indexOf("."));
@@ -103,6 +104,8 @@
 		if (coordinates.length < 1000)
 			fails_total = 1000;
 		else if (coordinates > 1400)
+			fails_total = coordinates.length;
+		else if (coordinates > 2000)
 			fails_total = coordinates.length;
 		else
 			fails_total = 100;

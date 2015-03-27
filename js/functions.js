@@ -189,7 +189,7 @@ function addBase(geometry){
 	geometry2.computeBoundingBox();
 	for(var i = 0; i < geometry2.vertices.length; i++) {
 		//geometry.vertices.push(new THREE.Vector3(geometry2.vertices[i].x, geometry2.vertices[i].y, -3));
-		geometry.vertices.push(new THREE.Vector3(geometry2.vertices[i].x, geometry2.vertices[i].y, geometry2.boundingBox.min.z - 3));
+		geometry.vertices.push(new THREE.Vector3(geometry2.vertices[i].x, geometry2.vertices[i].y, geometry2.boundingBox.min.z - 10));
 	}
 	var southVertices = new Array(), northVertices = new Array(), eastVertices = new Array(), westVertices = new Array(), i;
 	//Save the index of the limits(west, east, north, south).

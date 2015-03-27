@@ -16,6 +16,7 @@ function createGUI() {
 			location.reload();
 		}
 		this.export = function () {
+			console.clear();
 			var a, exporter;
 			var mesh, material;
 			console.log("[PFC gui.js]: Export with THREE.X3dExporter.");
@@ -34,14 +35,14 @@ function createGUI() {
 				formData.append('indexed_face_set', a);
 				var xhr2 = new XMLHttpRequest();
 					xhr2.open("POST", 'createX3D.php', true);
+					//xhr2.send(JSON.stringify(a));
 					xhr2.send(formData);
 					xhr2.onreadystatechange = function () {
 						if (xhr2.readyState == 4 && xhr2.status == 200) {
 							console.log(xhr2.responseText);
-							window.open('./downloadShapeways.php?file_name='+file_name,  "_self");
+							//window.open('./downloadShapeways.php?file_name='+file_name,  "_self");
 						}
 					}
-				
 			}
 		}
 	}
