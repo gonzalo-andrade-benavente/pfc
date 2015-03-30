@@ -93,8 +93,9 @@
 		var json_coordinates = new Array(), reverse_line_points = new Array();
 		var url = new Array();
 		var polyline;
-		//var width = 509, height = 702;
-		var width = 509, height = 750;
+		//var width = 509, height = 697;
+		var width = 509, height = parseInt(coordinates[0][0] * 16.25);
+		//var width = 509, height = 670;
 		var zoom_map = 16;
 		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 		var file_name = name.substring(0, name.indexOf("."));
@@ -154,7 +155,7 @@
 							reverse_line_points = fixCoordinates(reverse_line_points);							
 					coordinate_after = 0;
 					coordinate_before = 0;
-					var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 10},
+					var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 20},
 														 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
 					};
 					encode_json = JSON.stringify(geo_json);
@@ -200,7 +201,7 @@
 							reverse_line_points = fixCoordinates(reverse_line_points);						
 					coordinate_after = 0;
 					coordinate_before = 0;
-					var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 10},
+					var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 20},
 														 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
 					};
 					encode_json = JSON.stringify(geo_json);

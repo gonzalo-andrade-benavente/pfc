@@ -234,7 +234,14 @@ function showCombinedGeometry() {
 	var file_name = name.substring(0, name.indexOf("."));
 	var xhr = new XMLHttpRequest();
 	var url = "createImage.php";
-	var contenido = "rows="+rows+"&columns="+columns+"&name="+file_name;
+	var height;
+	
+	for (var index = 0; index < rectangle_tiles.length; index++) {
+		if (rectangle_tiles[index].cardinality == 'c')
+			height = rectangle_tiles[index].coordinate[1];
+	}
+	
+	var contenido = "rows="+rows+"&columns="+columns+"&name="+file_name+"&height="+height;	
 	//var contenido = "direction="+direction+"&name="+file_name + index;
 	xhr.open("GET", url+"?"+contenido, true);
 	xhr.send();

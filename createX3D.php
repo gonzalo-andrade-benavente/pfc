@@ -25,6 +25,7 @@
 	
 	Header('Content-type: text/xml');
 	print($xml->asXML());
+	fwrite($xml, "<Transform scale='0.38463 0.38463 0.38463'>");
 	*/
 	$xml = fopen("export\\".$_POST['file_name'].".x3d", "w") or die("Unable to open file!");
 	fwrite($xml, "<?xml version='1.0' encoding='UTF-8'?>");
@@ -35,7 +36,7 @@
 		fwrite($xml, "<meta name='generator' content='3xdExport.js' />");
 	fwrite($xml, "</head>");	
 	fwrite($xml, "<Scene>");
-		fwrite($xml, "<Transform scale='0.38463 0.38463 0.38463'>");
+		fwrite($xml, "<Transform scale='0.4 0.4 0.4'>");
 			fwrite($xml, "<Shape>");
 				fwrite($xml, "<Appearance>");
 					fwrite($xml, "<ImageTexture url='\"".$_POST['file_name'].".jpeg\"' />");

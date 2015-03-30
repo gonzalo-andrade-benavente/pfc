@@ -15,7 +15,12 @@
 	$file = $_GET['name'];
 	//510 - 697
 	$width = (509 * 0.5) - 1;
-	$heigth = (750 * 0.5) - 1;
+	$h = ((int) $_GET['height']) * 16.25;
+	//$h = ((int) $_GET['height']) * 15.85;
+	$heigth = ($h * 0.5);
+	//$heigth = (697 * 0.5) - 1;
+	//$heigth = (670 * 0.5) - 1;
+	
 	//$background_image = @imagecreate($width * $columns, $heigth * $rows)
 	//	or die("Cannot Initialize new GD image stream");
 		

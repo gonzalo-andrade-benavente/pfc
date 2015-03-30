@@ -40,7 +40,7 @@ function createGUI() {
 					xhr2.onreadystatechange = function () {
 						if (xhr2.readyState == 4 && xhr2.status == 200) {
 							console.log(xhr2.responseText);
-							//window.open('./downloadShapeways.php?file_name='+file_name,  "_self");
+							window.open('./downloadShapeways.php?file_name='+file_name,  "_self");
 						}
 					}
 			}
