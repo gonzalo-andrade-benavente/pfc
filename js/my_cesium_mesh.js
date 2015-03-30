@@ -124,60 +124,6 @@ function getGeometry(x, y) {
 	return geometry;
 }
 
-/*
-function getVertex(geometry, cardinality) {
-
-	if (geometry) {
-		//geometry.computeBoundingBox();
-	while(!geometry.boundingBox) {
-		geometry.computeBoundingBox();
-	}
-		var i, j, vertex = new Array();
-		//console.log("[PFC my_cesium_mesh]: BoundingBox Geometry ok!");
-		switch (cardinality) {
-			case 'east': {
-				for(i = 0; i < geometry.vertices.length; i++) {
-					if ((geometry.vertices[i].x === geometry.boundingBox.max.x) && (geometry.vertices[i].z != 0))
-						vertex.push(i);
-				}
-				vertex = sortVector(geometry, vertex, 'y');
-				break;
-			}
-			case 'west': {
-				for(i = 0; i < geometry.vertices.length; i++) {
-					if ((geometry.vertices[i].x === geometry.boundingBox.min.x) && (geometry.vertices[i].z != 0))
-						vertex.push(i);
-				}
-				vertex = sortVector(geometry, vertex, 'y');
-				break;
-			}
-			case 'north': {
-				for(i = 0; i < geometry.vertices.length; i++) {
-					if ((geometry.vertices[i].y === geometry.boundingBox.max.y) && (geometry.vertices[i].z != 0))
-						vertex.push(i);
-				}
-				vertex = sortVector(geometry, vertex, 'x');
-				break;
-			}
-			case 'south': {
-				for(i = 0; i < geometry.vertices.length; i++) {
-					if ((geometry.vertices[i].y === geometry.boundingBox.min.y) && (geometry.vertices[i].z != 0))
-						vertex.push(i);
-				}
-				vertex = sortVector(geometry, vertex, 'x');
-				break;
-			}			
-		}
-		return vertex;
-	} else {
-		//console.log("[PFC my_cesium_mesh.js]: Error cesium bounding box geometry.");
-		$( "#dialog-cesium" ).dialog( "open" );
-		//createTerrain();
-		//window.open("./PFCMyMesh.html", "_self");
-	}
-}
-*/
-
 function createTerrain() {
 	var i, j;
 	if (rectangle_tiles[0].geometry) {
@@ -201,11 +147,7 @@ function createTerrain() {
 			}
 			y = 0;
 			x = x + 33;
-			west = true;
 		}
-		/*	--------------------------------------------------------------------------------------------------------
-			Show the combined geometry.
-		*/
 		showCombinedGeometry();
 	} else {
 		setTimeout(createTerrain, 10);
@@ -312,17 +254,12 @@ function asociateGeometry(data, scale) {
 	var geometry = new THREE.Geometry();
 	var new_height;
 	for(var i=0; i < heights.length; i++) {
-			//geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/scale),Math.round(yy[i]/scale),Math.round(heights[i]/scale)));
 			new_height = (((data._maximumHeight - data._minimumHeight) * heights[i]) / 32767) + data._minimumHeight;
 			geometry.vertices.push( new THREE.Vector3(Math.round(xx[i]/scale),Math.round(yy[i]/scale), new_height/30));
 	}	
 	for(var i=0; i < facesQuantized.length; i=i+3)
 		geometry.faces.push(new THREE.Face3(facesQuantized[i], facesQuantized[i+1], facesQuantized[i+2]));
 	rectangle_tiles[index_tile].geometry = geometry;
-	
-	//geometry = addFaceVertexUvs(geometry);
-	//geometry = addBase(geometry);
-	//geometry = addFaceVertexUvs(geometry);	
 }
 
 
