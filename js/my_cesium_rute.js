@@ -107,15 +107,20 @@
 		var coordinate_after, coordinate_before;
 		var fails, fails_total;
 		
+		//fails_total = coordinates.length;
+		
 		if (coordinates.length < 1000)
 			fails_total = 1000;
-		else if (coordinates > 1400)
+		else if (coordinates.length > 1400)
 			fails_total = coordinates.length;
-		else if (coordinates > 2000)
+		else if (coordinates.length > 2000)
+			fails_total = coordinates.length;
+		else if (coordinates.length <= 500)
 			fails_total = coordinates.length;
 		else
 			fails_total = 100;
-		 
+		
+		
 		for (i = 0; i < rectangle_tiles.length; i++) {
 		json_coordinates = new Array();
 		reverse_line_points = new Array();

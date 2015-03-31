@@ -126,90 +126,54 @@ function getGeometry(x, y) {
 
 function createTerrain() {
 	var i, j;
-	if (rectangle_tiles[0].geometry) {
-		console.log('[PFC my_cesium_mesh.js]: Geometries created in rectangle_tiles');
-		var rectangle = maxMinTileXY();
-		//Add initial geometry.
-		var x = 0, y = 0; z = 0;
-		var geometry;
-		//Name actually file gpx.
-		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
-		var texture, material;
-		for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
-			for(j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
-			    //texture = THREE.ImageUtils.loadTexture("textures/" + name.substring(0, name.indexOf(".")) + b + ".png");
-				//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide } );
-				material = new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
-				//console.log("Tile ("+ i + "," + j + ")");
-				geometry = getGeometry(i,j);
-				addGeometryScene(geometry, x, y, z, material);
-				y = y + 33;
-			}
-			y = 0;
-			x = x + 33;
+	console.log('[PFC my_cesium_mesh.js]: Geometries created in rectangle_tiles');
+	var rectangle = maxMinTileXY();
+	var x = 0, y = 0; z = 0;
+	var geometry, material;
+	for(i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
+		for(j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
+			material = new THREE.MeshBasicMaterial( { color: "rgb(255,0,0)", wireframe: true ,side:THREE.DoubleSide} );
+			geometry = getGeometry(i,j);
+			addGeometryScene(geometry, x, y, z, material);
+			y = y + 33;
 		}
-		showCombinedGeometry();
-	} else {
-		setTimeout(createTerrain, 10);
+		y = 0;
+		x = x + 33;
 	}
+	showCombinedGeometry();
 }
 
 function showCombinedGeometry() {
 	$( "#dialog-geometry" ).dialog( "open" );
-	/*
-	if (quotient > 0) {
-		console.log("[PFC my_cesium_mesh.js]: quotient to bigger " + quotient);
-		for(i = 0; i < combined_geometry.vertices.length; i++) {
-			combined_geometry.vertices[i].z = combined_geometry.vertices[i].z / (quotient * 1000) ;
-		}
-	}
-	*/
 	var rectangle = maxMinTileXY();
 	var columns = 0, rows = 0;
 	for(var i = rectangle[0][0]; i <= rectangle[1][0]; i++) {
 		columns++;
 	}
 	for(var j = rectangle[1][1]; j >= rectangle[0][1]; j--) {
-			rows++;
+		rows++;
 	}
 	var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 	var file_name = name.substring(0, name.indexOf("."));
 	var xhr = new XMLHttpRequest();
-	var url = "createImage.php";
-	
-	
-	/*for (var index = 0; index < rectangle_tiles.length; index++) {
-		if (rectangle_tiles[index].cardinality == 'c')
-			height = rectangle_tiles[index].coordinate[1];
-	}*/
-	
+	var url = "createImage.php";	
 	var rest = (180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[0][0]) *(Math.PI/180)/2))) - (180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[1][0]) *(Math.PI/180)/2)));
 	rest = Math.round(rest * 100 * 508);
 	var contenido = "rows="+rows+"&columns="+columns+"&name="+file_name+"&rest="+rest;	
-	//var contenido = "direction="+direction+"&name="+file_name + index;
 	xhr.open("GET", url+"?"+contenido, true);
 	xhr.send();
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState == 4 && xhr.status == 200) {
 			console.log("[PFC my_cesium_mesh.js] Texture create in " + xhr.responseText);
-			/*
-			var material = new THREE.MeshFaceMaterial(materials);
-			var mesh = new THREE.Mesh(combined, material);
-			scene.add(mesh);
-			*/
-			
 			var texture, material;
 			texture = THREE.ImageUtils.loadTexture(xhr.responseText);
 			combined_geometry = addFaceVertexUvs(combined_geometry);
 			combined_geometry = addBase(combined_geometry);
 			material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide} );
-			//material = new THREE.MeshBasicMaterial( { wireframe: true, color: 'rgb(255, 0, 0)'} );
 			mesh = new THREE.Mesh(combined_geometry, material);
-			//mesh.position.set(-115 , 0, 50);
 			mesh.position.set(-combined_geometry.boundingBox.max.x + (combined_geometry.boundingBox.max.x/2), 0, 50);
 			mesh.rotation.x =  Math.PI / 180 * (-90);
 			scene.add(mesh);
-			
 			$( "#dialog-geometry" ).dialog( "close" );
 		}
 	}
@@ -218,31 +182,10 @@ function showCombinedGeometry() {
 	Add geometry to scene.
 */
 function addGeometryScene(geometry, x, y, z, material) {
-	materials.push(material);
-	if (!geometry) {
-		$( "#dialog-cesium" ).dialog( "open" );
-		//createTerrain();
-		//window.open("./PFCMyMesh.html", "_self");
-	}
-	var copy_geometry = geometry.clone();
-	for(var i = 0; i < copy_geometry.faces.length; i++) {
-		copy_geometry.faces[i].materialIndex = 0;
-	}
-	var tile = new THREE.Mesh(geometry);
-	//tile.rotation.x =  Math.PI / 180 * (-90);
-	tile.position.set(x, y, z);
-	tile.updateMatrix();
-	combined.merge(tile.geometry, tile.matrix, index_material);
-	index_material++;
-	//geometry = addFaceVertexUvs(geometry)
-	var mesh = new THREE.Mesh( geometry, material );
-	//mesh.rotation.x =  Math.PI / 180 * (-90);
+	mesh = new THREE.Mesh( geometry, material );
 	mesh.position.set(x, y, z);
-	
 	mesh.updateMatrix();
 	combined_geometry.merge(mesh.geometry, mesh.matrix);
-	//scene.add(mesh);	
-	
 }
 /*
 	Recieve data from asynchronous cesium then create and store the geometry for each tile.

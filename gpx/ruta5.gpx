@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx creator="Wikiloc - http://www.wikiloc.com" version="1.1" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <trk>
+    <name>ruta5</name>
+    <cmt></cmt>
+    <desc></desc>
+    <trkseg>
+      <trkpt lat="42.796433" lon="-1.634463">
+        <ele>420.0</ele>
+        <time>2015-02-02T12:59:08Z</time>
+      </trkpt>
+      <trkpt lat="42.796780" lon="-1.635493">
+        <ele>419.0</ele>
+        <time>2015-02-02T12:59:28Z</time>
+      </trkpt>
+      <trkpt lat="42.797110" lon="-1.636330">
+        <ele>417.0</ele>
+        <time>2015-02-02T12:59:48Z</time>
+      </trkpt>
+      <trkpt lat="42.797441" lon="-1.637210">
+        <ele>416.0</ele>
+        <time>2015-02-02T13:00:08Z</time>
+      </trkpt>
+      <trkpt lat="42.797709" lon="-1.637918">
+        <ele>421.0</ele>
+        <time>2015-02-02T13:00:28Z</time>
+      </trkpt>
+      <trkpt lat="42.797945" lon="-1.638733">
+        <ele>423.0</ele>
+        <time>2015-02-02T13:00:48Z</time>
+      </trkpt>
+      <trkpt lat="42.797299" lon="-1.639119">
+        <ele>418.0</ele>
+        <time>2015-02-02T13:01:08Z</time>
+      </trkpt>
+      <trkpt lat="42.796843" lon="-1.639527">
+        <ele>417.0</ele>
+        <time>2015-02-02T13:01:28Z</time>
+      </trkpt>
+      <trkpt lat="42.796449" lon="-1.639785">
+        <ele>420.0</ele>
+        <time>2015-02-02T13:01:48Z</time>
+      </trkpt>
+      <trkpt lat="42.796103" lon="-1.640042">
+        <ele>422.0</ele>
+        <time>2015-02-02T13:02:08Z</time>
+      </trkpt>
+      <trkpt lat="42.796370" lon="-1.639162">
+        <ele>419.0</ele>
+        <time>2015-02-02T13:02:28Z</time>
+      </trkpt>
+      <trkpt lat="42.795977" lon="-1.637639">
+        <ele>421.0</ele>
+        <time>2015-02-02T13:02:48Z</time>
+      </trkpt>
+      <trkpt lat="42.795725" lon="-1.636716">
+        <ele>422.0</ele>
+        <time>2015-02-02T13:03:08Z</time>
+      </trkpt>
+      <trkpt lat="42.795536" lon="-1.636223">
+        <ele>421.0</ele>
+        <time>2015-02-02T13:03:28Z</time>
+      </trkpt>
+      <trkpt lat="42.795268" lon="-1.635236">
+        <ele>421.0</ele>
+        <time>2015-02-02T13:03:48Z</time>
+      </trkpt>
+      <trkpt lat="42.795079" lon="-1.634592">
+        <ele>421.0</ele>
+        <time>2015-02-02T13:04:08Z</time>
+      </trkpt>
+      <trkpt lat="42.794969" lon="-1.633090">
+        <ele>422.0</ele>
+        <time>2015-02-02T13:04:28Z</time>
+      </trkpt>
+      <trkpt lat="42.795945" lon="-1.632940">
+        <ele>421.0</ele>
+        <time>2015-02-02T13:04:48Z</time>
+      </trkpt>
+      <trkpt lat="42.796370" lon="-1.633755">
+        <ele>421.0</ele>
+        <time>2015-02-02T13:05:08Z</time>
+      </trkpt>
+      <trkpt lat="42.796370" lon="-1.634313">
+        <ele>420.0</ele>
+        <time>2015-02-02T13:05:28Z</time>
+      </trkpt>
+    </trkseg>
+  </trk></gpx>
