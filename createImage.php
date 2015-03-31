@@ -14,12 +14,15 @@
 	$columns = (int) $_GET['columns'];
 	$file = $_GET['name'];
 	//510 - 697
-	$width = (509 * 0.5) - 1;
-	$h = ((int) $_GET['height']) * 16.25;
+	//$width = (509 * 0.5) - 1;
+	//$h = (((int) $_GET['height']) * 16.35) - 1;
 	//$h = ((int) $_GET['height']) * 15.85;
-	$heigth = ($h * 0.5);
+	//$heigth = (509 * 0.5) - 1;
 	//$heigth = (697 * 0.5) - 1;
-	//$heigth = (670 * 0.5) - 1;
+	$width = (508 * 0.5) - 1;
+	//$h = round(((int) $_GET['rest'] * 100) * 512);
+	$h = (int) $_GET['rest'];
+	$heigth = ( ($h - 70) * 0.5) - 1;
 	
 	//$background_image = @imagecreate($width * $columns, $heigth * $rows)
 	//	or die("Cannot Initialize new GD image stream");

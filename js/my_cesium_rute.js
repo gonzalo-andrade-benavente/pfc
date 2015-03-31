@@ -94,8 +94,13 @@
 		var url = new Array();
 		var polyline;
 		//var width = 509, height = 697;
-		var width = 509, height = parseInt(coordinates[0][0] * 16.25);
-		//var width = 509, height = 670;
+		//var width = 509, height = parseInt(coordinates[0][0] * 16.35);
+		//var width = 509, height = 509;
+		
+		//var width = 512, height = 512 * 180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[0][0]) *(Math.PI/180)/2));
+		
+		var rest = (180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[0][0]) *(Math.PI/180)/2))) - (180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[1][0]) *(Math.PI/180)/2)));
+		var width = 508, height = Math.round(width * rest * 100 - 70);
 		var zoom_map = 16;
 		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 		var file_name = name.substring(0, name.indexOf("."));
@@ -437,14 +442,15 @@
 			L.rectangle(bounds, {color: "#F70C0C", weight: 2, fillOpacity:0 }).addTo(map);
 		}
 		*/
-		
-		for(i = 0; i < rectangle_tiles.length; i++) {
+		//for(i = 0; i < rectangle_tiles.length; i++) {
+		for(i = 7; i < 8; i++) {
 			var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 			L.rectangle(bounds, {color: "rgb(0,255,0)", weight: 2, fillOpacity:0 }).addTo(map);
+			console.log(bounds);
 		}
 		
-		reverse_line_points = new Array();
-		var polyline = L.polyline(coordinates, { color: 'blue'}).addTo(map);
+		//reverse_line_points = new Array();
+		//var polyline = L.polyline(coordinates, { color: 'blue'}).addTo(map);
 		//for (i = 0; i < coordinates.length; i++)
 		
 		
