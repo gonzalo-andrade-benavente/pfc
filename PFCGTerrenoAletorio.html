@@ -1,0 +1,168 @@
+<html  xml:lang="es" lang="es">
+	<head>
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+	<script type="text/javascript" src="threeJS/js/Detector.js">//detector si el navegador soporta WebGL</script>
+	<script type="text/javascript" src="threeJS/js/libs/stats.min.js">//Estado</script> 
+	<script type="text/javascript" src="threeJS/js/libs/dat.gui.min.js">//GUI Graphic user interface </script> 
+	<script type="text/javascript" src="threeJS/build/three.js"></script>
+	
+	<script type="text/javascript" src="threeJS/js/controls/TrackballControls.js">//Estado</script>
+	<script type="text/javascript" src="js/generadorTerreno.js">//Libreria mía.</script>
+	
+	<!--<script type="text/javascript" src="./src/Three.js"></script>
+	<script src="./build/three.min.js">//instancia de la cámara</script>	
+	<script src="./build/three.js">//instancia de la cámara</script> -->
+		<title>
+			PFC 3D - Generador Terreno
+		</title>
+	</head>
+
+	
+	<body>
+		
+		<div id="divContenedor"><!--Aquí ira el renderizado.--></div>
+		<script>
+		
+			//----------------- VARIABLES GLOBALES
+			var contenedor;
+			var escena, camara, renderizado;
+			var clock ,trackballControls;
+			
+			var divContenedor;
+
+					
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+			else {
+				console.log('WebGL reconocido');
+			}
+			
+			contenedor = document.getElementById('divContenedor');
+			
+			//----------------- EL ORDEN EN PRINCIPIO NO INFLUYE
+			//var estado = estadoInicial();
+			init();
+			
+			
+			function estadoInicial() {
+				console.log('función estadoInicial()');
+				var stats = new Stats();
+				stats.setMode(0); // 0: framepersecundo, 1: milisecond
+				// Align top-left
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.left = '0px';
+				stats.domElement.style.top = '0px';
+				contenedor.appendChild(stats.domElement);
+				return stats;
+			}
+			
+			function init(){
+				console.log('función init()');
+				
+				// Clock - Para trackballs
+				clock = new THREE.Clock();
+				//-------------------- Creaciónn de la escena que contendrá los objetos, cámaras, luces.
+				escena = new THREE.Scene();
+				//-------------------- Creamos la cámara
+				camara = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+				//-------------------- Creamos el render y definimos el tamaño.
+				renderizado = new THREE.WebGLRenderer();
+				renderizado.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+				renderizado.setSize(window.innerWidth, window.innerHeight);
+				renderizado.shadowMapEnabled = true; //Sombra en el renderizado
+				
+							
+				//------------------ posición y punto de la cámara para centrar la escena 
+				camara.position.x = -30;
+				camara.position.y = 40;
+				camara.position.z = 40;
+				camara.lookAt(new THREE.Vector3(0, 0, 0));
+				
+				trackballControls = new THREE.TrackballControls(camara);
+				trackballControls.rotateSpeed = 1.0;
+				trackballControls.zoomSpeed = 1.0;
+				trackballControls.panSpeed = 1.0;
+				trackballControls.staticMoving = true;
+
+				
+				//escena.add(new THREE.AmbientLight(0x0c0c0c));
+				escena.add(new THREE.HemisphereLight(0xC0C0C0, 0x826F26));
+
+				var light = new THREE.PointLight(0xffffff);
+				light.position.set(0,250,0);
+				escena.add(light);
+
+				
+				//Textura
+				//var floorTexture = new THREE.ImageUtils.loadTexture('grass.png');
+				//floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
+				//floorTexture.repeat.set(10, 10);
+				//var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
+				var floorMaterial = new THREE.MeshBasicMaterial( { color : 0xff0000, wireframe : true, side: THREE.DoubleSide } );
+				
+				
+				//Plano con terreno
+				var ancho = 80, alto = 60, segmentos = 10, alisado = 10;
+				var mapa = new GeneradorTerreno(ancho, alto, segmentos, alisado);
+				var terreno = mapa.cuadroDiamante();
+				
+				
+				var geometriaCubo = new THREE.Mesh(new THREE.BoxGeometry(ancho, alto, segmentos));
+				
+				
+				var geometriaRelieve = new THREE.PlaneGeometry(ancho, alto, segmentos, alisado);
+				var index = 0;
+				for(var i = 0; i <= segmentos; i++) {
+					for(var j = 0; j <= segmentos; j++) {
+						geometriaRelieve.vertices[index].z = terreno[i][j];
+						index++;
+					}
+				}
+				
+				//var materialTexturado = new THREE.MeshBasicMaterial({ map: texturaObjeto });
+				var material = new THREE.MeshBasicMaterial({color : 0xff0000, wireframe : true});
+				
+				var profundidad = -1;
+				var geometriaCombinada = new THREE.Geometry();
+				
+				geometriaCubo.position.z=-5;
+				
+				geometriaCubo.updateMatrix();
+				//geometriaCombinada.merge(geometriaCubo.geometry, geometriaCubo.matrix);
+				geometriaCombinada.merge(geometriaRelieve);
+				
+				var mesh = new THREE.Mesh(geometriaCombinada, floorMaterial);
+				//mesh.rotation.x=-0.56*Math.PI;
+				mesh.rotation.x =  Math.PI / 180 * (-90);
+				
+				escena.add(mesh);			
+				
+				
+				//escena.add(plano);
+				
+				/*planoInterno.position.y = plano.position.y - 5 ;
+				escena.add(planoInterno);*/
+					
+				//------------------ Añadimos el renderizado al contenedor
+				contenedor.appendChild(renderizado.domElement);
+				render();
+			}
+			
+			
+	
+
+			function render() {
+				//estado.update();
+				var delta = clock.getDelta();
+				trackballControls.update(delta);
+				//------------------ render usando requestAnimationFrame
+				requestAnimationFrame(render);
+				//------------------ Renderizamos la escena, animar el cubo
+				renderizado.render(escena, camara);
+			}
+			
+			
+		</script>
+	
+	</body>
+
+</html>
