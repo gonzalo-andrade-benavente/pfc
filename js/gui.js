@@ -23,8 +23,6 @@ function createGUI() {
 			exporter = new THREE.X3DExporter();
 			if (combined_geometry) {
 				console.log(combined_geometry);
-				//combined_geometry = addFaceVertexUvs(combined_geometry);
-				//material = new THREE.MeshBasicMaterial( { map: texture, wireframe: false, side:THREE.DoubleSide} );
 				material= new THREE.MeshBasicMaterial( { side:THREE.DoubleSide} );
 				mesh = new THREE.Mesh(combined_geometry, material);				
 				a = exporter.parse(mesh);		
@@ -35,7 +33,6 @@ function createGUI() {
 				formData.append('indexed_face_set', a);
 				var xhr2 = new XMLHttpRequest();
 					xhr2.open("POST", 'createX3D.php', true);
-					//xhr2.send(JSON.stringify(a));
 					xhr2.send(formData);
 					xhr2.onreadystatechange = function () {
 						if (xhr2.readyState == 4 && xhr2.status == 200) {
