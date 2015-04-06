@@ -1,19 +1,26 @@
 /* dnd.js */
 var xhr = new XMLHttpRequest();
 
+var control;
 function loadPage() {
 	sessionStorage.clear();
 	if (window.File && window.FileList && window.FileReader) {
 		document.getElementById("messages").innerHTML = "<i>Mensaje de estado:</i> Navegador soporta File-FileList-FileReader";
 		var fileselect = document.getElementById("fileselect"),
 			filedrag = document.getElementById("filedrag"),
+			filedrag1 = document.getElementById("filedrag1"),
 			submitbutton = document.getElementById("submitbutton");
 		
-		if (xhr.upload) {	
+		if (xhr.upload) {			
 			filedrag.addEventListener("dragover", FileDragHover, false);
 			filedrag.addEventListener("dragleave", FileDragHover, false);
 			filedrag.addEventListener("drop", FileSelectHandler, false);
 			filedrag.style.display = "block";
+			
+			filedrag1.addEventListener("dragover", FileDragHover, false);
+			filedrag1.addEventListener("dragleave", FileDragHover, false);
+			filedrag1.addEventListener("drop", FileSelectHandler, false);
+			filedrag1.style.display = "block";
 		}	
 	
 	}else{
@@ -41,6 +48,7 @@ xhr2 = new XMLHttpRequest();
 }
 function FileSelectHandler(e) {
 	FileDragHover(e);
+	sessionStorage.setItem("control", e.target.id);
 	var files = e.target.files || e.dataTransfer.files;
 	var RegExPattern = /(gpx)$/;
 	if (files[0].name.match(RegExPattern)) {

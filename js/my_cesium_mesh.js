@@ -44,6 +44,7 @@ function requestTilesWhenReady() {
 	Function request data gpx.
 */
 function getRute() {
+	sessionStorage.setItem("control", "filedrag");
 	xhr = new XMLHttpRequest();
 	if (xhr.upload) {
 		var url = "getRute.php";
@@ -158,7 +159,7 @@ function showCombinedGeometry() {
 	var xhr = new XMLHttpRequest();
 	var url = "createImage.php";	
 	var rest = (180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[0][0]) *(Math.PI/180)/2))) - (180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[1][0]) *(Math.PI/180)/2)));
-	rest = Math.round(rest * 100 * 508);
+	rest = Math.round(rest * 100 * 510);
 	var contenido = "rows="+rows+"&columns="+columns+"&name="+file_name+"&rest="+rest;	
 	xhr.open("GET", url+"?"+contenido, true);
 	xhr.send();

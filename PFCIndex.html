@@ -8,10 +8,33 @@
 	
 </head>
 <body onload="deleteFiles()">
+	<div id="upload1">
+		<form action="" method="POST" enctype="multipart/form-data">
+		<fieldset>
+			<legend>Subir ruta gpx <i>drag and drop</i> sin intermedio </legend>
+			<input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
+			<!-- <div id="filedrag">Arrastrar aquí</div> -->
+			<div id="filedrag1">Arrastrar aquí</div>
+			<div>
+				<!-- 
+				<label for="fileselect">Fichero a subir</label>
+				<input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />
+				-->
+				
+			</div>
+			<!--
+			<div id="submitbutton">
+				<button type="submit">Subir ficheros</button>
+			</div>
+			-->
+		</fieldset>
+	</form>
+	</div>
+	
 	<div id="upload">
 	<form action="" method="POST" enctype="multipart/form-data">
 		<fieldset>
-			<legend>Subir ruta gpx <i>drag and drop</i></legend>
+			<legend>Subir ruta gpx <i>drag and drop</i> con intermedio </legend>
 			<input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
 			<div id="filedrag">Arrastrar aquí</div>
 			<div>
@@ -28,10 +51,12 @@
 			-->
 		</fieldset>
 	</form>
-
-	<div id="messages">
+	</div>
+	
+	<div id="messages" style="margin-top:5%; margin-left:15%">
 		<p><i>Mensaje de estado</i></p>
 	</div>
-	</div>
+	
+
 </body>
 </html>

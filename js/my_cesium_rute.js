@@ -57,6 +57,8 @@
 		checkTile(coordinates, level);
 		rectangle_tiles = createRectangle(info_tiles, level);
 		loadGpx();
+		if (sessionStorage.control == "filedrag1")
+			drawRute();
 	}
 	/*
 		Draw rute gpx in map.
@@ -91,6 +93,7 @@
 		var i, j, bounds, out_bounds = 0, static_image_json;
 		var coordinate_out, polyline;
 		var json_coordinates = new Array(), reverse_line_points = new Array();
+		var json_coordinates_min = new Array();
 		var url = new Array();
 		var polyline;
 		//var width = 509, height = 697;
@@ -100,7 +103,7 @@
 		//var width = 512, height = 512 * 180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[0][0]) *(Math.PI/180)/2));
 		
 		var rest = (180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[0][0]) *(Math.PI/180)/2))) - (180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[1][0]) *(Math.PI/180)/2)));
-		var width = 508, height = Math.round(width * rest * 100 - 70);
+		var width = 510, height = Math.round(width * rest * 100 - 75);
 		var zoom_map = 16;
 		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 		var file_name = name.substring(0, name.indexOf("."));
@@ -133,10 +136,10 @@
 					coordinate_after = coordinates[rectangle_tiles[i].index-1];
 					json_coordinates.push(coordinate_after);
 				}
-				L.mapbox.featureLayer({
+				/*L.mapbox.featureLayer({
 					type: 'Feature',
 					geometry: {	type: 'Point',	coordinates: [  coordinates[rectangle_tiles[i].index][1],  coordinates[rectangle_tiles[i].index][0] ]	}	
-				}).addTo(map);
+				}).addTo(map);*/
 				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
 					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
 						out_bounds = 0;
@@ -147,7 +150,10 @@
 							if (fails < fails_total) {
 								json_coordinates.push(coordinates[j]);
 								fails++;
+							} else {
+							 	out_bounds = 1;	
 							}
+
 						}
 					}
 				}
@@ -156,9 +162,13 @@
 					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 					map.setMaxBounds(bounds);
 					//If a coordinate before.
-					if ((rectangle_tiles[i].index + json_coordinates.length) < coordinates.length)
+					if ((rectangle_tiles[i].index + json_coordinates.length) < coordinates.length) {
 						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
-					polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);
+						console.log(coordinate_before);
+						json_coordinates.push(coordinate_before);
+					}
+
+					polyline = L.polyline(json_coordinates, { color: 'blue'}).addTo(map);
 					for(j=0; j < json_coordinates.length; j++) 
 							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);		
 					while (reverse_line_points.length > 120) 
@@ -220,7 +230,7 @@
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					else 
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
-					console.log(i + " - " + static_image_json);
+					//console.log(i + " - " + static_image_json);
 					url.push(new Request(static_image_json, file_name+i));
 				} else {
 					//Without coordinates
@@ -231,7 +241,7 @@
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					else 
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-					console.log(i + " - " + static_image_json);
+					//console.log(i + " - " + static_image_json);
 					url.push(new Request(static_image_json, file_name+i));
 				}
 			}
