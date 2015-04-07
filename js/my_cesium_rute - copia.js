@@ -57,6 +57,9 @@
 		checkTile(coordinates, level);
 		rectangle_tiles = createRectangle(info_tiles, level);
 		loadGpx();
+		
+		if (sessionStorage.control == 'filedrag1')
+			drawRute();
 	}
 	/*
 		Draw rute gpx in map.
@@ -107,8 +110,8 @@
 		var coordinate_after, coordinate_before;
 		var fails, fails_total;
 		
-		//fails_total = coordinates.length;
-		
+		fails_total = coordinates.length;
+		/*
 		if (coordinates.length < 1000)
 			fails_total = 1000;
 		else if (coordinates.length > 1400)
@@ -119,13 +122,18 @@
 			fails_total = coordinates.length;
 		else
 			fails_total = 100;
-		
-		
+		*/
+		var pos_out, cambio;
+		var short_coordinates;
 		for (i = 0; i < rectangle_tiles.length; i++) {
+		//for (i = 4; i < 5; i++) {
 		json_coordinates = new Array();
 		reverse_line_points = new Array();
+		short_coordinates = new Array();
 		out_bounds = 1;
 		fails = 0;
+		pos_out = 1;
+		cambio = 0;
 			//Mesh with coordinates.
 			if ( (rectangle_tiles[i].coordinate[0] != 0) && (rectangle_tiles[i].coordinate[1] != 0) ) {
 				//Add coordinate of previous tile.
@@ -133,21 +141,25 @@
 					coordinate_after = coordinates[rectangle_tiles[i].index-1];
 					json_coordinates.push(coordinate_after);
 				}
+				/*
 				L.mapbox.featureLayer({
 					type: 'Feature',
 					geometry: {	type: 'Point',	coordinates: [  coordinates[rectangle_tiles[i].index][1],  coordinates[rectangle_tiles[i].index][0] ]	}	
 				}).addTo(map);
+				*/
 				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
 					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
 						out_bounds = 0;
 						json_coordinates.push(coordinates[j]);
+						pos_out++;
 					} else {
 						//in - out
-						if (out_bounds == 0) {
-							if (fails < fails_total) {
-								json_coordinates.push(coordinates[j]);
-								fails++;
-							}
+						if (out_bounds == 0)
+							cambio++;
+						out_bounds = 1;
+						if (fails < fails_total) {
+							json_coordinates.push(coordinates[j]);
+							fails++;
 						}
 					}
 				}
@@ -155,10 +167,28 @@
 					bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 					map.setMaxBounds(bounds);
-					//If a coordinate before.
-					if ((rectangle_tiles[i].index + json_coordinates.length) < coordinates.length)
+					for(j = 0; j < pos_out; j++)
+						short_coordinates.push(json_coordinates[j]);
+					
+					//console.log(json_coordinates.length);
+					//console.log(short_coordinates.length);
+					//polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);
+					//polyline2 = L.polyline(short_coordinates, { color: 'orange'}).addTo(map);
+					
+					if (cambio == 1)
+						json_coordinates = short_coordinates;
+						
+					/*
+					if ((json_coordinates.length + rectangle_tiles[i].index) < coordinates.length ) {
 						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
-					polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);
+						console.log(coordinate_before);
+						L.mapbox.featureLayer({
+							type: 'Feature',
+							geometry: {	type: 'Point',	coordinates: [  coordinate_before[1], coordinate_before[0] ]	}	
+						}).addTo(map);
+						json_coordinates.push(coordinate_before);
+					}*/
+					
 					for(j=0; j < json_coordinates.length; j++) 
 							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);		
 					while (reverse_line_points.length > 120) 
@@ -202,13 +232,31 @@
 					bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 					map.setMaxBounds(bounds);
-					if ((rectangle_tiles[i].index + json_coordinates.length) < coordinates.length)
-						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length + 1];
-					polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);
+					for(j = 0; j < pos_out; j++)
+						short_coordinates.push(json_coordinates[j]);
+					
+					//console.log(json_coordinates.length);
+					//console.log(short_coordinates.length);
+					//polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);
+					//polyline2 = L.polyline(short_coordinates, { color: 'orange'}).addTo(map);
+					
+					if (cambio == 1)
+						json_coordinates = short_coordinates;
+						
+					/*if ((json_coordinates.length + rectangle_tiles[i].index) < coordinates.length ) {
+						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
+						console.log(coordinate_before);
+						L.mapbox.featureLayer({
+							type: 'Feature',
+							geometry: {	type: 'Point',	coordinates: [  coordinate_before[1], coordinate_before[0] ]	}	
+						}).addTo(map);
+						json_coordinates.push(coordinate_before);
+					}*/
+					
 					for(j=0; j < json_coordinates.length; j++) 
 							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);		
 					while (reverse_line_points.length > 120) 
-							reverse_line_points = fixCoordinates(reverse_line_points);						
+							reverse_line_points = fixCoordinates(reverse_line_points);							
 					coordinate_after = 0;
 					coordinate_before = 0;
 					var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 20},
@@ -231,7 +279,7 @@
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					else 
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-					console.log(i + " - " + static_image_json);
+					//console.log(i + " - " + static_image_json);
 					url.push(new Request(static_image_json, file_name+i));
 				}
 			}

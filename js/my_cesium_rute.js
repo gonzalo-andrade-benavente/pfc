@@ -65,27 +65,9 @@
 		Draw rute gpx in map.
 	*/
 	function loadGpx() {
-	//Añadimos la ruta a través del método omnivore, se podría dibujar la línea como polyline.
-		/*
-		var gpxLayer = omnivore.gpx(sessionStorage.rute)
-		.on('ready', function() {
-			//var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
-			var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
-			map.fitBounds(bounds);
-			map.setZoom(14);
-			console.log("[PFC my_cesium_rute.js]: TileCesium in Mapbox set bounds.");
-		})
-		.on('error', function() {
-			alert('[PFC my_cesium_rute.js]: Error loaded omnivore file gpx');
-		// fired if the layer can't be loaded over AJAX
-		// or can't be parsed
-		})
-		.addTo(map);
-		*/
 		var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
 		map.fitBounds(bounds);
 		map.setZoom(14);
-		
 		var polyline = L.polyline(coordinates, { color: 'red'}).addTo(map);
 	}
 	
@@ -96,11 +78,6 @@
 		var json_coordinates = new Array(), reverse_line_points = new Array();
 		var url = new Array();
 		var polyline;
-		//var width = 509, height = 697;
-		//var width = 509, height = parseInt(coordinates[0][0] * 16.35);
-		//var width = 509, height = 509;
-		
-		//var width = 512, height = 512 * 180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[0][0]) *(Math.PI/180)/2));
 		
 		var rest = (180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[0][0]) *(Math.PI/180)/2))) - (180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[1][0]) *(Math.PI/180)/2)));
 		var width = 510, height = Math.round(width * rest * 100 - 75);
@@ -111,29 +88,17 @@
 		var fails, fails_total;
 		
 		fails_total = coordinates.length;
-		/*
-		if (coordinates.length < 1000)
-			fails_total = 1000;
-		else if (coordinates.length > 1400)
-			fails_total = coordinates.length;
-		else if (coordinates.length > 2000)
-			fails_total = coordinates.length;
-		else if (coordinates.length <= 500)
-			fails_total = coordinates.length;
-		else
-			fails_total = 100;
-		*/
+
 		var pos_out, cambio;
 		var short_coordinates;
 		for (i = 0; i < rectangle_tiles.length; i++) {
-		//for (i = 4; i < 5; i++) {
-		json_coordinates = new Array();
-		reverse_line_points = new Array();
-		short_coordinates = new Array();
-		out_bounds = 1;
-		fails = 0;
-		pos_out = 1;
-		cambio = 0;
+			json_coordinates = new Array();
+			reverse_line_points = new Array();
+			short_coordinates = new Array();
+			out_bounds = 1;
+			fails = 0;
+			pos_out = 1;
+			cambio = 0;
 			//Mesh with coordinates.
 			if ( (rectangle_tiles[i].coordinate[0] != 0) && (rectangle_tiles[i].coordinate[1] != 0) ) {
 				//Add coordinate of previous tile.
@@ -141,12 +106,6 @@
 					coordinate_after = coordinates[rectangle_tiles[i].index-1];
 					json_coordinates.push(coordinate_after);
 				}
-				/*
-				L.mapbox.featureLayer({
-					type: 'Feature',
-					geometry: {	type: 'Point',	coordinates: [  coordinates[rectangle_tiles[i].index][1],  coordinates[rectangle_tiles[i].index][0] ]	}	
-				}).addTo(map);
-				*/
 				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
 					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
 						out_bounds = 0;
@@ -169,26 +128,8 @@
 					map.setMaxBounds(bounds);
 					for(j = 0; j < pos_out; j++)
 						short_coordinates.push(json_coordinates[j]);
-					
-					//console.log(json_coordinates.length);
-					//console.log(short_coordinates.length);
-					//polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);
-					//polyline2 = L.polyline(short_coordinates, { color: 'orange'}).addTo(map);
-					
 					if (cambio == 1)
 						json_coordinates = short_coordinates;
-						
-					/*
-					if ((json_coordinates.length + rectangle_tiles[i].index) < coordinates.length ) {
-						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
-						console.log(coordinate_before);
-						L.mapbox.featureLayer({
-							type: 'Feature',
-							geometry: {	type: 'Point',	coordinates: [  coordinate_before[1], coordinate_before[0] ]	}	
-						}).addTo(map);
-						json_coordinates.push(coordinate_before);
-					}*/
-					
 					for(j=0; j < json_coordinates.length; j++) 
 							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);		
 					while (reverse_line_points.length > 120) 
@@ -234,25 +175,8 @@
 					map.setMaxBounds(bounds);
 					for(j = 0; j < pos_out; j++)
 						short_coordinates.push(json_coordinates[j]);
-					
-					//console.log(json_coordinates.length);
-					//console.log(short_coordinates.length);
-					//polyline = L.polyline(json_coordinates, { color: 'red'}).addTo(map);
-					//polyline2 = L.polyline(short_coordinates, { color: 'orange'}).addTo(map);
-					
 					if (cambio == 1)
 						json_coordinates = short_coordinates;
-						
-					/*if ((json_coordinates.length + rectangle_tiles[i].index) < coordinates.length ) {
-						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
-						console.log(coordinate_before);
-						L.mapbox.featureLayer({
-							type: 'Feature',
-							geometry: {	type: 'Point',	coordinates: [  coordinate_before[1], coordinate_before[0] ]	}	
-						}).addTo(map);
-						json_coordinates.push(coordinate_before);
-					}*/
-					
 					for(j=0; j < json_coordinates.length; j++) 
 							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);		
 					while (reverse_line_points.length > 120) 
@@ -279,18 +203,13 @@
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					else 
 						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-					//console.log(i + " - " + static_image_json);
 					url.push(new Request(static_image_json, file_name+i));
 				}
 			}
 		}
-		
-		//window.open("./PFCMyMesh.html", "_self");
-		
-		
+
 		//Only one call with all the information in array.
 		var formData = new FormData();
-		//formData.append('information',JSON.stringify(url));
 		formData.append('information',JSON.stringify(url));
 		var xhr2 = new XMLHttpRequest();
 			xhr2.open("POST", 'getTexture.php', true);
@@ -310,183 +229,6 @@
 			}
 		
 	}	
-	
-	function drawAdvanced() {
-		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
-		var file_name = name.substring(0, name.indexOf("."));
-		console.log("[PFC my_cesium_rute.js]: Draw advanced");	
-		var i, j, a, b;
-		//Coordinate after
-		var coordinate_before;
-		//fails, only one time can draw out.
-		var fails = 1, total_fails;
-		var json_coordinates = new Array();
-		var reverse_line_points = new Array();
-		var encode_json, encode_json_uri, static_image_json;
-		//var width = 510, height = 697;
-		var width = 509, height = 702;
-		var zoom_map = 16;
-		var url = new Array();
-		
-		if (coordinates.length < 1000)
-			fails_total = 1000;
-		else if (coordinates > 2000)
-			fails_total = 2000;
-		else
-			fails_total = 100;
-		
-		if (rectangle_tiles.length > 0) {
-			for(i = 0; i < rectangle_tiles.length; i++) {
-				json_coordinates = new Array();
-				reverse_line_points = new Array();
-				coordinate_before = true;
-				fails = 1;
-				var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
-				map.setMaxBounds(bounds);
-				//L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
-				
-				//If no coordinate, some mesh have route.
-				if ((rectangle_tiles[i].coordinate[0] == 0) && (rectangle_tiles[i].coordinate[1] == 0)) {
-					//Texture whitout rute.
-					for(j = 0; j < coordinates.length; j++) {
-						if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
-							json_coordinates.push(coordinates[j]);
-						}
-					}
-					if (json_coordinates.length > 0) {
-						var polyline_options = { color: 'red'};
-						var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);			
-						for(j=0; j < json_coordinates.length; j++) 
-							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
-						while (reverse_line_points.length > 120) 
-							reverse_line_points = fixCoordinates(reverse_line_points);
-						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
-															 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
-						};
-						encode_json = JSON.stringify(geo_json);
-						encode_json_uri = encodeURIComponent(encode_json);
-						if (id_map == -1) 
-							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-						else 
-							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
-						url.push(new Request(static_image_json, file_name+i));
-						json_coordinates = new Array();
-					} else {
-						if (id_map == -1) 
-							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-						else 
-							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-					}
-					url.push(new Request(static_image_json, file_name+i));
-					//getTexture(static_image_json, i);
-				} else {
-					//console.log("[PFC my_cesium_rute.js]: Contains coordinates.");
-					for(j = rectangle_tiles[i].index; j < coordinates.length; j++){
-						//If route is in the mesh.
-						if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
-							//The coordinate before.
-							if (coordinate_before) {
-								if (j > 0) {
-									json_coordinates.push(coordinates[j-1]);
-									coordinate_before = false;
-								}
-							}
-							json_coordinates.push(coordinates[j]);
-						} else {
-							//If one point out from the mesh.
-							coordinate_before = true;
-							//Only one mistake.
-							if (fails < fails_total ) {
-								json_coordinates.push(coordinates[j]);
-								for(a=0; a < json_coordinates.length; a++) 
-									reverse_line_points.push([json_coordinates[a][1], json_coordinates[a][0]]);	
-								fails++;
-							} 
-							var polyline_options = { color: 'red'};
-							var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);
-							/*
-							while (reverse_line_points.length > 120) 
-								reverse_line_points = fixCoordinates(reverse_line_points);
-								
-							var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
-																 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
-							};
-							encode_json = JSON.stringify(geo_json);
-							encode_json_uri = encodeURIComponent(encode_json);
-							if (id_map == -1) 
-								static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-							else 
-								static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
-							url.push(new Request(static_image_json, file_name+i));
-							*/
-							json_coordinates = new Array();
-						}
-					}
-					//Union with the next tile.
-					
-					if(json_coordinates.length > 0) {					
-						var polyline_options = { color: 'red'};
-						var polyline = L.polyline(json_coordinates, polyline_options).addTo(map);
-						for(j=0; j < json_coordinates.length; j++) 
-							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);
-						console.log(json_coordinates.length);
-						while (reverse_line_points.length > 120) 
-							reverse_line_points = fixCoordinates(reverse_line_points);
-						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
-															 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
-						};
-						encode_json = JSON.stringify(geo_json);
-						encode_json_uri = encodeURIComponent(encode_json);
-						if (id_map == -1) 
-							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-						else 
-							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
-						url.push(new Request(static_image_json, file_name+i));
-						//getTexture(static_image_json, i);
-					}  else {
-						while (reverse_line_points.length > 120) 
-							reverse_line_points = fixCoordinates(reverse_line_points);						
-						var geo_json = { "type": "Feature",	 "properties": 	{ "stroke": "#ff0000", "stroke-width": 5},
-															 "geometry": 	{ "type": "LineString", "coordinates": reverse_line_points}
-						};
-						encode_json = JSON.stringify(geo_json);
-						encode_json_uri = encodeURIComponent(encode_json);
-						if (id_map == -1) 
-							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
-						else 
-							static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
-						url.push(new Request(static_image_json, file_name+i));
-						//getTexture(static_image_json, i);
-					}
-					
-				}
-			}
-		}
-		
-		
-		//Only one call with all the information in array.
-		var formData = new FormData();
-		//formData.append('information',JSON.stringify(url));
-		formData.append('information',JSON.stringify(url));
-		var xhr2 = new XMLHttpRequest();
-			xhr2.open("POST", 'getTexture.php', true);
-			xhr2.upload.onprogress = function (evt) {
-				$( "#dialog-message" ).dialog("open");
-			}
-			xhr2.onload = function () {
-				$( "#dialog-message" ).dialog( "close" );
-				window.open("./PFCMyMesh.html", "_self");
-			}
-			xhr2.send(formData);
-			xhr2.onreadystatechange = function () {
-				if (xhr2.readyState == 4 && xhr2.status == 200) {
-					console.log(xhr2.responseText);
-					//window.open("./PFCMyMesh.html", "_self");
-				}
-			}
-	}
-	
-
 	
 	function showTiles(tile){
 		/*
@@ -568,10 +310,5 @@
 			*/
 			xhr2.send();
 		}
-	}
-	
-	function Request(direction, name) {
-		this.direction = direction;
-		this.name = name;
 	}
 	
