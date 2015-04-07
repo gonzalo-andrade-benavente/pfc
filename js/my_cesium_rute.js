@@ -57,6 +57,9 @@
 		checkTile(coordinates, level);
 		rectangle_tiles = createRectangle(info_tiles, level);
 		loadGpx();
+		
+		if (sessionStorage.control == 'filedrag1')
+			drawRute();
 	}
 	/*
 		Draw rute gpx in map.
@@ -164,13 +167,6 @@
 					bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 					map.setMaxBounds(bounds);
-					//If a coordinate before.
-					if ((rectangle_tiles[i].index + json_coordinates.length) < coordinates.length) {
-						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
-						//json_coordinates.push(coordinate_before);
-						pos_out++;
-						pos_out++;
-					}
 					for(j = 0; j < pos_out; j++)
 						short_coordinates.push(json_coordinates[j]);
 					
@@ -181,6 +177,17 @@
 					
 					if (cambio == 1)
 						json_coordinates = short_coordinates;
+						
+					/*
+					if ((json_coordinates.length + rectangle_tiles[i].index) < coordinates.length ) {
+						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
+						console.log(coordinate_before);
+						L.mapbox.featureLayer({
+							type: 'Feature',
+							geometry: {	type: 'Point',	coordinates: [  coordinate_before[1], coordinate_before[0] ]	}	
+						}).addTo(map);
+						json_coordinates.push(coordinate_before);
+					}*/
 					
 					for(j=0; j < json_coordinates.length; j++) 
 							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);		
@@ -225,13 +232,6 @@
 					bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
 					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 					map.setMaxBounds(bounds);
-					//If a coordinate before.
-					if ((rectangle_tiles[i].index + json_coordinates.length) < coordinates.length) {
-						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
-						//json_coordinates.push(coordinate_before);
-						pos_out++;
-						pos_out++;
-					}
 					for(j = 0; j < pos_out; j++)
 						short_coordinates.push(json_coordinates[j]);
 					
@@ -242,6 +242,16 @@
 					
 					if (cambio == 1)
 						json_coordinates = short_coordinates;
+						
+					/*if ((json_coordinates.length + rectangle_tiles[i].index) < coordinates.length ) {
+						coordinate_before = coordinates[rectangle_tiles[i].index + json_coordinates.length];
+						console.log(coordinate_before);
+						L.mapbox.featureLayer({
+							type: 'Feature',
+							geometry: {	type: 'Point',	coordinates: [  coordinate_before[1], coordinate_before[0] ]	}	
+						}).addTo(map);
+						json_coordinates.push(coordinate_before);
+					}*/
 					
 					for(j=0; j < json_coordinates.length; j++) 
 							reverse_line_points.push([json_coordinates[j][1], json_coordinates[j][0]]);		
