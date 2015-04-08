@@ -65,9 +65,9 @@
 		Draw rute gpx in map.
 	*/
 	function loadGpx() {
-		var bounds = [[info_tiles[0].bounds[0][0], info_tiles[0].bounds[0][1]], [info_tiles[info_tiles.length-1].bounds[1][0], info_tiles[info_tiles.length-1].bounds[1][1]]];
+		var bounds = [[rectangle_tiles[0].bounds[0][0], rectangle_tiles[0].bounds[0][1]], [rectangle_tiles[rectangle_tiles.length-1].bounds[1][0], rectangle_tiles[rectangle_tiles.length-1].bounds[1][1]]];
 		map.fitBounds(bounds);
-		map.setZoom(14);
+		map.setZoom(13);
 		var polyline = L.polyline(coordinates, { color: 'red'}).addTo(map);
 	}
 	
@@ -285,30 +285,5 @@
 		if (id_map == (id_maps.length-1))
 			id_map = -1;
 	}
-	/*
-		Ajax to create texture.
-	*/
-	function getTexture(direction, index) {
-		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
-		var file_name = name.substring(0, name.indexOf("."));
-		if (xhr2.upload) {
-			console.log(direction);
-			var url = "getTexture.php";
-			var contenido = "direction="+direction+"&name="+file_name + index;
-			xhr2.open("GET", url+"?"+contenido, false);
-			/*
-			xhr2.onreadystatechange = function () {
-				if (xhr2.readyState == 4 && xhr2.status == 200) {
-					if (parseInt(xhr2.responseText) != rectangle_tiles.length)
-						drawAdvanced();
-					else {
-						console.log("[PFC my_cesium_rute.js]: All textures creates successfully");
-						window.open("./PFCMyMesh.html", "_self");
-					}
-				}
-			}
-			*/
-			xhr2.send();
-		}
-	}
+
 	

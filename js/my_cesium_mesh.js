@@ -28,15 +28,8 @@ var mesh;
 function requestTilesWhenReady() {
 	if (aCesiumTerrainProvider.ready) {
 		console.log("[PFC my_cesium_mesh.js]: Cesium Server Terrain Provider ready");
-		/*
-		document.oncontextmenu = function (event) {
-			event.preventDefault();
-			event.stopPropagation();
-		}
-		*/
 		getRute();
 	} else {
-		//console.log("[PFC]:Waiting a Terrain Provider is ready");
 		setTimeout(requestTilesWhenReady, 10);
 	}
 }
