@@ -29,6 +29,7 @@
 		<!-- #map { position:absolute; margin-top:3%; margin-left:35%; width:30%; height:73%} -->
 		#map { position:absolute; margin-top:3%; margin-left:35%; width:30%; height:70%}
 		#buttons {position:absolute; margin-top:3%; margin-left:40%; width:30%;}
+		#buttons2 {position:absolute;margin-top:0.5%; margin-left:35%; width:50%;}
 		#file {position:relative; float:right;}
 		.ui-dialog-titlebar-close {
 			visibility: hidden;
@@ -38,16 +39,18 @@
 </head>
 
 <body onload="requestTilesWhenReady()">
+	<div id="buttons2"> 
+	<a class='icon layers button' onclick="changeMap()">Cambiar Mapa</a>
+		<a class='icon pencil button' onclick="drawRute()">Dibujar ruta</a>	
+		<a class='icon pencil button' onclick="showTiles()">Mostrar Tiles</a>
+		<a class='icon pencil button' onclick="showRectangle()">Mostrar Rectangulo</a> 
+	</div>
 	<div id="map"></div>
 	<div id="file"> </div>
-	<div id="buttons"> 
-		<!-- <input type='button' class='button' value='Cambiar Mapa' onclick="changeMap()" /> 
-			 <input type='button' class='button' value='Dibujar Mapa' onclick="drawRute()" /> -->
+	<!-- <div id="buttons"> 
 		<a class='icon layers button' onclick="changeMap()">Cambiar Mapa</a>
-		<!-- <a class='icon pencil button' onclick="showTiles(3)">Mostrar Tiles</a> -->
-		<!-- <a class='icon pencil button' onclick="drawAdvanced()">Modelar 3D Avanzado</a> -->
-		<a class='icon pencil button' onclick="drawRute()">Dibujar ruta</a>
-	</div>
+		<a class='icon pencil button' onclick="drawRute()">Dibujar ruta</a>		
+	</div> -->
 	
 	<div id="dialog-message" style="width=50%" title="Subida de ficheros">
 		<!-- <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span> -->

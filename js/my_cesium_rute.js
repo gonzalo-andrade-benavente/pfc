@@ -79,7 +79,8 @@
 		var url = new Array();
 		var polyline;
 		
-		var rest = (180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[0][0]) *(Math.PI/180)/2))) - (180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[1][0]) *(Math.PI/180)/2)));
+		var rest = (180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[0][0]) *(Math.PI/180)/2))) - 
+					(180/Math.PI *Math.log(Math.tan(Math.PI/4 + (rectangle_tiles[0].bounds[1][0]) *(Math.PI/180)/2)));
 		var width = 510, height = Math.round(width * rest * 100 - 75);
 		var zoom_map = 16;
 		var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
@@ -107,7 +108,8 @@
 					json_coordinates.push(coordinate_after);
 				}
 				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
-					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
+					if ((coordinates[j][0] < rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] > rectangle_tiles[i].bounds[1][0]) && 
+						(coordinates[j][1] > rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] < rectangle_tiles[i].bounds[1][1])) {
 						out_bounds = 0;
 						json_coordinates.push(coordinates[j]);
 						pos_out++;
@@ -142,9 +144,11 @@
 					encode_json = JSON.stringify(geo_json);
 					encode_json_uri = encodeURIComponent(encode_json);
 					if (id_map == -1) 
-						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','
+											+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					else 
-						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','
+											+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
 					console.log(i + " - " + static_image_json);
 					url.push(new Request(static_image_json, file_name+i));
 				}
@@ -156,7 +160,8 @@
 					json_coordinates.push(coordinate_after);
 				}
 				for(j = rectangle_tiles[i].index; j < coordinates.length; j++) {
-					if ((coordinates[j][0] <= rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] >= rectangle_tiles[i].bounds[1][0]) && (coordinates[j][1] >= rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] <= rectangle_tiles[i].bounds[1][1])) {
+					if ((coordinates[j][0] <= rectangle_tiles[i].bounds[0][0]) && (coordinates[j][0] >= rectangle_tiles[i].bounds[1][0]) && 
+						(coordinates[j][1] >= rectangle_tiles[i].bounds[0][1]) && (coordinates[j][1] <= rectangle_tiles[i].bounds[1][1])) {
 						out_bounds = 0;
 						json_coordinates.push(coordinates[j]);
 					} else {
@@ -189,9 +194,11 @@
 					encode_json = JSON.stringify(geo_json);
 					encode_json_uri = encodeURIComponent(encode_json);
 					if (id_map == -1) 
-						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','
+											+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					else 
-						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/geojson('+encode_json_uri+')/'+ map.getCenter().lng +','+ map.getCenter().lat +','
+											+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;	
 					console.log(i + " - " + static_image_json);
 					url.push(new Request(static_image_json, file_name+i));
 				} else {
@@ -200,9 +207,11 @@
 					L.rectangle(bounds, {color: "#0C14F7", weight: 2, fillOpacity:0 }).addTo(map);
 					map.setMaxBounds(bounds);
 					if (id_map == -1) 
-						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_maps.length-1]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','
+											+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					else 
-						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
+						static_image_json = 'https://api.tiles.mapbox.com/v4/'+id_maps[id_map]+'/'+ map.getCenter().lng +','+ map.getCenter().lat +','
+											+ zoom_map +'/'+width+'x'+height+'.png?access_token='+L.mapbox.accessToken;
 					url.push(new Request(static_image_json, file_name+i));
 				}
 			}
@@ -229,26 +238,23 @@
 		
 	}	
 	
-	function showTiles(tile){
-		/*
+	function showTiles(){
 		for(i = 0; i < info_tiles.length; i++) {
 			var bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
 			L.rectangle(bounds, {color: "#F70C0C", weight: 2, fillOpacity:0 }).addTo(map);
 		}
-		*/
-		//for(i = 0; i < rectangle_tiles.length; i++) {
-		for(i = 7; i < 8; i++) {
-			var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
-			L.rectangle(bounds, {color: "rgb(0,255,0)", weight: 2, fillOpacity:0 }).addTo(map);
-			console.log(bounds);
-		}
-		
-		//reverse_line_points = new Array();
-		//var polyline = L.polyline(coordinates, { color: 'blue'}).addTo(map);
-		//for (i = 0; i < coordinates.length; i++)
-		
 		
 	}
+	
+	function showRectangle() {
+		for(i = 0; i < rectangle_tiles.length; i++) {
+			var bounds = [[rectangle_tiles[i].bounds[0][0], rectangle_tiles[i].bounds[0][1]], [rectangle_tiles[i].bounds[1][0], rectangle_tiles[i].bounds[1][1]]];
+			L.rectangle(bounds, {color: "rgb(0,255,0)", weight: 2, fillOpacity:0 }).addTo(map);
+		}
+	}
+	
+	
+	
 	/*
 		Fixed coordinates if his length is bigger than 122.
 	*/
