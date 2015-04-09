@@ -65,7 +65,6 @@ xhr.onreadystatechange = function () {
 	if (xhr.readyState == 4 && xhr.status == 200) {
 		var response = xhr.responseText;
 		if (response != "") {
-			//guardo el nombre del fichero subido en la variable de sesión.
 			sessionStorage.setItem("rute", response);
 			window.open("./PFCMyRute.html", "_self");
 		} else 

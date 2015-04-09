@@ -1,32 +1,4 @@
 <?php
-	/*
-	$xml = new SimpleXMLElement("<X3D xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' version='3.0' profile='Immersive' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.0.xsd' />");
-	
-	$head = $xml->addChild("head");
-		$meta = $head->addChild("meta name='filename' content='filename.x3d'");
-		$meta = $head->addChild("meta name='generator' content='3xdExport.js'");
-	
-	$scene = $xml->addChild("Scene");
-		$transform = $scene->addChild("Transform scale='0.38463 0.38463 0.38463'", "");
-		//$shape = $transform->addChild("Shape");
-			//$shape = $transform->addChild("Shape");
-				//$appearance = $shape->addChild("Appearance");
-	
-	
-	//$head->addChild("meta", "name='filename' content='thetahedronMusicTextureExport.x3d'");
-	//$head->addChild("<meta name='filename' content='thetahedronMusicTextureExport.x3d'/>");
-	//$head->addChild("<meta name='generator' content='3xdExport.js'/>");
-	
-	for ($i = 1; $i <= 8; ++$i) {
-		$track = $xml->addChild('track');
-		$track->addChild('path', "song$i.mp3");
-		$track->addChild('title', "Track $i - Track Title");
-	}
-	
-	Header('Content-type: text/xml');
-	print($xml->asXML());
-	fwrite($xml, "<Transform scale='0.38463 0.38463 0.38463'>");
-	*/
 	$xml = fopen("export\\".$_POST['file_name'].".x3d", "w") or die("Unable to open file!");
 	fwrite($xml, "<?xml version='1.0' encoding='UTF-8'?>");
 	//fwrite($xml, "<!DOCTYPE X3D PUBLIC 'ISO//Web3D//DTD X3D 3.0//EN' 'http://www.web3d.org/specifications/x3d-3.0.dtd'>");
@@ -59,6 +31,5 @@
 	}
 	$zip->addFile("export/".$_POST['file_name'].".jpeg", $_POST['file_name'].".jpeg");
 	$zip->addFile("export/".$_POST['file_name'].".x3d", $_POST['file_name'].".x3d");
-	$zip->close();
-		
+	$zip->close();	
 ?>

@@ -67,7 +67,7 @@
 	function loadGpx() {
 		var bounds = [[rectangle_tiles[0].bounds[0][0], rectangle_tiles[0].bounds[0][1]], [rectangle_tiles[rectangle_tiles.length-1].bounds[1][0], rectangle_tiles[rectangle_tiles.length-1].bounds[1][1]]];
 		map.fitBounds(bounds);
-		map.setZoom(13);
+		map.setZoom(14);
 		var polyline = L.polyline(coordinates, { color: 'red'}).addTo(map);
 	}
 	
@@ -224,7 +224,6 @@
 			xhr2.onreadystatechange = function () {
 				if (xhr2.readyState == 4 && xhr2.status == 200) {
 					console.log(xhr2.responseText);
-					//window.open("./PFCMyMesh.html", "_self");
 				}
 			}
 		

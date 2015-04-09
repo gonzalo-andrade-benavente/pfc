@@ -37,8 +37,8 @@ function InfoTile(x, y, cardinality, northwest_latitude, northwest_longitude, so
 	this.coordinate = [longitude, latitude];
 	this.index = index;
 	this.geometry;
-	this.texture;
 }
+
 
 function Request(direction, name) {
 	this.direction = direction;
