@@ -5,10 +5,8 @@
 function checkTile(coord, level) {
 		var i, j,positionLonLat, positionTileXY, tile;
 		positionLonLat = Cesium.Cartographic.fromDegrees(coord[0][1], coord[0][0]);
-		//console.log("[PFC functions.js]: longitude " + coord[0][1] + " latitude " +  coord[0][0]);
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat, level);
 		tile = getTile(positionTileXY.x, positionTileXY.y, level);
-		//info_tiles.push(new InfoTile(positionTileXY.x, positionTileXY.y, "checkTile",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[0][1], coord[0][0], 0));
 		info_tiles.push(new InfoTile(positionTileXY.x, positionTileXY.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[0][1], coord[0][0], 0));
 		for (i = 1; i < coord.length; i ++) {
 			var positionLonLat_actual, positionTileXY_actual;
@@ -52,28 +50,11 @@ function checkTile(coord, level) {
 		if (info_tiles.length > 1) 
 			if ((info_tiles[info_tiles.length-1].x == info_tiles[info_tiles.length-2].x) && (info_tiles[info_tiles.length-1].y == info_tiles[info_tiles.length-2].y))
 				info_tiles.splice(info_tiles.length-1,1);
-	
-		//info_tiles.splice(info_tiles.length-1, 1);
-		
-		
-		/*
-		for(i = 0; i < info_tiles.length; i++) {
-			var bounds = [[info_tiles[i].bounds[0][0], info_tiles[i].bounds[0][1]], [info_tiles[i].bounds[1][0], info_tiles[i].bounds[1][1]]];
-			L.rectangle(bounds, {color: "#191414", weight: 2, fillOpacity:0 }).addTo(map);
-		}
-		*/
-		
-		
 }
 /*
 	Whit the tiles study to create a rectangle.
 */
 function createRectangle(info, level) {
-	/*
-	for(i = 0; i < info_tiles.length; i++) {
-		console.log('[PFC my_cesium_rute]: x' + info_tiles[i].x + 'y' + info_tiles[i].y);
-	}
-	*/
 	info_tiles_rectangle = new Array();
 	var min_x = info[0].x, max_x = info[0].x, min_y = info[0].y, max_y = info[0].y;
 	for(i = 1; i < info.length; i++) {
@@ -106,7 +87,6 @@ function createRectangle(info, level) {
 	
 	console.log("[PFC functions.js]: Rectangle mesh ready with " + info_tiles_rectangle.length + " tiles.");
 	return info_tiles_rectangle;
-	
 }
 
 
