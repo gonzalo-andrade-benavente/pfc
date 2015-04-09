@@ -16,3 +16,5 @@
 	}
 	echo "[PFC getTexture.php]: All textures copy in server.";
 ?>
+
+
