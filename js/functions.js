@@ -7,7 +7,8 @@ function checkTile(coord, level) {
 		positionLonLat = Cesium.Cartographic.fromDegrees(coord[0][1], coord[0][0]);
 		positionTileXY = aCesiumTerrainProvider.tilingScheme.positionToTileXY(positionLonLat, level);
 		tile = getTile(positionTileXY.x, positionTileXY.y, level);
-		info_tiles.push(new InfoTile(positionTileXY.x, positionTileXY.y, "c",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[0][1], coord[0][0], 0));
+		info_tiles.push(new InfoTile(positionTileXY.x, positionTileXY.y, "c",tile.northwest.latitude, tile.northwest.longitude, 
+									tile.southeast.latitude, tile.southeast.longitude, coord[0][1], coord[0][0], 0));
 		for (i = 1; i < coord.length; i ++) {
 			var positionLonLat_actual, positionTileXY_actual;
 			positionLonLat_actual = Cesium.Cartographic.fromDegrees(coord[i][1], coord[i][0]);
@@ -15,13 +16,17 @@ function checkTile(coord, level) {
 			if ((positionTileXY.x != positionTileXY_actual.x) || (positionTileXY.y != positionTileXY_actual.y)) {
 				tile = getTile(positionTileXY_actual.x, positionTileXY_actual.y, level);
 				if (positionTileXY.x < positionTileXY_actual.x)
-					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "checkTile",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
+					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "checkTile",tile.northwest.latitude, tile.northwest.longitude, 
+									tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
 				else if (positionTileXY.x > positionTileXY_actual.x)	
-					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "checkTile",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
+					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "checkTile",tile.northwest.latitude, tile.northwest.longitude, 
+									tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
 				else if (positionTileXY.y < positionTileXY_actual.y)
-					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "checkTile",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
+					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "checkTile",tile.northwest.latitude, tile.northwest.longitude, 
+									tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
 				else if (positionTileXY.y > positionTileXY_actual.y)
-					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "checkTile",tile.northwest.latitude, tile.northwest.longitude, tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
+					info_tiles.push(new InfoTile(positionTileXY_actual.x, positionTileXY_actual.y, "checkTile",tile.northwest.latitude, tile.northwest.longitude, 
+									tile.southeast.latitude, tile.southeast.longitude, coord[i][1], coord[i][0], i));
 				positionTileXY = positionTileXY_actual;
 			}
 		}
