@@ -1,5 +1,13 @@
 <?php
-	$xml = fopen("export\\".$_POST['file_name'].".x3d", "w") or die("Unable to open file!");
+	if (DIRECTORY_SEPARATOR == '/') { 
+	// linux 
+		$xml = fopen("export/".$_POST['file_name'].".x3d", "w") or die("Unable to open file!");
+	} if (DIRECTORY_SEPARATOR == '\\') { 
+	// windows
+		$xml = fopen("export\\".$_POST['file_name'].".x3d", "w") or die("Unable to open file!");
+	}
+
+	
 	fwrite($xml, "<?xml version='1.0' encoding='UTF-8'?>");
 	//fwrite($xml, "<!DOCTYPE X3D PUBLIC 'ISO//Web3D//DTD X3D 3.0//EN' 'http://www.web3d.org/specifications/x3d-3.0.dtd'>");
 	fwrite($xml, "<X3D xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' version='3.0' profile='Immersive' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.0.xsd'>");
@@ -29,6 +37,7 @@
 	} else {
 		echo "[PFC createX3D.php]: Create X3D complete.";
 	}
+	
 	$zip->addFile("export/".$_POST['file_name'].".jpeg", $_POST['file_name'].".jpeg");
 	$zip->addFile("export/".$_POST['file_name'].".x3d", $_POST['file_name'].".x3d");
 	$zip->close();	
