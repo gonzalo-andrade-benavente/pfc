@@ -74,7 +74,7 @@ function load(coord) {
 	checkTile(coord, level);
 	rectangle_tiles = createRectangle(info_tiles, level);
 	var promise = [];
-	for(i = 0; i < rectangle_tiles.length; i++) {		
+	for(i = 0; i < rectangle_tiles.length; i++) {
 		requestPromise = aCesiumTerrainProvider.requestTileGeometry(rectangle_tiles[i].x, rectangle_tiles[i].y, level, false).then(function(data){
 				asociateGeometry(data, 1000);
 				index_tile++;
@@ -165,6 +165,7 @@ function showCombinedGeometry() {
 			combined_geometry = addFaceVertexUvs(combined_geometry);
 			combined_geometry = addBase(combined_geometry);
 			material = new THREE.MeshBasicMaterial( { map: texture, wireframe: true, side:THREE.DoubleSide} );
+			//material = new THREE.MeshBasicMaterial( { color: 'rgb(0,0,0)', wireframe: true, side:THREE.DoubleSide} );
 			mesh = new THREE.Mesh(combined_geometry, material);
 			mesh.position.set(-combined_geometry.boundingBox.max.x + (combined_geometry.boundingBox.max.x/2), 0, 50);
 			mesh.rotation.x =  Math.PI / 180 * (-90);
