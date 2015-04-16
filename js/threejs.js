@@ -34,8 +34,6 @@ function init() {
 	var container = document.createElement('div');
 	document.body.appendChild(container);
 	stats = initialStats();
-	// Clock - Para trackballs
-	// clock = new THREE.Clock();
 	//-------------------- Creaciónn de la escena que contendrá los objetos, cámaras, luces.
 	scene = new THREE.Scene();
 	//-------------------- Creamos la cámara
@@ -55,8 +53,6 @@ function init() {
 
 
 function render() {
-	//var delta = clock.getDelta();
-	//trackballControls.update(delta);
 	controlCamera.update();
 	stats.update();
 	requestAnimationFrame(render);
