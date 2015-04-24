@@ -81,14 +81,10 @@ function load(coord) {
 		});
 		var tilePromise = Cesium.when(requestPromise);
         promise.push(tilePromise);
-		
-		
 	}
 	Cesium.when.all(promise, function() {
 		createTerrain();
     });
-	
-	
 }
 
 function maxMinTileXY() {
@@ -120,7 +116,7 @@ function getGeometry(x, y) {
 
 function createTerrain() {
 	var i, j;
-	console.log('[PFC my_cesium_mesh.js]: Geometries created in rectangle_tiles');
+	console.log('[PFC my_cesium_mesh.js]: Geometries created in rectangle_tiles');	
 	var rectangle = maxMinTileXY();
 	var x = 0, y = 0; z = 0;
 	var geometry, material;
