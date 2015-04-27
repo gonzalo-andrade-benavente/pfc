@@ -14,7 +14,8 @@
 			var name = sessionStorage.rute.substring(sessionStorage.rute.indexOf("/") + 1, sessionStorage.rute.length);
 			var file_name = name.substring(0, name.indexOf("."));
 			sessionStorage.name = file_name;
-			document.getElementById('file').innerHTML = "Trabajando con el fichero <i>gps</i> " + sessionStorage.name + ".gpx <a href='PFCIndex.html'>cambiar</a>";
+			//document.getElementById('file').innerHTML = "Trabajando con el fichero <i>gps</i> " + sessionStorage.name + ".gpx <a href='PFCIndex.html'>cambiar</a>";
+			document.getElementById('file').innerHTML = sessionStorage.name + ".gpx <a href='PFCIndex.html'>cambiar</a>";
 			getRute();
 		} else {
 			setTimeout(requestTilesWhenReady, 10);
