@@ -1,4 +1,4 @@
-# Proyecto fin de carrera UPAN - Modelado 3D con la librería three.js
+# Proyecto fin de carrera UPNA (Universidad Publica de Navarra) - Modelado 3D con la librería three.js
 Repositorio proyecto fin de carrera
 
 En este repositorio compartire todo lo relacionado con mi proyecto de fin de carrera de la Ingeniería superior 
